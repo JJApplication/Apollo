@@ -42,3 +42,12 @@ func Save2JsonFile(m interface{}, fileName string) error {
 
 	return ioutil.WriteFile(fileName, data, 0644)
 }
+
+func PrettyJson(v interface{}) string {
+	s, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return ""
+	}
+
+	return string(s)
+}

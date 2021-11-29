@@ -13,7 +13,7 @@ import (
 
 // 返回码对照表
 
-const APPManager = "[APP Manager]"
+const APPManagerPrefix = "[APP Manager]"
 
 var appCodeMap = map[int]string{
 	APPStatusError:   appCodeMsg("get app result failed"),
@@ -26,7 +26,7 @@ var appCodeMap = map[int]string{
 }
 
 func appCodeMsg(s string) string {
-	return fmt.Sprintf("%s %s", APPManager, s)
+	return fmt.Sprintf("%s %s", APPManagerPrefix, s)
 }
 
 func toCode(s string) int {

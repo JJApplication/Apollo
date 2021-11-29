@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-  	initGlobalConfig()
+	initGlobalConfig()
 	logger.Check()
 	err := logger.InitLogger()
 	if err != nil {

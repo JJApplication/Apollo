@@ -18,18 +18,24 @@ func init() {
 
 // app管理测试
 func TestAppControl(t *testing.T) {
-	app := app_manager.App{Name: "Test", ID: "test", ManageCMD: app_manager.CMD{
-		Start:     []string{"start.sh"},
-		Stop:      nil,
-		Restart:   nil,
-		ForceKill: nil,
-		Check:     "",
-	}}
+	app := app_manager.App{Name: "Blog", ID: "test", ManageCMD: app_manager.CMD{
+		Start:     "start.sh",
+		Stop:      "stop.sh",
+		Restart:   "restart.sh",
+		ForceKill: "kill.sh",
+		Check:     "check.sh",
+	},
+		RunData: app_manager.RunData{RandomPort: true}}
 
+	app_manager.AppManagerMap.Store(app.Name, &app)
+	t.Log(app.ToJSON())
 	ok, err := app.Start()
 	if err != nil {
 		t.Error("test: ", err.Error())
 	}
 
 	t.Logf("app start %v\n", ok)
+	appKey, _ := app_manager.APPManager.APPManagerMap.Load("Blog")
+	t.Logf("%+v", appKey)
+	t.Logf("%+v", app_manager.APPManager)
 }

@@ -59,10 +59,10 @@ func NewApp(appName string) error {
 			EngDes:        "default english description",
 			CHSDes:        "默认中文描述",
 			ManageCMD: CMD{
-				Start:     []string{"start.sh"},
-				Stop:      []string{"stop.sh"},
-				Restart:   []string{"restart.sh"},
-				ForceKill: []string{"kill.sh"},
+				Start:     "start.sh",
+				Stop:      "stop.sh",
+				Restart:   "restart.sh",
+				ForceKill: "kill.sh",
 				Check:     "check.sh",
 			},
 			Meta: Meta{
@@ -75,12 +75,29 @@ func NewApp(appName string) error {
 				ConfPath:    "",
 			},
 			RunData: RunData{
-				Envs:  []string{},
-				Ports: []int{},
-				Host:  "localhost",
+				Envs:       []string{},
+				Ports:      []int{},
+				RandomPort: true,
+				Host:       "localhost",
 			},
 		},
 		configen.Config,
 		utils.CalDir(
 			utils.GetAppDir(), APPConfigsRoot, appName+ConfigSuffix))
+}
+
+// NewAppScript 新增app 命令目录
+// 默认只创建start stop check
+func NewAppScript(appName string) error {
+	for _, sh := range []string{"start.sh", "stop.sh", "check.sh"} {
+		err := utils.CreateFileX(utils.CalDir(
+			utils.GetAppDir(),
+			APPScriptsRoot,
+			appName,
+			sh))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

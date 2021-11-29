@@ -29,11 +29,11 @@ type App struct {
 
 // CMD 服务的管理脚本
 type CMD struct {
-	Start     []string `json:"start"`
-	Stop      []string `json:"stop"`
-	Restart   []string `json:"restart"`
-	ForceKill []string `json:"force_kill"`
-	Check     string   `json:"check"`
+	Start     string `json:"start"`
+	Stop      string `json:"stop"`
+	Restart   string `json:"restart"`
+	ForceKill string `json:"force_kill"`
+	Check     string `json:"check"`
 }
 
 // Meta 服务的元数据
@@ -49,9 +49,10 @@ type Meta struct {
 
 // RunData 运行时依赖
 type RunData struct {
-	Envs  []string `json:"envs"` // just like `Name=Diri`
-	Ports []int    `json:"ports"`
-	Host  string   `json:"host"` // always must be localhost
+	Envs       []string `json:"envs"` // just like `Name=Diri`
+	Ports      []int    `json:"ports"`
+	RandomPort bool     `json:"random_port"` // if using random port
+	Host       string   `json:"host"`        // always must be localhost
 }
 
 // Validate 适用于model的检查器

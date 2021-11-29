@@ -12,6 +12,7 @@ import (
 	"github.com/landers1037/dirichlet/config"
 	"github.com/landers1037/dirichlet/engine"
 	"github.com/landers1037/dirichlet/logger"
+	"github.com/landers1037/dirichlet/router/router_app"
 )
 
 // 初始化运行时数据
@@ -24,19 +25,21 @@ func initGlobalConfig() {
 }
 
 func initAPPManager() {
-	err := app_manager.LoadManagerCf()
-	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("init APPConfig failed: %s", err.Error()))
-	}
-
-	logger.Logger.Info("init APPConfig done")
+	app_manager.InitAPPManager()
+	logger.Logger.Info("init APPManager done")
 }
 
 func initEngine() {
-	dirEngine := engine.NewEngine(&engine.EngineConfig{})
+	dirEngine := engine.NewEngine(&engine.EngineConfig{
+		Host: config.DirichletConf.Server.Host,
+		Port: config.DirichletConf.Server.Port,
+	})
 	dirEngine.Init()
-	err := dirEngine.Run()
 
+	// load router
+	router_app.Init(dirEngine.GetEngine())
+
+	err := dirEngine.Run()
 	if err != nil {
 		logger.Logger.Error("[Dirichlet] server start failed")
 		return

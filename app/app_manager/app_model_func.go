@@ -9,6 +9,9 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strconv"
+	"strings"
+	"sync"
 
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/utils"
@@ -20,6 +23,7 @@ func appScriptPath(app, c string) string {
 
 func wrapWithCode(envs []string) []string {
 	return append([]string{
+		fmt.Sprintf("%s=%d", "APP_STATUS_OK", APPStatusOK),
 		fmt.Sprintf("%s=%d", "APP_STATUS_ERR", APPStatusError),
 		fmt.Sprintf("%s=%d", "APP_START_ERR", APPStatusStart),
 		fmt.Sprintf("%s=%d", "APP_STOP_ERR", APPStatusStop),
@@ -30,25 +34,107 @@ func wrapWithCode(envs []string) []string {
 	}, envs...)
 }
 
+// 生成运行时所需的环境变量
+func attachEnvs(app *App) []string {
+	var envs []string
+	if app.Name != "" {
+		envs = append(app.RunData.Envs, fmt.Sprintf("APP=%s", app.Name))
+	}
+
+	return wrapWithCode(envs)
+}
+
+// 加载固定端口时使用
+func attachEnvsSp(app *App) []string {
+	var envs []string
+	if app.Name != "" {
+		envs = append(app.RunData.Envs, fmt.Sprintf("APP=%s", app.Name))
+	}
+
+	if len(app.RunData.Ports) > 0 {
+		var ports []string
+		for _, p := range app.RunData.Ports {
+			ports = append(ports, strconv.Itoa(p))
+		}
+		envs = append(envs, fmt.Sprintf("PORTS=%s", strings.Join(ports, " ")))
+	}
+
+	return wrapWithCode(envs)
+}
+
+// 生成运行时所需的端口
+// 通过appManager中的ports来去重
+func attachEnvsWithPorts(app *App) []string {
+	// 仅重试10次
+	var s string
+	var envs = attachEnvs(app)
+	for i := 0; i < 10; i++ {
+		p := utils.RandomPort()
+		if APPManager.checkPorts(p) {
+			s = fmt.Sprintf("PORTS=%d", p)
+			// 记录port到app运行时 在启动失败后从manager中删除
+			app.RunData.Ports = []int{p}
+			APPManager.addPorts(p)
+			break
+		}
+	}
+
+	envs = append(envs, s)
+	return envs
+}
+
+// Start 启动服务
+// 每次启动前应该强制校验 先停止服务
+// rundata中的ports是随机分配的，只能在START中生效
 func (app *App) Start() (bool, error) {
 	var ret int
-	for _, c := range app.ManageCMD.Start {
-		_, err := utils.CMDRun(wrapWithCode(app.RunData.Envs), appScriptPath(app.Name, c))
+	// 判断是否需要随机端口运行
+	if app.RunData.RandomPort {
+		_, err := utils.CMDRun(attachEnvsWithPorts(app), appScriptPath(app.Name, app.ManageCMD.Start))
 		if err != nil {
-			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManager, appScriptPath(app.Name, c), err.Error()))
+			APPManager.delPorts(app.RunData.Ports[0])
+			app.ClearPorts()
+			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
 			ret = toCode(err.Error())
 			return false, errors.New(appCodeMap[ret])
 		}
+		return true, err
+	}
+
+	_, err := utils.CMDRun(attachEnvsSp(app), appScriptPath(app.Name, app.ManageCMD.Start))
+	if err != nil {
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
+		ret = toCode(err.Error())
+		return false, errors.New(appCodeMap[ret])
 	}
 
 	return true, nil
 }
 
 func (app *App) Stop() (bool, error) {
+	var ret int
+	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Name, app.ManageCMD.Stop))
+	if err != nil {
+		// 停止失败时 保持原有池的数据
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop), err.Error()))
+		ret = toCode(err.Error())
+		return false, errors.New(appCodeMap[ret])
+	}
+
 	return true, nil
 }
 
 func (app *App) ReStart() (bool, error) {
+	ok, err := app.Stop()
+	if !ok || err != nil {
+		return false, err
+	}
+
+	ok, err = app.Start()
+	if !ok || err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
 
@@ -64,7 +150,21 @@ func (app *App) PostTodo() *App {
 
 // Check 状态检查
 func (app *App) Check() (bool, error) {
+	var ret int
+
+	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Name, app.ManageCMD.Check))
+	if err != nil {
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Check), err.Error()))
+		ret = toCode(err.Error())
+		return false, errors.New(appCodeMap[ret])
+	}
+
 	return true, nil
+}
+
+// ClearPorts 删除运行时环境
+func (app *App) ClearPorts() {
+	app.RunData.Ports = []int{}
 }
 
 // BackUp 备份服务
@@ -75,17 +175,29 @@ func (app *App) BackUp() (bool, error) {
 
 // Reload 重载配置文件
 func (app *App) Reload() (bool, error) {
+	// 默认线程安全
+	err := loadFromApp(app.Name)
+	if err != nil {
+		return false, err
+	}
 	return true, nil
 }
 
 // Sync 同步配置文件
 func (app *App) Sync() (bool, error) {
+	lock := sync.Mutex{}
+	lock.Lock()
+	err := SaveToFile(app, app.Name)
+	lock.Unlock()
+	if err != nil {
+		return false, err
+	}
 	return true, nil
 }
 
 // Info 获取app的基础信息
-func (app *App) Info() (bool, error) {
-	return true, nil
+func (app *App) Info() interface{} {
+	return nil
 }
 
 // Dump 安全的保存运行态数据
@@ -94,6 +206,6 @@ func (app *App) Dump() (bool, error) {
 }
 
 // ToJSON 导出为json字符串
-func (app *App) ToJSON() (string, error) {
-	return "", nil
+func (app *App) ToJSON() string {
+	return utils.PrettyJson(app)
 }

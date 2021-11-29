@@ -7,8 +7,18 @@ package app_manager
 
 import "sync"
 
+type appManager struct {
+	APPManagerMap *sync.Map
+	APPUsingPorts map[int]struct{}
+}
+
 // AppManagerMap 应用的全局字典 每次配置更新后重载到全局字典中
 var AppManagerMap sync.Map
+
+var APPManager = appManager{
+	APPManagerMap: &AppManagerMap,
+	APPUsingPorts: map[int]struct{}{},
+}
 
 const (
 	APPConfigsRoot = "conf/app"
@@ -58,3 +68,23 @@ const (
 	ConfNginx    = "nginx"
 	ConfGunicorn = "gunicorn"
 )
+
+// 校验随机端口的合法性
+func (am *appManager) checkPorts(port int) bool {
+	if _, ok := am.APPUsingPorts[port]; ok {
+		return false
+	}
+	return true
+}
+
+func (am *appManager) addPorts(port int) {
+	if _, ok := am.APPUsingPorts[port]; !ok {
+		am.APPUsingPorts[port] = struct{}{}
+	}
+}
+
+func (am *appManager) delPorts(port int) {
+	if _, ok := am.APPUsingPorts[port]; ok {
+		delete(am.APPUsingPorts, port)
+	}
+}

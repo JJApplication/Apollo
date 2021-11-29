@@ -71,6 +71,8 @@ type Redis struct {
 
 // Server server Config
 type Server struct {
+	Host string `json:"host"`
+	Port int    `json:"port"`
 }
 
 // Sync 从配置文件中同步加载

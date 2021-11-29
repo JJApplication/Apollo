@@ -18,6 +18,7 @@ require (
 	github.com/golang/protobuf v1.3.3 // indirect
 	github.com/gookit/filter v1.1.2 // indirect
 	github.com/gookit/goutil v0.3.12 // indirect
+	github.com/landers1037/plnack-proto v1.0.5 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect

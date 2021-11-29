@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/landers1037/configen"
+	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/utils"
 )
 
@@ -21,7 +22,6 @@ import (
 func LoadManagerCf() error {
 	// 保证读取到配置后再刷新字典
 	tm, ok := loadAllCfs(getAPPCfs())
-	fmt.Println(tm)
 	// 每次刷新
 	if ok {
 		AppManagerMap.Range(func(key, value interface{}) bool {
@@ -30,6 +30,7 @@ func LoadManagerCf() error {
 		})
 
 		for k, v := range tm {
+			logger.Logger.Info(fmt.Sprintf("store app [%s] config: %+v", k, v))
 			AppManagerMap.Store(k, v)
 		}
 	}

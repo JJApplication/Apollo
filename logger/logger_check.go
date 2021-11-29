@@ -13,8 +13,9 @@ import (
 )
 
 func Check() {
-	fmt.Printf("[Dirichlet]\nStartTime: %s\nServiceRoot: %s\nAppRoot: %s\nAppManger: %s\nAppLog: %s\nBackUpDir: %s\nCacheDir: %s\n",
+	fmt.Printf("[Dirichlet]\nStartTime: %s\nListening on %s\nServiceRoot: %s\nAppRoot: %s\nAppManger: %s\nAppLog: %s\nBackUpDir: %s\nCacheDir: %s\n\n",
 		time.Now().String(),
+		fmt.Sprintf("http://%s:%d", config.DirichletConf.Server.Host, config.DirichletConf.Server.Port),
 		config.DirichletConf.ServiceRoot,
 		config.DirichletConf.APPRoot,
 		config.DirichletConf.APPManager,
