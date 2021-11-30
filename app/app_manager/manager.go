@@ -25,7 +25,7 @@ func InitAPPManager() {
 
 func GetApp(app string) (App, error) {
 	if Check(app) {
-		a, _ := AppManagerMap.Load(app)
+		a, _ := APPManager.APPManagerMap.Load(app)
 		return a.(App), nil
 	}
 
@@ -33,7 +33,7 @@ func GetApp(app string) (App, error) {
 }
 
 func Check(app string) bool {
-	if _, ok := AppManagerMap.Load(app); ok {
+	if _, ok := APPManager.APPManagerMap.Load(app); ok {
 		return true
 	}
 
@@ -43,8 +43,9 @@ func Check(app string) bool {
 // Start app快速启动
 func Start(app string) (bool, error) {
 	if Check(app) {
-		a, _ := AppManagerMap.Load(app)
-		return a.(*App).Start()
+		a, _ := APPManager.APPManagerMap.Load(app)
+		b := a.(App)
+		return b.Start()
 	}
 
 	return false, errors.New(APPNotExist)
@@ -53,8 +54,9 @@ func Start(app string) (bool, error) {
 // Stop app快速停止
 func Stop(app string) (bool, error) {
 	if Check(app) {
-		a, _ := AppManagerMap.Load(app)
-		return a.(*App).Stop()
+		a, _ := APPManager.APPManagerMap.Load(app)
+		b := a.(App)
+		return b.Stop()
 	}
 
 	return false, errors.New(APPNotExist)
@@ -63,8 +65,9 @@ func Stop(app string) (bool, error) {
 // ReStart app快速重启
 func ReStart(app string) (bool, error) {
 	if Check(app) {
-		a, _ := AppManagerMap.Load(app)
-		return a.(*App).ReStart()
+		a, _ := APPManager.APPManagerMap.Load(app)
+		b := a.(App)
+		return b.ReStart()
 	}
 
 	return false, errors.New(APPNotExist)

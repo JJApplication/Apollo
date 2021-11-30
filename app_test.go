@@ -25,10 +25,13 @@ func TestAppControl(t *testing.T) {
 		ForceKill: "kill.sh",
 		Check:     "check.sh",
 	},
-		RunData: app_manager.RunData{RandomPort: true}}
-
-	app_manager.AppManagerMap.Store(app.Name, &app)
+		RunData: app_manager.RunData{RandomPort: true, Ports: []int{1}}}
+	app_manager.APPManager.APPManagerMap.Store(app.Name, app)
+	// test app sync
+	app.Sync()
+	// test app toJson
 	t.Log(app.ToJSON())
+	// test app start
 	ok, err := app.Start()
 	if err != nil {
 		t.Error("test: ", err.Error())

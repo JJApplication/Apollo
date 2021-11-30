@@ -24,14 +24,14 @@ func LoadManagerCf() error {
 	tm, ok := loadAllCfs(getAPPCfs())
 	// 每次刷新
 	if ok {
-		AppManagerMap.Range(func(key, value interface{}) bool {
-			AppManagerMap.Delete(key)
+		APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+			APPManager.APPManagerMap.Delete(key)
 			return true
 		})
 
 		for k, v := range tm {
 			logger.Logger.Info(fmt.Sprintf("store app [%s] config: %+v", k, v))
-			AppManagerMap.Store(k, v)
+			APPManager.APPManagerMap.Store(k, v)
 		}
 	}
 
@@ -60,17 +60,17 @@ func getAPPCfs() []string {
 	})
 
 	if err != nil {
-		//todo log
+		logger.Logger.Error(fmt.Sprintf("%s failed to walk load app configs: %s", APPManagerPrefix, err.Error()))
 	}
 
 	return cfs
 }
 
 func loadAllCfs(cfs []string) (map[string]App, bool) {
-	fmt.Println(cfs)
 	var loadStatus = true
 	tm := make(map[string]App, 0)
 	for _, c := range cfs {
+		logger.Logger.Info(fmt.Sprintf("%s load config from: %s", APPManagerPrefix, c))
 		var appCfg App
 		err := configen.ParseConfig(&appCfg, configen.Config, c)
 		if err != nil || reflect.DeepEqual(appCfg, App{}) {
@@ -79,7 +79,7 @@ func loadAllCfs(cfs []string) (map[string]App, bool) {
 		}
 
 		// get name
-		name := strings.Trim(filepath.Base(c), filepath.Ext(c))
+		name := strings.TrimSuffix(filepath.Base(c), filepath.Ext(c))
 		// save to map
 		tm[name] = appCfg
 	}

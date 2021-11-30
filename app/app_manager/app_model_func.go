@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/landers1037/dirichlet/config"
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/utils"
 )
@@ -31,6 +32,11 @@ func wrapWithCode(envs []string) []string {
 		fmt.Sprintf("%s=%d", "APP_RESTART_ERR", APPStatusRestart),
 		fmt.Sprintf("%s=%d", "APP_KILL_ERR", APPStatusKilled),
 		fmt.Sprintf("%s=%d", "APP_RUN_ERR", APPStatusRunning),
+
+		// 运行时服务路径
+		fmt.Sprintf("%s=%s", "APP_ROOT", config.DirichletConf.APPRoot),
+		fmt.Sprintf("%s=%s", "SERVICE_ROOT", config.DirichletConf.ServiceRoot),
+		fmt.Sprintf("%s=%s", "APP_LOG", config.DirichletConf.APPLogDir),
 	}, envs...)
 }
 
@@ -75,6 +81,7 @@ func attachEnvsWithPorts(app *App) []string {
 			// 记录port到app运行时 在启动失败后从manager中删除
 			app.RunData.Ports = []int{p}
 			APPManager.addPorts(p)
+			app.Dump()
 			break
 		}
 	}
@@ -115,12 +122,14 @@ func (app *App) Stop() (bool, error) {
 	var ret int
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Name, app.ManageCMD.Stop))
 	if err != nil {
-		// 停止失败时 保持原有池的数据
+		// 停止失败时 保留原有的数据
 		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop), err.Error()))
 		ret = toCode(err.Error())
 		return false, errors.New(appCodeMap[ret])
 	}
-
+	// 停止成功时 清空保留的ports
+	APPManager.delPorts(app.RunData.Ports[0])
+	app.ClearPorts()
 	return true, nil
 }
 
@@ -187,7 +196,12 @@ func (app *App) Reload() (bool, error) {
 func (app *App) Sync() (bool, error) {
 	lock := sync.Mutex{}
 	lock.Lock()
-	err := SaveToFile(app, app.Name)
+	// 运行时数据不存储 所以进行一次app clone
+	var appClone App
+	appClone = *app
+	appClone.RunData.Ports = []int{}
+
+	err := SaveToFile(&appClone, app.Name)
 	lock.Unlock()
 	if err != nil {
 		return false, err
@@ -200,8 +214,9 @@ func (app *App) Info() interface{} {
 	return nil
 }
 
-// Dump 安全的保存运行态数据
+// Dump 安全的保存运行态数据到Map中
 func (app *App) Dump() (bool, error) {
+	APPManager.APPManagerMap.Store(app.Name, *app)
 	return true, nil
 }
 

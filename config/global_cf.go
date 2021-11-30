@@ -64,6 +64,9 @@ type Sqlite struct {
 }
 
 type Mongo struct {
+	URL    string `json:"url"`
+	User   string `json:"user"`
+	PassWd string `json:"pass_wd"`
 }
 
 type Redis struct {

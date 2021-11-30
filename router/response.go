@@ -18,6 +18,8 @@ const (
 )
 
 func Response(c *gin.Context, data interface{}) {
+	// 设置上下文
+	c.Set("data", data)
 	c.JSON(http.StatusOK, gin.H{
 		"data": data,
 		"time": time.Now().Unix(),
@@ -25,6 +27,7 @@ func Response(c *gin.Context, data interface{}) {
 }
 
 func Res4xx(c *gin.Context, data interface{}) {
+	c.Set("data", data)
 	c.JSON(http.StatusBadRequest, gin.H{
 		"data":  data,
 		"error": "bad request",
@@ -33,6 +36,7 @@ func Res4xx(c *gin.Context, data interface{}) {
 }
 
 func Res5xx(c *gin.Context, data interface{}) {
+	c.Set("data", data)
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"data":  data,
 		"error": "inner error",

@@ -30,7 +30,7 @@ func loadFromApp(appName string) error {
 		return errors.New("can't load from config file")
 	}
 
-	AppManagerMap.Store(appName, cf)
+	APPManager.APPManagerMap.Store(appName, cf)
 
 	return nil
 }

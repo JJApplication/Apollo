@@ -10,6 +10,8 @@ import (
 
 	"github.com/landers1037/dirichlet/app/app_manager"
 	"github.com/landers1037/dirichlet/config"
+	"github.com/landers1037/dirichlet/cron"
+	"github.com/landers1037/dirichlet/database"
 	"github.com/landers1037/dirichlet/engine"
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/router/router_app"
@@ -24,9 +26,23 @@ func initGlobalConfig() {
 	}
 }
 
+// 初始化数据库
+func initMongo() {
+	err := database.InitDBMongo()
+	if err != nil {
+		fmt.Printf("[Dirichlet] init mongo failed %s\n", err)
+		return
+	}
+}
+
 func initAPPManager() {
 	app_manager.InitAPPManager()
 	logger.Logger.Info("init APPManager done")
+}
+
+func initBackgroundJobs() {
+	cron.InitBackgroundJobs()
+	logger.Logger.Info("init BackgroundJobs done")
 }
 
 func initEngine() {

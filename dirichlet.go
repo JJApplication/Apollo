@@ -13,8 +13,13 @@ func main() {
 		return
 	}
 
+	// init database
+	initMongo()
 	// init app manager
 	initAPPManager()
+	// init background ticker
+	initBackgroundJobs()
+	// init background cron job
 	// init engine
 	initEngine()
 }

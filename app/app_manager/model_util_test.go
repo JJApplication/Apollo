@@ -11,13 +11,13 @@ import (
 
 // 加载模型文件
 func TestLoadToMap(t *testing.T) {
-	t.Logf("%+v", &AppManagerMap)
+	t.Logf("%+v", APPManager.APPManagerMap)
 	err := loadFromApp("TestService")
 	t.Log(err)
 	// d, _ := AppManagerMap.Load("TestService")
 
 	// range all
-	AppManagerMap.Range(func(key, value interface{}) bool {
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		t.Logf("%s, %+v", key, value)
 		return true
 	})
