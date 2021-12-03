@@ -37,6 +37,7 @@ func initMongo() {
 
 func initAPPManager() {
 	app_manager.InitAPPManager()
+	app_manager.SaveToDB()
 	logger.Logger.Info("init APPManager done")
 }
 
@@ -58,6 +59,8 @@ func initEngine() {
 	err := dirEngine.Run()
 	if err != nil {
 		logger.Logger.Error("[Dirichlet] server start failed")
+		logger.Logger.Error(err.Error())
+		cron.InsureTickerExit()
 		return
 	}
 }

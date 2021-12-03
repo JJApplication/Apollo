@@ -22,6 +22,7 @@ import (
 type oneTicker struct {
 	ch         chan bool
 	uuid       string
+	name       string
 	stopped    bool
 	createTime int64
 }
@@ -41,13 +42,14 @@ func init() {
 }
 
 // AddTicker 以s为维度的执行轮询任务
-func AddTicker(t int, f func()) {
+func AddTicker(t int, taskName string, f func()) {
 	ticker := time.NewTicker(time.Second * time.Duration(t))
 	ch := make(chan bool)
 	uuidStr := uuid.NewString()
 	TickerMap[uuidStr] = oneTicker{
 		ch:         ch,
 		uuid:       uuidStr,
+		name:       taskName,
 		stopped:    false,
 		createTime: time.Now().Unix(),
 	}
@@ -66,4 +68,12 @@ func AddTicker(t int, f func()) {
 			}
 		}
 	}()
+}
+
+// InsureTickerExit 确保程序退出时关闭协程
+func InsureTickerExit() {
+	for _, t := range TickerMap {
+		t.Stop()
+		t.SetStop()
+	}
 }
