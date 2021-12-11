@@ -95,16 +95,23 @@ func attachEnvsWithPorts(app *App) []string {
 // rundata中的ports是随机分配的，只能在START中生效
 func (app *App) Start() (bool, error) {
 	var ret int
+	if ok, _ := app.Check(); ok {
+		return true, nil
+	}
 	// 判断是否需要随机端口运行
 	if app.RunData.RandomPort {
 		_, err := utils.CMDRun(attachEnvsWithPorts(app), appScriptPath(app.Name, app.ManageCMD.Start))
 		if err != nil {
-			APPManager.delPorts(app.RunData.Ports[0])
-			app.ClearPorts()
+			if len(app.RunData.Ports) > 0 {
+				APPManager.delPorts(app.RunData.Ports[0])
+				app.ClearPorts()
+			}
+
 			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
 			ret = toCode(err.Error())
 			return false, errors.New(appCodeMap[ret])
 		}
+		logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
 		return true, err
 	}
 
@@ -114,7 +121,7 @@ func (app *App) Start() (bool, error) {
 		ret = toCode(err.Error())
 		return false, errors.New(appCodeMap[ret])
 	}
-
+	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
 	return true, nil
 }
 
@@ -128,8 +135,12 @@ func (app *App) Stop() (bool, error) {
 		return false, errors.New(appCodeMap[ret])
 	}
 	// 停止成功时 清空保留的ports
-	APPManager.delPorts(app.RunData.Ports[0])
-	app.ClearPorts()
+	if len(app.RunData.Ports) > 0 {
+		APPManager.delPorts(app.RunData.Ports[0])
+		app.ClearPorts()
+	}
+
+	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop)))
 	return true, nil
 }
 

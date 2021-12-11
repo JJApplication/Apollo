@@ -40,7 +40,8 @@ func SaveToDB() {
 	})
 }
 
-// Persist 持久化
+// Persist 持久化为bson数据
+// todo 序列化bson文件
 func Persist() {
 	var data []DaoAPP
 	err := mgm.Coll(&DaoAPP{}).SimpleFind(&data, bson.M{})

@@ -32,6 +32,15 @@ func GetApp(app string) (App, error) {
 	return App{}, errors.New(APPNotExist)
 }
 
+func GetAllApp() ([]App, error) {
+	var apps []App
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		apps = append(apps, value.(App))
+		return true
+	})
+	return apps, nil
+}
+
 func Check(app string) bool {
 	if _, ok := APPManager.APPManagerMap.Load(app); ok {
 		return true
@@ -110,6 +119,25 @@ func StopAll() error {
 
 	if e != nil {
 		return errors.New("apps stop has failure")
+	}
+	return nil
+}
+
+func StatusAll() error {
+	var e error
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		app := value.(App)
+		if ok, err := app.Check(); !ok {
+			e = err
+			logger.Logger.Error(fmt.Sprintf("%s %s check failed: %s", APPManagerPrefix, key, err.Error()))
+		} else {
+			logger.Logger.Info(fmt.Sprintf("%s %s check success", APPManagerPrefix, key))
+		}
+		return true
+	})
+
+	if e != nil {
+		return errors.New("apps check has failure")
 	}
 	return nil
 }

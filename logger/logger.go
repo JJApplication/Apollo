@@ -91,7 +91,7 @@ func configLog() []string {
 	case "no", "NO", "No":
 		return []string{}
 	default:
-		return []string{"stdout"}
+		return []string{"stderr"}
 	}
 }
 

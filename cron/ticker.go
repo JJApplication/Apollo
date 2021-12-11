@@ -59,11 +59,11 @@ func AddTicker(t int, taskName string, f func()) {
 			select {
 			case <-ticker.C:
 				f()
-				logger.Logger.Info(fmt.Sprintf("ticker [%s] task run at :%s", uuidStr, time.Now().String()))
+				logger.Logger.Info(fmt.Sprintf("ticker {%s} [%s] task run at :%s", taskName, uuidStr, time.Now().String()))
 			case sig := <-ch:
 				if sig {
 					ticker.Stop()
-					logger.Logger.Info(fmt.Sprintf("ticker [%s] stop signal received", uuidStr))
+					logger.Logger.Info(fmt.Sprintf("ticker {%s} [%s] stop signal received", taskName, uuidStr))
 				}
 			}
 		}

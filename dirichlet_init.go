@@ -15,6 +15,7 @@ import (
 	"github.com/landers1037/dirichlet/engine"
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/router/router_app"
+	"github.com/landers1037/dirichlet/uds"
 )
 
 // 初始化运行时数据
@@ -63,4 +64,8 @@ func initEngine() {
 		cron.InsureTickerExit()
 		return
 	}
+}
+
+func initUDS() {
+	uds.Register()
 }

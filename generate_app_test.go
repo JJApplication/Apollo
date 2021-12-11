@@ -12,8 +12,8 @@ import (
 )
 
 var apps = []string{"NoEngine", "MySite", "Mgek", "MgekDoc", "Blog", "JJMail", "JJRobot",
-	"CookBook", "JJService", "Redis", "Plume", "MgekFile", "JJGo", "Frp", "Blog_Front", "JJService_Front",
-	"Plume_Front", "JJGo_Front", "Works",
+	"CookBook", "JJService", "Redis", "Plume", "MgekFile", "JJGo", "Frp", "BlogFront", "JJServiceFront",
+	"PlumeFront", "JJGoFront", "Works",
 }
 
 // 生成app配置文件

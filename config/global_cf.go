@@ -17,7 +17,7 @@ var DirichletConf DConfig
 
 const (
 	GlobalConfigRoot = "conf"
-	GlobalConfigFile = "dirichlet.config"
+	GlobalConfigFile = "dirichlet.pig"
 )
 
 // DConfig 全局配置
@@ -89,7 +89,7 @@ func (d *DConfig) Sync() {
 
 	_ = configen.ParseConfig(
 		&DirichletConf,
-		configen.Config,
+		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(),
 			GlobalConfigRoot,
@@ -116,4 +116,8 @@ func (d *DConfig) Update(v *DConfig) {
 	}
 
 	defer d.lock.Unlock()
+}
+
+func (d *DConfig) ToJSON() string {
+	return utils.PrettyJson(d)
 }

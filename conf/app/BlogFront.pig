@@ -1,6 +1,6 @@
 {
-  "name": "JJService_Front",
-  "id": "app_jjservice_front",
+  "name": "BlogFront",
+  "id": "app_blogfront",
   "type": "Service",
   "release_status": "published",
   "eng_des": "default english description",
@@ -14,6 +14,7 @@
   },
   "meta": {
     "author": "",
+    "domain": "",
     "language": [],
     "create_date": "",
     "version": "1.0.0",

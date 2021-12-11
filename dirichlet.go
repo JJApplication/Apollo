@@ -20,6 +20,9 @@ func main() {
 	// init background ticker
 	initBackgroundJobs()
 	// init background cron job
+
+	// only all manager init, can uds server be active
+	initUDS()
 	// init engine
 	initEngine()
 }

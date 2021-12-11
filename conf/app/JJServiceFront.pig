@@ -1,6 +1,6 @@
 {
-  "name": "MgekFile",
-  "id": "app_mgekfile",
+  "name": "JJServiceFront",
+  "id": "app_jjservicefront",
   "type": "Service",
   "release_status": "published",
   "eng_des": "default english description",
@@ -14,6 +14,7 @@
   },
   "meta": {
     "author": "",
+    "domain": "",
     "language": [],
     "create_date": "",
     "version": "1.0.0",

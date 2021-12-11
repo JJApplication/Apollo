@@ -13,5 +13,8 @@ var routerApp *gin.RouterGroup
 
 func Init(r *gin.Engine) {
 	routerApp = r.Group("/app")
-	StartApp(routerApp)
+	{
+		routerApp.POST("/start", StartApp)
+		routerApp.POST("/startall", StartAppAll)
+	}
 }

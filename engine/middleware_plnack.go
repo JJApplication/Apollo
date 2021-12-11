@@ -6,6 +6,7 @@ Created: 2021/11/30 by Landers
 package engine
 
 import (
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,16 @@ import (
 	plnack_proto "github.com/landers1037/plnack-proto"
 )
 
-// MiddleWare_Plnack plnack数据编码
-func MiddleWare_Plnack() gin.HandlerFunc {
+const (
+	KeyPlnack = "plnack"
+)
+
+// MiddlewarePlnack plnack数据编码
+func MiddlewarePlnack() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 获取响应数据
-		if c.Request.Header.Get("proto") == "plnack" {
+		// 校验headers的proto判断是否需要使用plnack编码
+		if strings.ToLower(c.Request.Header.Get("proto")) == "plnack" {
 			d, _ := c.Get("data")
 			pl := plnack_proto.PlnackData{
 				Key:       "",
@@ -28,6 +34,8 @@ func MiddleWare_Plnack() gin.HandlerFunc {
 				KeyVerify: false,
 				Time:      time.Now(),
 			}
+			plnack_proto.PLNACK_LOG = false
+			plnack_proto.PlnackVerify = false
 			err := plnack_proto.EncodeGin(c, pl)
 			if err != nil {
 				logger.Logger.Error("encode for plnack failed")

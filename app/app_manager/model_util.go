@@ -25,7 +25,7 @@ func LoadToMap(appName string) error {
 func loadFromApp(appName string) error {
 	var cf App
 	p := utils.CalDir(utils.GetAppDir(), APPConfigsRoot, appName+ConfigSuffix)
-	err := configen.ParseConfig(&cf, configen.Config, p)
+	err := configen.ParseConfig(&cf, configen.Pig, p)
 	if err != nil || reflect.DeepEqual(cf, App{}) {
 		return errors.New("can't load from config file")
 	}
@@ -43,7 +43,7 @@ func SaveToFile(cf *App, appName string) error {
 
 	return configen.SaveConfig(
 		cf,
-		configen.Config,
+		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(), APPConfigsRoot, appName+ConfigSuffix))
 }
@@ -67,6 +67,7 @@ func NewApp(appName string) error {
 			},
 			Meta: Meta{
 				Author:      "",
+				Domain:      "",
 				Language:    []string{},
 				CreateDate:  "",
 				Version:     "1.0.0",
@@ -81,7 +82,7 @@ func NewApp(appName string) error {
 				Host:       "localhost",
 			},
 		},
-		configen.Config,
+		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(), APPConfigsRoot, appName+ConfigSuffix))
 }

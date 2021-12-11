@@ -49,8 +49,9 @@ func NewEngine(cf *EngineConfig) *Engine {
 
 func newGin() *gin.Engine {
 	g := gin.New()
+	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
-	g.Use(MiddleWare_Plnack())
+	g.Use(MiddlewarePlnack())
 	return g
 }
 
@@ -89,35 +90,35 @@ func (e *Engine) Group(r string, ware ...gin.HandlerFunc) *gin.RouterGroup {
 // Handle 路由控制
 func (e *Engine) Handle(method, r string, handler ...gin.HandlerFunc) {
 	if e.EnablePlnack {
-		e.ginEngine.Handle(method, r+PLNACK_PROTO, handler...).Use(MiddleWare_Plnack())
+		e.ginEngine.Handle(method, r+PLNACK_PROTO, handler...).Use(MiddlewarePlnack())
 	}
 	e.ginEngine.Handle(method, r, handler...)
 }
 
 func (e *Engine) GET(r string, handler ...gin.HandlerFunc) {
 	if e.EnablePlnack {
-		e.ginEngine.GET(r+PLNACK_PROTO, handler...).Use(MiddleWare_Plnack())
+		e.ginEngine.GET(r+PLNACK_PROTO, handler...).Use(MiddlewarePlnack())
 	}
 	e.ginEngine.GET(r, handler...)
 }
 
 func (e *Engine) POST(r string, handler ...gin.HandlerFunc) {
 	if e.EnablePlnack {
-		e.ginEngine.POST(r+PLNACK_PROTO, handler...).Use(MiddleWare_Plnack())
+		e.ginEngine.POST(r+PLNACK_PROTO, handler...).Use(MiddlewarePlnack())
 	}
 	e.ginEngine.POST(r, handler...)
 }
 
 func (e *Engine) DELETE(r string, handler ...gin.HandlerFunc) {
 	if e.EnablePlnack {
-		e.ginEngine.DELETE(r+PLNACK_PROTO, handler...).Use(MiddleWare_Plnack())
+		e.ginEngine.DELETE(r+PLNACK_PROTO, handler...).Use(MiddlewarePlnack())
 	}
 	e.ginEngine.DELETE(r, handler...)
 }
 
 func (e *Engine) PUT(r string, handler ...gin.HandlerFunc) {
 	if e.EnablePlnack {
-		e.ginEngine.PUT(r+PLNACK_PROTO, handler...).Use(MiddleWare_Plnack())
+		e.ginEngine.PUT(r+PLNACK_PROTO, handler...).Use(MiddlewarePlnack())
 	}
 	e.ginEngine.PUT(r, handler...)
 }

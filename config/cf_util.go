@@ -17,7 +17,7 @@ func InitGlobalConfig() error {
 	DirichletConf.lock = new(sync.Mutex)
 	return configen.ParseConfig(
 		&DirichletConf,
-		configen.Config,
+		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(),
 			GlobalConfigRoot,
@@ -28,7 +28,7 @@ func InitGlobalConfig() error {
 func SaveGlobalConfig() error {
 	return configen.SaveConfig(
 		&DirichletConf,
-		configen.Config,
+		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(), GlobalConfigRoot, GlobalConfigFile))
 }

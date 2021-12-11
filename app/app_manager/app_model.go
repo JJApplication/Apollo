@@ -39,6 +39,7 @@ type CMD struct {
 // Meta 服务的元数据
 type Meta struct {
 	Author      string   `json:"author" bson:"author"`
+	Domain      string   `json:"domain" bson:"domain"`
 	Language    []string `json:"language" bson:"language"`
 	CreateDate  string   `json:"create_date" bson:"create_date"`
 	Version     string   `json:"version" bson:"version"`

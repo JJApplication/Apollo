@@ -24,7 +24,7 @@ var APPManager = appManager{
 const (
 	APPConfigsRoot = "conf/app"
 	APPScriptsRoot = "conf/manager" // 当前独立与zeus
-	ConfigSuffix   = ".config"
+	ConfigSuffix   = ".pig"
 	APPStart       = "start"
 	APPStop        = "stop"
 	APPExit        = "exit"

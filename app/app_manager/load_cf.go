@@ -49,9 +49,9 @@ func getAPPCfs() []string {
 		return cfs
 	}
 
-	err := filepath.Walk(p, func(path string, info fs.FileInfo, err error) error {
+	err := filepath.WalkDir(p, func(path string, d fs.DirEntry, err error) error {
 		if err == nil {
-			if !info.IsDir() {
+			if !d.IsDir() {
 				cfs = append(cfs, path)
 			}
 		}
@@ -72,7 +72,7 @@ func loadAllCfs(cfs []string) (map[string]App, bool) {
 	for _, c := range cfs {
 		logger.Logger.Info(fmt.Sprintf("%s load config from: %s", APPManagerPrefix, c))
 		var appCfg App
-		err := configen.ParseConfig(&appCfg, configen.Config, c)
+		err := configen.ParseConfig(&appCfg, configen.Pig, c)
 		if err != nil || reflect.DeepEqual(appCfg, App{}) {
 			loadStatus = false
 			continue

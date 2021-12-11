@@ -1,6 +1,6 @@
 {
-  "name": "MgekDoc",
-  "id": "app_mgekdoc",
+  "name": "Plume",
+  "id": "app_plume",
   "type": "Service",
   "release_status": "published",
   "eng_des": "default english description",
@@ -14,6 +14,7 @@
   },
   "meta": {
     "author": "",
+    "domain": "",
     "language": [],
     "create_date": "",
     "version": "1.0.0",

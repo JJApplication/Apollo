@@ -9,8 +9,9 @@ require (
 	github.com/gookit/validate v1.2.11
 	github.com/json-iterator/go v1.1.12
 	github.com/kamva/mgm/v3 v3.4.1
-	github.com/landers1037/configen v1.0.4
+	github.com/landers1037/configen v1.0.6
 	github.com/landers1037/plnack-proto v1.0.5
+	go.mongodb.org/mongo-driver v1.7.0
 	go.uber.org/zap v1.19.1
 )
 
@@ -39,7 +40,6 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.7.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
