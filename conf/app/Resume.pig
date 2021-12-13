@@ -1,6 +1,6 @@
 {
-  "name": "JJService",
-  "id": "app_jjservice",
+  "name": "Resume",
+  "id": "app_resume",
   "type": "Service",
   "release_status": "published",
   "eng_des": "default english description",
@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "app.renj.io",
+    "domain": "me.renj.io",
     "language": [],
     "create_date": "",
     "version": "1.0.0",
@@ -25,7 +25,7 @@
   "run_data": {
     "envs": [],
     "ports": [],
-    "random_port": true,
+    "random_port": false,
     "host": "localhost"
   }
 }

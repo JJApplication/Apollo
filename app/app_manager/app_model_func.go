@@ -8,6 +8,7 @@ package app_manager
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -47,6 +48,11 @@ func attachEnvs(app *App) []string {
 		envs = append(app.RunData.Envs, fmt.Sprintf("APP=%s", app.Name))
 	}
 
+	path := os.Getenv("PATH")
+	if path != "" {
+		envs = append(envs, fmt.Sprintf("PATH=%s", path+":/usr/local/bin"))
+	}
+
 	return wrapWithCode(envs)
 }
 
@@ -81,6 +87,7 @@ func attachEnvsWithPorts(app *App) []string {
 			// 记录port到app运行时 在启动失败后从manager中删除
 			app.RunData.Ports = []int{p}
 			APPManager.addPorts(p)
+			app.ClonePorts()
 			app.Dump()
 			break
 		}
@@ -109,7 +116,7 @@ func (app *App) Start() (bool, error) {
 
 			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
 			ret = toCode(err.Error())
-			return false, errors.New(appCodeMap[ret])
+			return false, errors.New(errCode(ret))
 		}
 		logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
 		return true, err
@@ -119,7 +126,7 @@ func (app *App) Start() (bool, error) {
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
 		ret = toCode(err.Error())
-		return false, errors.New(appCodeMap[ret])
+		return false, errors.New(errCode(ret))
 	}
 	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
 	return true, nil
@@ -132,7 +139,7 @@ func (app *App) Stop() (bool, error) {
 		// 停止失败时 保留原有的数据
 		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop), err.Error()))
 		ret = toCode(err.Error())
-		return false, errors.New(appCodeMap[ret])
+		return false, errors.New(errCode(ret))
 	}
 	// 停止成功时 清空保留的ports
 	if len(app.RunData.Ports) > 0 {
@@ -176,7 +183,7 @@ func (app *App) Check() (bool, error) {
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Check), err.Error()))
 		ret = toCode(err.Error())
-		return false, errors.New(appCodeMap[ret])
+		return false, errors.New(errCode(ret))
 	}
 
 	return true, nil
@@ -185,6 +192,11 @@ func (app *App) Check() (bool, error) {
 // ClearPorts 删除运行时环境
 func (app *App) ClearPorts() {
 	app.RunData.Ports = []int{}
+}
+
+// ClonePorts 同步缓存中的随机端口组到mongo
+func (app *App) ClonePorts() {
+	SavePort(app.Name, app.RunData.Ports)
 }
 
 // BackUp 备份服务

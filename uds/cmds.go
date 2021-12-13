@@ -129,11 +129,11 @@ var cmdsMap = map[string]func(args ...string) (result string){
 		}
 		appName := args[0]
 		if appName == "all" {
-			err := app_manager.StatusAll()
+			res, err := app_manager.StatusAll()
 			if err != nil {
-				return fmt.Sprintf("failed: %s", err.Error())
+				return fmt.Sprintf("failed: %s\n%s", err.Error(), strings.Join(res, "\n"))
 			}
-			return SUCCESS
+			return fmt.Sprintf("%s\n%s", SUCCESS, strings.Join(res, "\n"))
 		} else {
 			app, err := app_manager.GetApp(appName)
 			if err != nil {

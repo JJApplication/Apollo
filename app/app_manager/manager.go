@@ -123,21 +123,24 @@ func StopAll() error {
 	return nil
 }
 
-func StatusAll() error {
+func StatusAll() ([]string, error) {
 	var e error
+	var statusList []string
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		app := value.(App)
 		if ok, err := app.Check(); !ok {
 			e = err
+			statusList = append(statusList, fmt.Sprintf("[%s]: BAD", key))
 			logger.Logger.Error(fmt.Sprintf("%s %s check failed: %s", APPManagerPrefix, key, err.Error()))
 		} else {
+			statusList = append(statusList, fmt.Sprintf("[%s]: OK", key))
 			logger.Logger.Info(fmt.Sprintf("%s %s check success", APPManagerPrefix, key))
 		}
 		return true
 	})
 
 	if e != nil {
-		return errors.New("apps check has failure")
+		return statusList, errors.New("apps check has failure")
 	}
-	return nil
+	return statusList, nil
 }

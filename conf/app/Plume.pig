@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "",
+    "domain": "plume.renj.io",
     "language": [],
     "create_date": "",
     "version": "1.0.0",

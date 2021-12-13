@@ -1,6 +1,6 @@
 {
-  "name": "JJService",
-  "id": "app_jjservice",
+  "name": "Sandwich",
+  "id": "app_sandwich",
   "type": "Service",
   "release_status": "published",
   "eng_des": "default english description",
@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "app.renj.io",
+    "domain": "",
     "language": [],
     "create_date": "",
     "version": "1.0.0",
@@ -24,8 +24,8 @@
   },
   "run_data": {
     "envs": [],
-    "ports": [],
-    "random_port": true,
+    "ports": [8888],
+    "random_port": false,
     "host": "localhost"
   }
 }

@@ -29,6 +29,13 @@ func appCodeMsg(s string) string {
 	return fmt.Sprintf("%s %s", APPManagerPrefix, s)
 }
 
+func errCode(code int) string {
+	if v, ok := appCodeMap[code]; ok {
+		return v
+	}
+	return appCodeMsg("invalid code")
+}
+
 func toCode(s string) int {
 	// 正则匹配出返回码
 	reg, err := regexp.Compile("[0-9]*$")

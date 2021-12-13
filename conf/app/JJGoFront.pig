@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "",
+    "domain": "jjgo.renj.io",
     "language": [],
     "create_date": "",
     "version": "1.0.0",
@@ -25,7 +25,7 @@
   "run_data": {
     "envs": [],
     "ports": [],
-    "random_port": true,
+    "random_port": false,
     "host": "localhost"
   }
 }

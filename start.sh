@@ -3,6 +3,11 @@ run_path=$(pwd)
 app=dirichlet
 executable="${run_path}/${app}"
 
+init()
+{
+  chmod +x -R $(pwd)/conf/manager/*
+}
+
 check()
 {
   result=$(ps ax|grep ${executable}|grep -v grep|awk '{print $1}')
@@ -16,4 +21,5 @@ check()
   exit 0
 }
 
+init
 check

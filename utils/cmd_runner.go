@@ -8,9 +8,12 @@ package utils
 import (
 	"context"
 	"os/exec"
+	"path/filepath"
+	"syscall"
 )
 
 // 命令行运行
+// 会开启新的sid 不会和主进程共用终端
 const (
 	BASH = "bash"
 	RUN  = "-c"
@@ -19,8 +22,22 @@ const (
 // 异步的命令行只适用于非及时返回的函数
 
 func newCMD(envs []string, cmd ...string) *exec.Cmd {
-	c := exec.Command(BASH, append([]string{RUN}, cmd...)...)
-	c.Env = envs
+	c := &exec.Cmd{
+		Path:       BASH,
+		Args:       append([]string{BASH, RUN}, cmd...),
+		Env:        envs,
+		SysProcAttr: &syscall.SysProcAttr{
+			Setsid: true,
+		},
+	}
+	if filepath.Base(BASH) == BASH {
+		if lp, err := exec.LookPath(BASH); err != nil {
+			// todo lookpath error
+		} else {
+			c.Path = lp
+		}
+	}
+
 	return c
 }
 

@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "",
+    "domain": "blog.renj.io",
     "language": [],
     "create_date": "",
     "version": "1.0.0",

@@ -21,6 +21,10 @@ type DaoAPP struct {
 	App
 }
 
+func (app *DaoAPP) CollectionName() string {
+	return "app"
+}
+
 // SaveToDB 批量插入
 func SaveToDB() {
 	var data DaoAPP
@@ -52,6 +56,20 @@ func Persist() {
 	err = utils.SaveBson(&data, "app.bson")
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s persist %s from db failed: %s", APPManagerPrefix, err.Error()))
+	}
+}
+
+func SavePort(app string, port []int) {
+	var data DaoAPP
+	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app}).Decode(&data)
+	if err != nil {
+		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
+		return
+	}
+	data.RunData.Ports = port
+	err = mgm.Coll(&DaoAPP{}).Update(&data)
+	if err != nil {
+		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
 	}
 }
 

@@ -14,7 +14,7 @@
   },
   "meta": {
     "author": "",
-    "domain": "",
+    "domain": "mgek.cc",
     "language": [],
     "create_date": "",
     "version": "1.0.0",
