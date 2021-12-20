@@ -5,7 +5,7 @@ if [[ ! -d "${APP_LOG}/${APP}" ]];then
   mkdir -p "${APP_LOG}/${APP}"
 fi
 
-"${APP_ROOT}/${APP}/sbin/nginx" -p "${APP_ROOT}/${APP}"
+"${APP_ROOT}/${APP}/sbin/noengine" -p "${APP_ROOT}/${APP}"
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

@@ -58,7 +58,14 @@ var cmdsMap = map[string]func(args ...string) (result string){
 			return "empty app, do you mean all?"
 		}
 		appName := args[0]
-		if appName == "all" {
+		if appName == "list" {
+			var appList []string
+			app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+				appList = append(appList, key.(string))
+				return true
+			})
+			return strings.Join(appList, " ")
+		} else if appName == "all" {
 			apps, err := app_manager.GetAllApp()
 			if err != nil {
 				return fmt.Sprintf("failed: %s", err.Error())
