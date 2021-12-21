@@ -15,6 +15,7 @@ import (
 	"github.com/landers1037/dirichlet/engine"
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/router/router_app"
+	"github.com/landers1037/dirichlet/router/router_web"
 	"github.com/landers1037/dirichlet/uds"
 )
 
@@ -56,6 +57,7 @@ func initEngine() {
 
 	// load router
 	router_app.Init(dirEngine.GetEngine())
+	router_web.Init(dirEngine.GetEngine())
 
 	err := dirEngine.Run()
 	if err != nil {

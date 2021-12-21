@@ -52,6 +52,7 @@ func newGin() *gin.Engine {
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
 	g.Use(MiddlewarePlnack())
+	g.LoadHTMLGlob("web/*")
 	return g
 }
 
