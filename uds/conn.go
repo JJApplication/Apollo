@@ -31,9 +31,12 @@ func echo(c net.Conn) {
 		cmd := string(buf[:cnt])
 		if supportCmds(cmd) {
 			res := execCmd(cmd)
-			c.Write([]byte(res))
+			c.Write(UDSResponse(res))
 		} else {
-			c.Write([]byte("cmd not support"))
+			c.Write(UDSResponse(UDSRes{
+				Error: ErrCmdNotFound,
+				Data:  "",
+			}))
 		}
 	}
 

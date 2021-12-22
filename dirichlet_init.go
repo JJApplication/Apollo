@@ -40,6 +40,7 @@ func initMongo() {
 func initAPPManager() {
 	app_manager.InitAPPManager()
 	app_manager.SaveToDB()
+	app_manager.FirstLoad()
 	logger.Logger.Info("init APPManager done")
 }
 

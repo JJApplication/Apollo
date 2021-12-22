@@ -18,7 +18,7 @@ const (
 	Duration_DBSaver   = 60 * 60
 	Duration_DBPersist = 60 * 60 * 24
 	Duration_APPSync   = 60 * 60
-	Duration_APPDump   = 60
+	Duration_APPSyncDB   = 60
 )
 
 func InitBackgroundJobs() {
@@ -63,13 +63,13 @@ func AddJobAPPSync() {
 // AddJobAPPDumps 从缓存同步配置到mongo
 // 用于同步配置参数和端口变量
 func AddJobAPPDumps() {
-	logger.Logger.Info("job: app config dumps start")
-	AddTicker(Duration_APPDump, "AppConfigDumps", func() {
+	logger.Logger.Info("job: app runtime sync start")
+	AddTicker(Duration_APPSyncDB, "AppRuntimeSync", func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)
-			_, err := app.Dump()
+			_, err := app.SyncDB()
 			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("job app config dumps failed: %s", err.Error()))
+				logger.Logger.Error(fmt.Sprintf("job app runtime syncDB failed: %s", err.Error()))
 			}
 			return true
 		})

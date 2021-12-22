@@ -29,7 +29,7 @@ func StartApp(c *gin.Context) {
 }
 
 func StartAppAll(c *gin.Context) {
-	err := app_manager.StartAll()
+	_, err := app_manager.StartAll()
 	if err != nil {
 		router.Response(c, err, false)
 		return

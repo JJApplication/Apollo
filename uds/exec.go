@@ -14,16 +14,26 @@ import (
 
 // 执行cmds
 // c 是一个空格分割的命令
-func execCmd(c string) string {
+func execCmd(c string) UDSRes {
 	c = strings.TrimSpace(c)
 	args := strings.Fields(c)
 	if len(args) <= 0 {
-		return "empty cmd"
+		return UDSRes{
+			Error:"empty cmd",
+			Data:  "",
+		}
 	}
 	logger.Logger.Info(fmt.Sprintf("recieved cmd from UDS: %s", c))
 	fn, ok := cmdsMap[args[0]]
 	if !ok {
-		return "incorrect cmd"
+		return UDSRes{
+			Error: "incorrect cmd",
+			Data:  "",
+		}
 	}
-	return fn(args[1:]...)
+	funcRes, err := fn(args[1:]...)
+	return UDSRes{
+		Error: err,
+		Data:  funcRes,
+	}
 }

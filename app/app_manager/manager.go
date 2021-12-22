@@ -84,43 +84,49 @@ func ReStart(app string) (bool, error) {
 
 // StartAll 启动所有服务
 // 服务的启动可以异步 并且不受其他服务报错的影响
-func StartAll() error {
+func StartAll() ([]string, error) {
 	var e error
+	var startList []string
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		app := value.(App)
 		if ok, err := app.Start(); !ok {
 			e = err
+			startList = append(startList, fmt.Sprintf("[%s]: BAD", app.Name))
 			logger.Logger.Error(fmt.Sprintf("%s %s start failed: %s", APPManagerPrefix, key, err.Error()))
 		} else {
+			startList = append(startList, fmt.Sprintf("[%s]: OK", app.Name))
 			logger.Logger.Info(fmt.Sprintf("%s %s start success", APPManagerPrefix, key))
 		}
 		return true
 	})
 
 	if e != nil {
-		return errors.New("apps start has failure")
+		return startList, errors.New("apps start has failure")
 	}
-	return nil
+	return startList, nil
 }
 
 // StopAll 停止所有服务
-func StopAll() error {
+func StopAll() ([]string, error) {
 	var e error
+	var stopList []string
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		app := value.(App)
 		if ok, err := app.Stop(); !ok {
 			e = err
+			stopList = append(stopList, fmt.Sprintf("[%s]: BAD", app.Name))
 			logger.Logger.Error(fmt.Sprintf("%s %s stop failed: %s", APPManagerPrefix, key, err.Error()))
 		} else {
+			stopList = append(stopList, fmt.Sprintf("[%s]: OK", app.Name))
 			logger.Logger.Info(fmt.Sprintf("%s %s stop success", APPManagerPrefix, key))
 		}
 		return true
 	})
 
 	if e != nil {
-		return errors.New("apps stop has failure")
+		return stopList, errors.New("apps stop has failure")
 	}
-	return nil
+	return stopList, nil
 }
 
 func StatusAll() ([]string, error) {

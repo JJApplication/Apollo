@@ -243,6 +243,12 @@ func (app *App) Dump() (bool, error) {
 	return true, nil
 }
 
+// SyncDB 安全的保存运行态数据到DB中
+func (app *App) SyncDB() (bool, error) {
+	SaveRuntimeData(*app)
+	return true, nil
+}
+
 // ToJSON 导出为json字符串
 func (app *App) ToJSON() string {
 	return utils.PrettyJson(app)
