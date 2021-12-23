@@ -23,9 +23,9 @@ const (
 
 func newCMD(envs []string, cmd ...string) *exec.Cmd {
 	c := &exec.Cmd{
-		Path:       BASH,
-		Args:       append([]string{BASH, RUN}, cmd...),
-		Env:        envs,
+		Path: BASH,
+		Args: append([]string{BASH, RUN}, cmd...),
+		Env:  envs,
 		SysProcAttr: &syscall.SysProcAttr{
 			Setsid: true,
 		},

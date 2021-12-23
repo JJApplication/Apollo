@@ -5,7 +5,16 @@
     .top-part{
         text-align: center;
         padding: 16px 10px;
-        margin-top: 40px;
+        margin-top: 80px;
+    }
+    #header1, #header1 span{
+        font-size: 2rem;
+    }
+    #header2{
+        font-size: 2.8rem;
+        font-weight: bold;
+        width: 100%;
+        margin-top: 30px
     }
     .status{
         background-color: green;
@@ -34,8 +43,17 @@
         padding: 8px 0;
     }
     @media (max-width: 400px) {
+        .top-part{
+            margin-top: 30px;
+        }
+        #header1, #header1 span{
+            font-size: 1.8rem;
+        }
+        #header2{
+            font-size: 2.4rem;
+        }
         .bar-wrapper{
-            margin: 20px auto 0;
+            margin: 20px auto 80px;
             width: calc(100% - 40px);
         }
         .bar-inner{
@@ -44,8 +62,8 @@
     }
 </style>
 <div class="top-part">
-    <h1>Service of <span style="font-size: 2rem;color: #378de5">Renj.io</span></h1>
-    <p style="font-size: 2.8rem;font-weight: bold;width: 100%;margin-top: 30px">
+    <h1 id="header1">Service of <span style="color: #378de5">Renj.io</span></h1>
+    <p id="header2">
         Dirichlet is a "Service Manager" for renj.io.
     </p>
     <p style="font-size: 1.2rem;color: #808080;margin-top: 10px">It's a microservice with many features which includes

@@ -14,13 +14,14 @@ import (
 	"github.com/landers1037/dirichlet/app/app_manager"
 )
 
-type status struct{
-	App string
+type status struct {
+	App    string
 	Status string
 }
+
 // Index 主页
 func Index(c *gin.Context) {
-	apps, _  := app_manager.StatusAll()
+	apps, _ := app_manager.StatusAll()
 	var stat []status
 	for _, app := range apps {
 		s := status{}

@@ -13,8 +13,9 @@ import (
 
 type UDSRes struct {
 	Error string `json:"error"`
-	Data string `json:"data"`
+	Data  string `json:"data"`
 }
+
 // UDSResponse UDS响应
 // 数据可信 传入的结构体一定可以格式化
 func UDSResponse(u UDSRes) []byte {

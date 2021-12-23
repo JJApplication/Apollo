@@ -7,6 +7,7 @@ package engine
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/landers1037/dirichlet/logger"
@@ -18,6 +19,8 @@ func init() {
 
 const (
 	PLNACK_PROTO = "+plnack"
+	HTML_GLOB = "web/*"
+	StaticPath = "./web"
 )
 
 var engine Engine
@@ -52,7 +55,8 @@ func newGin() *gin.Engine {
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
 	g.Use(MiddlewarePlnack())
-	g.LoadHTMLGlob("web/*")
+	g.LoadHTMLGlob(HTML_GLOB)
+	g.StaticFS("/static", http.Dir(StaticPath))
 	return g
 }
 

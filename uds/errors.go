@@ -6,7 +6,6 @@ Created: 2021/12/22 by Landers
 package uds
 
 const (
-	ErrNoResponse = "no response"
+	ErrNoResponse  = "no response"
 	ErrCmdNotFound = "cmd not found"
 )
-

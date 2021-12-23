@@ -19,7 +19,7 @@ func execCmd(c string) UDSRes {
 	args := strings.Fields(c)
 	if len(args) <= 0 {
 		return UDSRes{
-			Error:"empty cmd",
+			Error: "empty cmd",
 			Data:  "",
 		}
 	}

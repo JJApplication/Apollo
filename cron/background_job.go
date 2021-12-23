@@ -18,7 +18,7 @@ const (
 	Duration_DBSaver   = 60 * 60
 	Duration_DBPersist = 60 * 60 * 24
 	Duration_APPSync   = 60 * 60
-	Duration_APPSyncDB   = 60
+	Duration_APPSyncDB = 60
 )
 
 func InitBackgroundJobs() {
