@@ -1,0 +1,17 @@
+{{ define "error/error404.tmpl" }}
+{{ template "base/base.tmpl" . }}
+<style>
+    #error404{
+        margin-top: 120px;
+        padding: 10px;
+        text-align: center;
+    }
+    #error404 h1{
+        font-size: 5rem;
+    }
+</style>
+<div id="error404">
+    <h1>404</h1>
+    <p>The pages you view is not found. Click <a href="/">here</a> to back to Home.</p>
+</div>
+{{ end }}

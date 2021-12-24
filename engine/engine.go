@@ -19,7 +19,7 @@ func init() {
 
 const (
 	PLNACK_PROTO = "+plnack"
-	HTML_GLOB = "web/*"
+	HTML_GLOB = "web/**/*"
 	StaticPath = "./web"
 )
 
@@ -52,11 +52,13 @@ func NewEngine(cf *EngineConfig) *Engine {
 
 func newGin() *gin.Engine {
 	g := gin.New()
+	g.LoadHTMLGlob(HTML_GLOB)
+	g.StaticFS("/static", http.Dir(StaticPath))
+	g.NoRoute(MiddlewareNoRoute())
+	g.NoMethod(MiddlewareNoMethod())
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
 	g.Use(MiddlewarePlnack())
-	g.LoadHTMLGlob(HTML_GLOB)
-	g.StaticFS("/static", http.Dir(StaticPath))
 	return g
 }
 

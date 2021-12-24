@@ -20,6 +20,13 @@ type status struct {
 }
 
 // Index 主页
+// @Summary 主页面
+// @Description 主页
+// @Tags Home
+// @Accept application/json
+// @Produce application/json
+// @Success 200
+// @Router / [get]
 func Index(c *gin.Context) {
 	apps, _ := app_manager.StatusAll()
 	var stat []status
@@ -32,7 +39,7 @@ func Index(c *gin.Context) {
 	sort.SliceStable(stat, func(i, j int) bool {
 		return stat[i].App < stat[j].App
 	})
-	c.HTML(http.StatusOK, "index.tmpl", map[string]interface{}{
+	c.HTML(http.StatusOK, "base/index.tmpl", map[string]interface{}{
 		"Apps": stat,
 	})
 }

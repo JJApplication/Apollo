@@ -12,7 +12,7 @@ import (
 var routerApp *gin.RouterGroup
 
 func Init(r *gin.Engine) {
-	routerApp = r.Group("/app")
+	routerApp = r.Group("/api/app")
 	{
 		routerApp.POST("/start", StartApp)
 		routerApp.POST("/startall", StartAppAll)

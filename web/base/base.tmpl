@@ -1,4 +1,5 @@
 <!--基础模板-->
+{{ define "base/base.tmpl" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,6 +50,8 @@
         background-color: #24292f;
     }
 </style>
+{{ block "styles" . }}
+{{ end }}
 <body>
     <div id="header">
         <div><h1><img id="logo" src="/static/logo.jpg">Dirichlet</h1></div>
@@ -59,4 +62,7 @@
         <div><p style="padding: 20px">Copyright © <a href="http://renj.io" target="_blank">renj.io</a></p></div>
     </div>
 </body>
+{{ block "scripts" . }}
+{{ end }}
 </html>
+{{ end }}

@@ -7,6 +7,9 @@ package router_web
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/landers1037/dirichlet/docs"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 var routerWeb *gin.RouterGroup
@@ -15,5 +18,6 @@ func Init(r *gin.Engine) {
 	routerWeb = r.Group("")
 	{
 		routerWeb.GET("/", Index)
+		routerWeb.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 }

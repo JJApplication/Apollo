@@ -1,0 +1,17 @@
+{{ define "error/error405.tmpl" }}
+    {{ template "base/base.tmpl" . }}
+    <style>
+        #error405{
+            margin-top: 120px;
+            padding: 10px;
+            text-align: center;
+        }
+        #error405 h1{
+            font-size: 5rem;
+        }
+    </style>
+    <div id="error405">
+        <h1>405</h1>
+        <p>Method is not allowed. Click <a href="/">here</a> to back to Home.</p>
+    </div>
+{{ end }}

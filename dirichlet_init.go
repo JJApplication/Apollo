@@ -32,9 +32,16 @@ func initGlobalConfig() {
 func initMongo() {
 	err := database.InitDBMongo()
 	if err != nil {
-		fmt.Printf("[Dirichlet] init mongo failed %s\n", err)
+		fmt.Printf("[Dirichlet] init mongo failed %s\n", err.Error())
+		database.MongoPing = false
 		return
 	}
+	if err = database.Ping(); err != nil {
+		fmt.Printf("[Dirichlet] ping mongo failed %s\n", err.Error())
+		database.MongoPing = false
+		return
+	}
+	fmt.Println("[Dirichlet] init mongo success")
 }
 
 func initAPPManager() {

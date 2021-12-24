@@ -19,6 +19,7 @@ package()
   # generate
   cp dirichlet ./opt
   cp -r ./conf ./opt
+  cp -r ./web ./opt
   tar -czvf dirichlet.tar.gz ./opt
 }
 

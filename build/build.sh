@@ -6,6 +6,8 @@ echo "GOOS: $(go env GOOS)"
 echo "GOARCH: $(go env GOARCH)"
 
 echo $(date -u)
-echo "start to build"
+echo "build swagger docs"
+swag init -g ./dirichlet.go
 
-go build -a -ldflags='-w -s -extldflags "-static"' -trimpath -o dirichlet ./
+echo "start to build"
+go build -ldflags='-w -s -extldflags "-static"' -trimpath -o dirichlet ./

@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/kamva/mgm/v3"
+	"github.com/landers1037/dirichlet/database"
 	"github.com/landers1037/dirichlet/logger"
 	"github.com/landers1037/dirichlet/utils"
 	"go.mongodb.org/mongo-driver/bson"
@@ -27,6 +28,10 @@ func (app *DaoAPP) CollectionName() string {
 
 // SaveToDB 批量插入
 func SaveToDB() {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return
+	}
 	var data DaoAPP
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		if !checkExist(bson.M{"app.name": key}) {
@@ -71,6 +76,10 @@ func SaveToDB() {
 
 // FirstLoad 在异常情况下重启，先从mongo拿数据保存后续再刷新
 func FirstLoad() {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return
+	}
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		if checkExist(bson.M{"app.name": key}) {
 			var data DaoAPP
@@ -94,6 +103,10 @@ func FirstLoad() {
 // Persist 持久化为bson数据
 // todo 序列化bson文件
 func Persist() {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return
+	}
 	var data []DaoAPP
 	err := mgm.Coll(&DaoAPP{}).SimpleFind(&data, bson.M{})
 	if err != nil {
@@ -107,6 +120,10 @@ func Persist() {
 }
 
 func SavePort(app string, port []int) {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return
+	}
 	var data DaoAPP
 	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app}).Decode(&data)
 	if err != nil {
@@ -122,6 +139,10 @@ func SavePort(app string, port []int) {
 }
 
 func SaveRuntimeData(app App) {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return
+	}
 	var data DaoAPP
 	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app.Name}).Decode(&data)
 	if err != nil {
