@@ -24,7 +24,7 @@
   },
   "run_data": {
     "envs": [],
-    "ports": [9090],
+    "ports": [],
     "random_port": false,
     "host": "localhost"
   }

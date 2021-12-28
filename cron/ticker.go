@@ -19,39 +19,38 @@ import (
 // 可以通过通道关闭指定uuid的ticker
 // todo如何恢复
 
-type oneTicker struct {
+type OneTicker struct {
 	ch         chan bool
-	uuid       string
-	name       string
-	stopped    bool
-	createTime int64
+	UUID       string `json:"uuid"`
+	Name       string `json:"name"`
+	Des        string `json:"des"`
+	Stopped    bool   `json:"stopped"`
+	CreateTime int64  `json:"create_time"`
 }
 
-func (tc *oneTicker) Stop() {
+func (tc *OneTicker) Stop() {
+	tc.Stopped = true
 	tc.ch <- true
 }
 
-func (tc *oneTicker) SetStop() {
-	tc.stopped = true
-}
-
-var TickerMap = map[string]oneTicker{}
+var TickerMap = map[string]OneTicker{}
 
 func init() {
-	TickerMap = make(map[string]oneTicker, 1)
+	TickerMap = make(map[string]OneTicker, 1)
 }
 
 // AddTicker 以s为维度的执行轮询任务
-func AddTicker(t int, taskName string, f func()) {
+func AddTicker(t int, taskName, des string, f func()) {
 	ticker := time.NewTicker(time.Second * time.Duration(t))
 	ch := make(chan bool)
 	uuidStr := uuid.NewString()
-	TickerMap[uuidStr] = oneTicker{
+	TickerMap[uuidStr] = OneTicker{
 		ch:         ch,
-		uuid:       uuidStr,
-		name:       taskName,
-		stopped:    false,
-		createTime: time.Now().Unix(),
+		UUID:       uuidStr,
+		Name:       taskName,
+		Des:        des,
+		Stopped:    false,
+		CreateTime: time.Now().Unix(),
 	}
 
 	go func() {
@@ -74,6 +73,5 @@ func AddTicker(t int, taskName string, f func()) {
 func InsureTickerExit() {
 	for _, t := range TickerMap {
 		t.Stop()
-		t.SetStop()
 	}
 }

@@ -19,8 +19,8 @@ func init() {
 
 const (
 	PLNACK_PROTO = "+plnack"
-	HTML_GLOB = "web/**/*"
-	StaticPath = "./web"
+	HTML_GLOB    = "web/**/*"
+	StaticPath   = "./web"
 )
 
 var engine Engine
