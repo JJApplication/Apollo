@@ -28,6 +28,8 @@ func main() {
 	initBackgroundJobs()
 	// init background cron job
 
+	// init docker
+	initDockerClient()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

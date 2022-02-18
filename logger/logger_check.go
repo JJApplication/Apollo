@@ -13,7 +13,7 @@ import (
 )
 
 func Check() {
-	fmt.Printf("[Dirichlet]\nStartTime: %s\nListening on %s\nServiceRoot: %s\nAppRoot: %s\nAppManger: %s\nAppLog: %s\nBackUpDir: %s\nCacheDir: %s\n\n",
+	fmt.Printf("[Dirichlet] 🚀🚀🚀\n⌛ StartTime: %s\n🔥 Listening on %s\n📁 ServiceRoot: %s\n📁 AppRoot: %s\n📁 AppManger: %s\n📁 AppLog: %s\n📁 BackUpDir: %s\n📁 CacheDir: %s\n\n",
 		time.Now().String(),
 		fmt.Sprintf("http://%s:%d", config.DirichletConf.Server.Host, config.DirichletConf.Server.Port),
 		config.DirichletConf.ServiceRoot,

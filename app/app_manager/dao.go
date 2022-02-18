@@ -110,12 +110,12 @@ func Persist() {
 	var data []DaoAPP
 	err := mgm.Coll(&DaoAPP{}).SimpleFind(&data, bson.M{})
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s persist %s from db failed: %s", APPManagerPrefix, err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
 		return
 	}
 	err = utils.SaveBson(&data, "app.bson")
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s persist %s from db failed: %s", APPManagerPrefix, err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
 	}
 }
 

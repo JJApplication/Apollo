@@ -7,8 +7,11 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/landers1037/dirichlet/app/app_manager"
+	"github.com/landers1037/dirichlet/app/docker_manager"
 	"github.com/landers1037/dirichlet/config"
 	"github.com/landers1037/dirichlet/cron"
 	"github.com/landers1037/dirichlet/database"
@@ -17,43 +20,50 @@ import (
 	"github.com/landers1037/dirichlet/router/router_app"
 	"github.com/landers1037/dirichlet/router/router_web"
 	"github.com/landers1037/dirichlet/uds"
+	"github.com/landers1037/dirichlet/utils"
+)
+
+const (
+	APPName = "[Dirichlet]"
 )
 
 // 初始化运行时数据
 func initGlobalConfig() {
+	t := time.Now()
 	err := config.InitGlobalConfig()
 	if err != nil {
-		fmt.Printf("[Dirichlet] init config failed %s\n", err)
+		fmt.Printf("%s init config failed: %s\n", APPName, err)
 		return
 	}
+	fmt.Printf("%s load config in %dms\n", APPName, utils.TimeCalcUnix(t))
 }
 
 // 初始化数据库
 func initMongo() {
 	err := database.InitDBMongo()
 	if err != nil {
-		fmt.Printf("[Dirichlet] init mongo failed %s\n", err.Error())
+		fmt.Printf("%s init mongo failed: %s\n", APPName, err.Error())
 		database.MongoPing = false
 		return
 	}
 	if err = database.Ping(); err != nil {
-		fmt.Printf("[Dirichlet] ping mongo failed %s\n", err.Error())
+		fmt.Printf("%s ping mongo failed: %s\n", APPName, err.Error())
 		database.MongoPing = false
 		return
 	}
-	fmt.Println("[Dirichlet] init mongo success")
+	fmt.Println(APPName + " init mongo success")
 }
 
 func initAPPManager() {
 	app_manager.InitAPPManager()
 	app_manager.SaveToDB()
 	app_manager.FirstLoad()
-	logger.Logger.Info("init APPManager done")
+	logger.Logger.Info(APPName + "init APPManager done")
 }
 
 func initBackgroundJobs() {
 	cron.InitBackgroundJobs()
-	logger.Logger.Info("init BackgroundJobs done")
+	logger.Logger.Info(APPName + "init BackgroundJobs done")
 }
 
 func initEngine() {
@@ -67,15 +77,24 @@ func initEngine() {
 	router_app.Init(dirEngine.GetEngine())
 	router_web.Init(dirEngine.GetEngine())
 
-	err := dirEngine.Run()
-	if err != nil {
-		logger.Logger.Error("[Dirichlet] server start failed")
-		logger.Logger.Error(err.Error())
+	err := dirEngine.RunServer()
+	if err != nil && err != http.ErrServerClosed {
+		logger.Logger.Error(APPName + " server start failed")
+		logger.Logger.Error(fmt.Sprintf("%s %s", APPName, err.Error()))
 		cron.InsureTickerExit()
+		fmt.Println(APPName + " server start failed ⚠️")
 		return
+	}
+
+	if err == http.ErrServerClosed {
+		fmt.Println(APPName + " thanks for using ❤️️")
 	}
 }
 
 func initUDS() {
 	uds.Register()
+}
+
+func initDockerClient() {
+	docker_manager.InitDockerClient()
 }

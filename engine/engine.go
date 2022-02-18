@@ -8,6 +8,8 @@ package engine
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/landers1037/dirichlet/logger"
@@ -52,13 +54,12 @@ func NewEngine(cf *EngineConfig) *Engine {
 
 func newGin() *gin.Engine {
 	g := gin.New()
+
 	g.LoadHTMLGlob(HTML_GLOB)
 	g.StaticFS("/static", http.Dir(StaticPath))
 	g.NoRoute(MiddlewareNoRoute())
 	g.NoMethod(MiddlewareNoMethod())
-	g.Use(gin.Logger())
-	g.Use(gin.Recovery())
-	g.Use(MiddlewarePlnack())
+	loadMiddleWare(g)
 	return g
 }
 
@@ -87,6 +88,38 @@ func (e *Engine) Run() error {
 	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
 	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
 	return e.ginEngine.Run(path)
+}
+
+func (e *Engine) RunServer() error {
+	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
+	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
+
+	server := new(http.Server)
+	server.Handler = e.ginEngine
+	server.Addr = path
+	server.ReadTimeout = 10 * time.Second
+	server.WriteTimeout = 10 * time.Second
+	server.IdleTimeout = 5 * time.Second
+	server.MaxHeaderBytes = 5 << 20
+
+	sig := make(chan os.Signal, 1)
+	go RegisterSignals(server, sig)
+	return server.ListenAndServe()
+}
+
+func (e *Engine) RunServerTLS(cert, key string) error {
+	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
+	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
+
+	server := new(http.Server)
+	server.Handler = e.ginEngine
+	server.Addr = path
+	server.ReadTimeout = 10 * time.Second
+	server.WriteTimeout = 10 * time.Second
+	server.IdleTimeout = 5 * time.Second
+	server.MaxHeaderBytes = 5 << 20
+
+	return server.ListenAndServeTLS(cert, key)
 }
 
 // Group 生成路由分组

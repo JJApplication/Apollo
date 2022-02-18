@@ -24,7 +24,7 @@ func echo(c net.Conn) {
 				logger.Logger.Info("read from UDS Client, client disconnect from server")
 				break
 			}
-			logger.Logger.Info(fmt.Sprintf("read from UDS Client failed %s", err.Error()))
+			logger.Logger.Info(fmt.Sprintf("read from UDS Client failed: %s", err.Error()))
 			break
 		}
 

@@ -17,9 +17,12 @@ import (
 	"github.com/landers1037/dirichlet/logger"
 )
 
-type taskInterface interface {
+type baseTaskInterface interface {
 	Start() (uuid string, err error)
 	Stop() (uuid string, err error)
+}
+
+type taskInterface interface {
 	Check() (uuid string, err error)
 	Delete() (uuid string, err error)
 	Save() (uuid string, err error)
@@ -100,7 +103,7 @@ func (t *task) Start() (uuid string, err error) {
 						select {
 						case <-ctx.Done():
 							t.sureTimeout()
-							logger.Logger.Error(fmt.Sprintf("[task %s]: %s", t.TaskID, ErrTaskTimeout))
+							logger.Logger.Error(fmt.Sprintf("%s [task %s]: %s", TaskManagerPrefix, t.TaskID, ErrTaskTimeout))
 							runtime.Goexit()
 						}
 					}

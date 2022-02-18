@@ -41,6 +41,9 @@ type DConfig struct {
 
 	// Server
 	Server Server `json:"server"`
+
+	// CI
+	CI CI `json:"ci"`
 }
 
 // DLog log config
@@ -61,6 +64,7 @@ type DDb struct {
 }
 
 type Sqlite struct {
+	// todo
 }
 
 type Mongo struct {
@@ -76,6 +80,11 @@ type Redis struct {
 type Server struct {
 	Host string `json:"host"`
 	Port int    `json:"port"`
+}
+
+// CI CI配置
+type CI struct {
+	DockerHost string `json:"docker_host"`
 }
 
 // Sync 从配置文件中同步加载

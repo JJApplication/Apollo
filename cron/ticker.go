@@ -28,9 +28,15 @@ type OneTicker struct {
 	CreateTime int64  `json:"create_time"`
 }
 
-func (tc *OneTicker) Stop() {
+func (tc *OneTicker) Start() (uuid string, err error) {
+	tc.Stopped = false
+	return tc.UUID, nil
+}
+
+func (tc *OneTicker) Stop() (uuid string, err error) {
 	tc.Stopped = true
 	tc.ch <- true
+	return tc.UUID, nil
 }
 
 var TickerMap = map[string]OneTicker{}

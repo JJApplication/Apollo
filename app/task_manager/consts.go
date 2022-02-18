@@ -9,6 +9,10 @@ import (
 	"github.com/fatih/set"
 )
 
+const (
+	TaskManagerPrefix = "[Task Manager]"
+)
+
 var TaskManager taskManager
 var TaskGroup []interface{}
 
