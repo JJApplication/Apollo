@@ -14,6 +14,7 @@ import (
 const (
 	TimeFormat    = "2006/1/2 15:04:05"
 	TimeFormatDay = "2006/1/2"
+	TimeForLogger = "2006-1-2 15:04:05"
 )
 
 // TimeNowUnix 计算当前unix时间

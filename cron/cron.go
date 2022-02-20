@@ -23,5 +23,6 @@ type Cron struct {
 	IsSaved      bool      `json:"is_saved"` // 持久化数据库
 }
 
+// CronManager cron内部实现基于cronV3
 type CronManager struct {
 }

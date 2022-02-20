@@ -60,6 +60,7 @@ func newGin() *gin.Engine {
 	g.NoRoute(MiddlewareNoRoute())
 	g.NoMethod(MiddlewareNoMethod())
 	loadMiddleWare(g)
+	loadMiddlePlugins(g)
 	return g
 }
 

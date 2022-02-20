@@ -85,6 +85,8 @@ type Server struct {
 // CI CI配置
 type CI struct {
 	DockerHost string `json:"docker_host"`
+	DockerTimeout int `json:"docker_timeout"`
+	DockerAPIVersion string `json:"docker_api_version"`
 }
 
 // Sync 从配置文件中同步加载

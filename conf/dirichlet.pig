@@ -26,5 +26,10 @@
   "server": {
     "host": "0.0.0.0",
     "port": 9090
+  },
+  "ci": {
+    "docker_host": "tcp://192.168.100.100:2375",
+    "docker_timeout": 5,
+    "docker_api_version": "1.41"
   }
 }

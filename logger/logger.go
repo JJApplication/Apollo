@@ -8,6 +8,7 @@ package logger
 // 日志记录器 zap
 import (
 	"github.com/landers1037/dirichlet/config"
+	"github.com/landers1037/dirichlet/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -36,7 +37,7 @@ func InitLogger() error {
 			ConsoleSeparator: "",
 			LineEnding:       zapcore.DefaultLineEnding,
 			EncodeLevel:      zapcore.CapitalLevelEncoder,
-			EncodeTime:       zapcore.RFC3339TimeEncoder,
+			EncodeTime:       zapcore.TimeEncoderOfLayout(utils.TimeForLogger),
 			EncodeDuration:   zapcore.StringDurationEncoder,
 			EncodeCaller:     zapcore.ShortCallerEncoder,
 		},

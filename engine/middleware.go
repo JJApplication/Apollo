@@ -7,9 +7,15 @@ package engine
 
 import (
 	"fmt"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"plugin"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/landers1037/dirichlet/logger"
+	"github.com/landers1037/dirichlet/utils"
 )
 
 // 基于本地配置加载中间件
@@ -18,6 +24,7 @@ import (
 
 const (
 	MiddleWare = "[MiddleWare]"
+	PluginsPath = "lib"
 )
 
 var PreInjectMiddle []MiddleWareConfig
@@ -61,4 +68,44 @@ func loadMiddleWare(g *gin.Engine) {
 		logger.Logger.Info(fmt.Sprintf("%s (%d) %s loaded", MiddleWare, i, m.Name))
 		g.Use(MiddleWareMap[m.Name])
 	}
+}
+
+// load from ./lib/*.so
+func loadMiddlePlugins(g *gin.Engine) {
+	plugins := findAllPlugins()
+	for i, p := range plugins {
+		pl, err := plugin.Open(p)
+		if err != nil {
+			logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded failed", MiddleWare, i, p))
+			continue
+		}
+		syb, err := pl.Lookup("Patch")
+		if err != nil {
+			logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded failed", MiddleWare, i, p))
+		}
+		g.Use(syb.(gin.HandlerFunc))
+		logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded", MiddleWare, i, p))
+	}
+}
+
+func findAllPlugins() []string {
+	var plugins []string
+	libPath := utils.CalDir(utils.GetAppDir(), PluginsPath)
+	if _, e := os.Stat(libPath); os.IsNotExist(e) {
+		return nil
+	}
+	err := filepath.Walk(libPath, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && strings.Contains(info.Name(), ".so") {
+			plugins = append(plugins, path)
+		}
+		return nil
+	})
+	if err != nil {
+		logger.Logger.Info(fmt.Sprintf("%s failed to find plugins: %s", MiddleWare, err.Error()))
+	}
+
+	return plugins
 }
