@@ -1,5 +1,5 @@
 /*
-Project: dirichlet app_model_types.go
+Project: Apollo app_model_types.go
 Created: 2021/11/27 by Landers
 */
 
@@ -14,9 +14,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/landers1037/dirichlet/config"
-	"github.com/landers1037/dirichlet/logger"
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 )
 
 func appScriptPath(app, c string) string {
@@ -35,17 +35,17 @@ func wrapWithCode(envs []string) []string {
 		fmt.Sprintf("%s=%d", "APP_RUN_ERR", APPStatusRunning),
 
 		// 运行时服务路径
-		fmt.Sprintf("%s=%s", "APP_ROOT", config.DirichletConf.APPRoot),
-		fmt.Sprintf("%s=%s", "SERVICE_ROOT", config.DirichletConf.ServiceRoot),
-		fmt.Sprintf("%s=%s", "APP_LOG", config.DirichletConf.APPLogDir),
+		fmt.Sprintf("%s=%s", "APP_ROOT", config.ApolloConf.APPRoot),
+		fmt.Sprintf("%s=%s", "SERVICE_ROOT", config.ApolloConf.ServiceRoot),
+		fmt.Sprintf("%s=%s", "APP_LOG", config.ApolloConf.APPLogDir),
 	}, envs...)
 }
 
 // 生成运行时所需的环境变量
 func attachEnvs(app *App) []string {
 	var envs []string
-	if app.Name != "" {
-		envs = append(app.RunData.Envs, fmt.Sprintf("APP=%s", app.Name))
+	if app.Meta.Name != "" {
+		envs = append(app.Meta.RunData.Envs, fmt.Sprintf("APP=%s", app.Meta.Name))
 	}
 
 	path := os.Getenv("PATH")
@@ -59,13 +59,13 @@ func attachEnvs(app *App) []string {
 // 加载固定端口时使用
 func attachEnvsSp(app *App) []string {
 	var envs []string
-	if app.Name != "" {
-		envs = append(app.RunData.Envs, fmt.Sprintf("APP=%s", app.Name))
+	if app.Meta.Name != "" {
+		envs = append(app.Meta.RunData.Envs, fmt.Sprintf("APP=%s", app.Meta.Name))
 	}
 
-	if len(app.RunData.Ports) > 0 {
+	if len(app.Meta.RunData.Ports) > 0 {
 		var ports []string
-		for _, p := range app.RunData.Ports {
+		for _, p := range app.Meta.RunData.Ports {
 			ports = append(ports, strconv.Itoa(p))
 		}
 		envs = append(envs, fmt.Sprintf("PORTS=%s", strings.Join(ports, " ")))
@@ -85,7 +85,7 @@ func attachEnvsWithPorts(app *App) []string {
 		if APPManager.checkPorts(p) {
 			s = fmt.Sprintf("PORTS=%d", p)
 			// 记录port到app运行时 在启动失败后从manager中删除
-			app.RunData.Ports = []int{p}
+			app.Meta.RunData.Ports = []int{p}
 			APPManager.addPorts(p)
 			app.ClonePorts()
 			app.Dump()
@@ -106,48 +106,48 @@ func (app *App) Start() (bool, error) {
 		return true, nil
 	}
 	// 判断是否需要随机端口运行
-	if app.RunData.RandomPort {
-		_, err := utils.CMDRun(attachEnvsWithPorts(app), appScriptPath(app.Name, app.ManageCMD.Start))
+	if app.Meta.RunData.RandomPort {
+		_, err := utils.CMDRun(attachEnvsWithPorts(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 		if err != nil {
-			if len(app.RunData.Ports) > 0 {
-				APPManager.delPorts(app.RunData.Ports[0])
+			if len(app.Meta.RunData.Ports) > 0 {
+				APPManager.delPorts(app.Meta.RunData.Ports[0])
 				app.ClearPorts()
 			}
 
-			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
+			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error()))
 			ret = toCode(err.Error())
 			return false, errors.New(errCode(ret))
 		}
-		logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
+		logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start)))
 		return true, err
 	}
 
-	_, err := utils.CMDRun(attachEnvsSp(app), appScriptPath(app.Name, app.ManageCMD.Start))
+	_, err := utils.CMDRun(attachEnvsSp(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start), err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error()))
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
-	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Start)))
+	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start)))
 	return true, nil
 }
 
 func (app *App) Stop() (bool, error) {
 	var ret int
-	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Name, app.ManageCMD.Stop))
+	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
 		// 停止失败时 保留原有的数据
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop), err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop), err.Error()))
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
 	// 停止成功时 清空保留的ports
-	if len(app.RunData.Ports) > 0 {
-		APPManager.delPorts(app.RunData.Ports[0])
+	if len(app.Meta.RunData.Ports) > 0 {
+		APPManager.delPorts(app.Meta.RunData.Ports[0])
 		app.ClearPorts()
 	}
 
-	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Stop)))
+	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop)))
 	return true, nil
 }
 
@@ -179,9 +179,9 @@ func (app *App) PostTodo() *App {
 func (app *App) Check() (bool, error) {
 	var ret int
 
-	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Name, app.ManageCMD.Check))
+	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check))
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Name, app.ManageCMD.Check), err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error()))
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -191,12 +191,12 @@ func (app *App) Check() (bool, error) {
 
 // ClearPorts 删除运行时环境
 func (app *App) ClearPorts() {
-	app.RunData.Ports = []int{}
+	app.Meta.RunData.Ports = []int{}
 }
 
 // ClonePorts 同步缓存中的随机端口组到mongo
 func (app *App) ClonePorts() {
-	SavePort(app.Name, app.RunData.Ports)
+	SavePort(app.Meta.Name, app.Meta.RunData.Ports)
 }
 
 // BackUp 备份服务
@@ -208,7 +208,7 @@ func (app *App) BackUp() (bool, error) {
 // Reload 重载配置文件
 func (app *App) Reload() (bool, error) {
 	// 默认线程安全
-	err := loadFromApp(app.Name)
+	err := loadFromApp(app.Meta.Name)
 	if err != nil {
 		return false, err
 	}
@@ -222,9 +222,9 @@ func (app *App) Sync() (bool, error) {
 	// 运行时数据不存储 所以进行一次app clone
 	var appClone App
 	appClone = *app
-	appClone.RunData.Ports = []int{}
+	appClone.Meta.RunData.Ports = []int{}
 
-	err := SaveToFile(&appClone, app.Name)
+	err := SaveToFile(&appClone, app.Meta.Name)
 	lock.Unlock()
 	if err != nil {
 		return false, err
@@ -239,7 +239,7 @@ func (app *App) Info() interface{} {
 
 // Dump 安全的保存运行态数据到Map中
 func (app *App) Dump() (bool, error) {
-	APPManager.APPManagerMap.Store(app.Name, *app)
+	APPManager.APPManagerMap.Store(app.Meta.Name, *app)
 	return true, nil
 }
 

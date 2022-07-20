@@ -1,7 +1,5 @@
-/*
-Project: dirichlet doc.go
-Created: 2021/11/30 by Landers
-*/
+// 数据库操作层 当前所有数据基于mongo保存和备份
+// 备份数据格式为mongo支持的bson数据
 
 package database
 

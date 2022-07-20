@@ -1,5 +1,5 @@
 /*
-Project: dirichlet generate_app_test.go
+Project: Apollo generate_app_test.go
 Created: 2021/11/28 by Landers
 */
 
@@ -8,7 +8,7 @@ package main
 import (
 	"testing"
 
-	"github.com/landers1037/dirichlet/app/app_manager"
+	"github.com/JJApplication/Apollo/app/app_manager"
 )
 
 var apps = []string{"NoEngine", "MySite", "Mgek", "MgekDoc", "Blog", "JJMail", "JJRobot",

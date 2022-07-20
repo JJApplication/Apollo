@@ -1,5 +1,5 @@
 /*
-Project: dirichlet middleware.go
+Project: Apollo middleware.go
 Created: 2021/11/26 by Landers
 */
 
@@ -8,14 +8,13 @@ package engine
 import (
 	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"plugin"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/landers1037/dirichlet/logger"
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 )
 
 // 基于本地配置加载中间件
@@ -23,7 +22,7 @@ import (
 // 两种模式：全局global 路由route 在路由模式下需要指定路由
 
 const (
-	MiddleWare = "[MiddleWare]"
+	MiddleWare  = "[MiddleWare]"
 	PluginsPath = "lib"
 )
 
@@ -91,7 +90,7 @@ func loadMiddlePlugins(g *gin.Engine) {
 func findAllPlugins() []string {
 	var plugins []string
 	libPath := utils.CalDir(utils.GetAppDir(), PluginsPath)
-	if _, e := os.Stat(libPath); os.IsNotExist(e) {
+	if utils.FileNotExist(libPath) {
 		return nil
 	}
 	err := filepath.Walk(libPath, func(path string, info fs.FileInfo, err error) error {

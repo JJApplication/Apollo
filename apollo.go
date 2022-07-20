@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 )
 
-// @title Dirichlet ServiceGroup
+// @title Apollo ServiceGroup
 // @version 1.0
-// @description Dirichlet服务接口文档
+// @description Apollo服务接口文档
 // @termsOfService http://service.renj.io/terms
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html

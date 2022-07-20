@@ -1,5 +1,5 @@
 /*
-Project: dirichlet exec.go
+Project: Apollo exec.go
 Created: 2021/12/9 by Landers
 */
 
@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 // 执行cmds

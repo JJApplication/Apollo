@@ -1,5 +1,5 @@
 /*
-Project: dirichlet middleware_cors.go
+Project: Apollo middleware_cors.go
 Created: 2022/2/18 by Landers
 */
 
@@ -16,7 +16,8 @@ func MiddleWareCors() gin.HandlerFunc {
 	config.AllowWebSockets = true
 	config.AllowBrowserExtensions = true
 	config.AllowCredentials = true
-	config.AllowHeaders = []string{}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTION"}
+	config.AllowHeaders = []string{"token", "Token", "auth", "Auth", "Mgek", "jjapp", "JJApp", "plnack"}
 
 	return cors.New(config)
 }

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet init.go
+Project: Apollo init.go
 Created: 2021/12/22 by Landers
 */
 
@@ -7,7 +7,7 @@ package router_web
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "github.com/landers1037/dirichlet/docs"
+	_ "github.com/JJApplication/Apollo/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet cf_util_test.go
+Project: Apollo cf_util_test.go
 Created: 2021/11/22 by Landers
 */
 
@@ -13,12 +13,12 @@ import (
 
 func TestInitGlobalConfig(t *testing.T) {
 	err := InitGlobalConfig()
-	t.Logf("%+v", DirichletConf)
+	t.Logf("%+v", ApolloConf)
 	t.Log(err)
 }
 
 func TestSaveGlobalConfig(t *testing.T) {
-	DirichletConf = DConfig{
+	ApolloConf = DConfig{
 		ServiceRoot: ".",
 		APPRoot:     ".",
 		APPManager:  ".",
@@ -42,12 +42,12 @@ func TestSync(t *testing.T) {
 	if e != nil {
 		t.Error(e)
 	}
-	fmt.Println(DirichletConf)
+	fmt.Println(ApolloConf)
 	ch := make(chan int)
 	for i := 0; i < 10; i++ {
 		go func(i int) {
 			ch <- i
-			DirichletConf.Sync()
+			ApolloConf.Sync()
 		}(i)
 	}
 
@@ -66,13 +66,13 @@ func TestUpdate(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		go func(i int) {
 			str := fmt.Sprintf("%d", rand.Int())
-			DirichletConf.Update(&DConfig{APPRoot: str, Log: DLog{EnableLog: "ok"}})
+			ApolloConf.Update(&DConfig{APPRoot: str, Log: DLog{EnableLog: "ok"}})
 			ch <- i
 		}(i)
 	}
 
 	for i := 0; i < 5; i++ {
 		data := <-ch
-		fmt.Printf("changed: %+v %d\n", &DirichletConf, data)
+		fmt.Printf("changed: %+v %d\n", &ApolloConf, data)
 	}
 }

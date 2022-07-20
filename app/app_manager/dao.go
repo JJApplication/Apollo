@@ -1,5 +1,5 @@
 /*
-Project: dirichlet dao.go
+Project: Apollo dao.go
 Created: 2021/12/4 by Landers
 */
 
@@ -9,10 +9,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/JJApplication/Apollo/database"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/kamva/mgm/v3"
-	"github.com/landers1037/dirichlet/database"
-	"github.com/landers1037/dirichlet/logger"
-	"github.com/landers1037/dirichlet/utils"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -49,19 +49,19 @@ func SaveToDB() {
 			var data DaoAPP
 			v := value.(App)
 			mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": key}).Decode(&data)
-			if len(v.RunData.Ports) > 0 {
-				data.RunData.Ports = v.RunData.Ports
+			if len(v.Meta.RunData.Ports) > 0 {
+				data.Meta.RunData.Ports = v.Meta.RunData.Ports
 			}
-			if len(v.RunData.Envs) > 0 {
-				data.RunData.Envs = v.RunData.Envs
+			if len(v.Meta.RunData.Envs) > 0 {
+				data.Meta.RunData.Envs = v.Meta.RunData.Envs
 			}
-			data.ID = v.ID
-			data.Type = v.Type
-			data.CHSDes = v.CHSDes
-			data.EngDes = v.EngDes
-			data.ReleaseStatus = v.ReleaseStatus
-			data.ManageCMD = v.ManageCMD
-			data.Meta = v.Meta
+			data.Meta.ID = v.Meta.ID
+			data.Meta.Type = v.Meta.Type
+			data.Meta.CHSDes = v.Meta.CHSDes
+			data.Meta.EngDes = v.Meta.EngDes
+			data.Meta.ReleaseStatus = v.Meta.ReleaseStatus
+			data.Meta.ManageCMD = v.Meta.ManageCMD
+			data.Meta.Meta = v.Meta.Meta
 
 			err := mgm.Coll(&DaoAPP{}).Update(&data)
 			if err != nil {
@@ -86,11 +86,11 @@ func FirstLoad() {
 			err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": key}).Decode(&data)
 			if err == nil {
 				app := value.(App)
-				if app.RunData.Ports == nil || len(app.RunData.Ports) == 0 {
-					app.RunData.Ports = data.RunData.Ports
+				if app.Meta.RunData.Ports == nil || len(app.Meta.RunData.Ports) == 0 {
+					app.Meta.RunData.Ports = data.Meta.RunData.Ports
 				}
-				if app.RunData.Envs == nil || len(app.RunData.Envs) == 0 {
-					app.RunData.Envs = data.RunData.Envs
+				if app.Meta.RunData.Envs == nil || len(app.Meta.RunData.Envs) == 0 {
+					app.Meta.RunData.Envs = data.Meta.RunData.Envs
 				}
 				APPManager.APPManagerMap.Store(key, app)
 				logger.Logger.Info(fmt.Sprintf("%s first load %s runtime data to appCache", APPManagerPrefix, key))
@@ -130,7 +130,7 @@ func SavePort(app string, port []int) {
 		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
 		return
 	}
-	data.RunData.Ports = port
+	data.Meta.RunData.Ports = port
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
@@ -144,17 +144,17 @@ func SaveRuntimeData(app App) {
 		return
 	}
 	var data DaoAPP
-	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app.Name}).Decode(&data)
+	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app.Meta.Name}).Decode(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Name, err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error()))
 		return
 	}
-	data.RunData = app.RunData
+	data.Meta.RunData = app.Meta.RunData
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Name, err.Error()))
+		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error()))
 	}
-	logger.Logger.Info(fmt.Sprintf("%s save [%s] runtime data to db", APPManagerPrefix, app.Name))
+	logger.Logger.Info(fmt.Sprintf("%s save [%s] runtime data to db", APPManagerPrefix, app.Meta.Name))
 }
 
 func checkExist(filter interface{}) bool {

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet doc.go
+Project: Apollo doc.go
 Created: 2021/10/31 by Landers
 */
 

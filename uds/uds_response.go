@@ -1,12 +1,12 @@
 /*
-Project: dirichlet uds_response.go
+Project: Apollo uds_response.go
 Created: 2021/12/22 by Landers
 */
 
 package uds
 
 import (
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/utils"
 )
 
 // 响应带格式的json

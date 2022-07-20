@@ -1,5 +1,5 @@
 /*
-Project: dirichlet init.go
+Project: Apollo init.go
 Created: 2021/11/30 by Landers
 */
 

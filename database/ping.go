@@ -1,5 +1,5 @@
 /*
-Project: dirichlet ping.go
+Project: Apollo ping.go
 Created: 2021/12/25 by Landers
 */
 

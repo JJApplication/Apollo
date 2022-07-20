@@ -1,5 +1,5 @@
 /*
-Project: dirichlet response.go
+Project: Apollo response.go
 Created: 2021/11/30 by Landers
 */
 
@@ -54,3 +54,5 @@ func Res5xx(c *gin.Context, data interface{}) {
 	})
 	return
 }
+
+// todo 限流时的429状态返回

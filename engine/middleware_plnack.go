@@ -1,5 +1,5 @@
 /*
-Project: dirichlet middleware_plnack.go
+Project: Apollo middleware_plnack.go
 Created: 2021/11/30 by Landers
 */
 
@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 	plnack_proto "github.com/landers1037/plnack-proto"
 )
 
@@ -29,7 +29,7 @@ func MiddlewarePlnack() gin.HandlerFunc {
 				Key:       "",
 				Type:      plnack_proto.PtypeServer,
 				Version:   "",
-				AppName:   "Dirichlet",
+				AppName:   "Apollo",
 				Data:      d,
 				KeyVerify: false,
 				Time:      time.Now(),

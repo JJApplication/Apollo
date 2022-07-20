@@ -1,5 +1,5 @@
 /*
-Project: dirichlet docker_client.go
+Project: Apollo docker_client.go
 Created: 2022/2/18 by Landers
 */
 
@@ -11,8 +11,8 @@ import (
 	"time"
 
 	docker "github.com/docker/docker/client"
-	"github.com/landers1037/dirichlet/config"
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 // docker的客户端
@@ -38,15 +38,15 @@ func InitDockerClient() {
 
 func getClient() *docker.Client {
 	client, err := docker.NewClientWithOpts(
-		docker.WithHost(config.DirichletConf.CI.DockerHost),
-		docker.WithTimeout(time.Duration(config.DirichletConf.CI.DockerTimeout) * time.Second),
-		docker.WithVersion(config.DirichletConf.CI.DockerAPIVersion),
+		docker.WithHost(config.ApolloConf.CI.DockerHost),
+		docker.WithTimeout(time.Duration(config.ApolloConf.CI.DockerTimeout)*time.Second),
+		docker.WithVersion(config.ApolloConf.CI.DockerAPIVersion),
 	)
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s failed to create docker client: %s", DockerManager, err.Error()))
 		return nil
 	}
 	logger.Logger.Info(DockerManager + " init docker client success")
-	logger.Logger.Info(DockerManager + " connected to host: " + config.DirichletConf.CI.DockerHost)
+	logger.Logger.Info(DockerManager + " connected to host: " + config.ApolloConf.CI.DockerHost)
 	return client
 }

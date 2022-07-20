@@ -1,9 +1,4 @@
-/*
-Project: dirichlet doc.go
-Created: 2021/12/8 by Landers
-*/
-
+// Package uds
+//
+// UDS本机通信基于UNIX Domain Socket的通信服务端，与Apollo-cli一同使用
 package uds
-
-// 外部的命令组合
-// 支持非web访问的命令行调用

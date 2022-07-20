@@ -1,5 +1,5 @@
 /*
-Project: dirichlet types.go
+Project: Apollo types.go
 Created: 2021/12/27 by Landers
 */
 
@@ -12,9 +12,9 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/JJApplication/Apollo/cron"
+	"github.com/JJApplication/Apollo/logger"
 	"github.com/google/uuid"
-	"github.com/landers1037/dirichlet/cron"
-	"github.com/landers1037/dirichlet/logger"
 )
 
 type baseTaskInterface interface {

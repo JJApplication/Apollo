@@ -1,5 +1,5 @@
 /*
-Project: dirichlet web_index.go
+Project: Apollo web_index.go
 Created: 2021/12/22 by Landers
 */
 
@@ -10,8 +10,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/JJApplication/Apollo/app/app_manager"
 	"github.com/gin-gonic/gin"
-	"github.com/landers1037/dirichlet/app/app_manager"
 )
 
 type status struct {

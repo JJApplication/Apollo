@@ -1,5 +1,5 @@
 /*
-Project: dirichlet background_job.go
+Project: Apollo background_job.go
 Created: 2021/11/30 by Landers
 */
 
@@ -8,8 +8,8 @@ package cron
 import (
 	"fmt"
 
-	"github.com/landers1037/dirichlet/app/app_manager"
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 // 启动时执行的轮询任务 用于随时刷新持久化数据

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet global_cf.go
+Project: Apollo global_cf.go
 Created: 2021/11/20 by Landers
 */
 
@@ -9,15 +9,15 @@ import (
 	"reflect"
 	"sync"
 
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/landers1037/configen"
-	"github.com/landers1037/dirichlet/utils"
 )
 
-var DirichletConf DConfig
+var ApolloConf DConfig
 
 const (
 	GlobalConfigRoot = "conf"
-	GlobalConfigFile = "dirichlet.pig"
+	GlobalConfigFile = "apollo.pig"
 )
 
 // DConfig 全局配置
@@ -84,8 +84,8 @@ type Server struct {
 
 // CI CI配置
 type CI struct {
-	DockerHost string `json:"docker_host"`
-	DockerTimeout int `json:"docker_timeout"`
+	DockerHost       string `json:"docker_host"`
+	DockerTimeout    int    `json:"docker_timeout"`
 	DockerAPIVersion string `json:"docker_api_version"`
 }
 
@@ -99,7 +99,7 @@ func (d *DConfig) Sync() {
 	defer d.lock.Unlock()
 
 	_ = configen.ParseConfig(
-		&DirichletConf,
+		&ApolloConf,
 		configen.Pig,
 		utils.CalDir(
 			utils.GetAppDir(),
@@ -115,7 +115,7 @@ func (d *DConfig) Update(v *DConfig) {
 
 	d.lock.Lock()
 	vars := reflect.ValueOf(v).Elem()
-	globals := reflect.ValueOf(&DirichletConf).Elem()
+	globals := reflect.ValueOf(&ApolloConf).Elem()
 
 	for i := 0; i < vars.NumField(); i++ {
 		if !vars.Field(i).IsZero() {

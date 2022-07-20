@@ -1,5 +1,5 @@
 /*
-Project: dirichlet conn.go
+Project: Apollo conn.go
 Created: 2021/12/8 by Landers
 */
 
@@ -11,7 +11,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 func echo(c net.Conn) {

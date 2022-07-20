@@ -1,5 +1,5 @@
 /*
-Project: dirichlet middleware_cf.go
+Project: Apollo middleware_cf.go
 Created: 2022/2/17 by Landers
 */
 
@@ -7,12 +7,11 @@ package engine
 
 import (
 	"fmt"
-	"os"
 	"time"
 
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/landers1037/configen"
-	"github.com/landers1037/dirichlet/logger"
-	"github.com/landers1037/dirichlet/utils"
 )
 
 // 加载中间件的配置文件
@@ -64,10 +63,10 @@ func SaveMiddleWareConfig() error {
 
 // 不存在配置文件时会自动生成基于当前接口的配置文件
 func initEmptyConfig() error {
-	if _, err := os.Stat(utils.CalDir(
+	if utils.FileNotExist(utils.CalDir(
 		utils.GetAppDir(),
 		MiddleConfigRoot,
-		MiddleConfigFile)); os.IsNotExist(err) {
+		MiddleConfigFile)) {
 		logger.Logger.Warn(MiddleWare + " no config exists, using default middleware config.")
 		return configen.SaveConfig(&DefaultMiddleWare,
 			configen.Pig,

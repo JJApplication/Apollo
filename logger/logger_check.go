@@ -1,5 +1,5 @@
 /*
-Project: dirichlet logger_check.go
+Project: Apollo logger_check.go
 Created: 2021/11/26 by Landers
 */
 
@@ -9,17 +9,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/landers1037/dirichlet/config"
+	"github.com/JJApplication/Apollo/config"
 )
 
 func Check() {
-	fmt.Printf("[Dirichlet] 🚀🚀🚀\n⌛ StartTime: %s\n🔥 Listening on %s\n📁 ServiceRoot: %s\n📁 AppRoot: %s\n📁 AppManger: %s\n📁 AppLog: %s\n📁 BackUpDir: %s\n📁 CacheDir: %s\n\n",
+	fmt.Printf("[Apollo] 🚀🚀🚀\n⌛ StartTime: %s\n🔥 Listening on %s\n📁 ServiceRoot: %s\n📁 AppRoot: %s\n📁 AppManger: %s\n📁 AppLog: %s\n📁 BackUpDir: %s\n📁 CacheDir: %s\n\n",
 		time.Now().String(),
-		fmt.Sprintf("http://%s:%d", config.DirichletConf.Server.Host, config.DirichletConf.Server.Port),
-		config.DirichletConf.ServiceRoot,
-		config.DirichletConf.APPRoot,
-		config.DirichletConf.APPManager,
-		config.DirichletConf.APPLogDir,
-		config.DirichletConf.APPBackUp,
-		config.DirichletConf.APPCacheDir)
+		fmt.Sprintf("http://%s:%d", config.ApolloConf.Server.Host, config.ApolloConf.Server.Port),
+		config.ApolloConf.ServiceRoot,
+		config.ApolloConf.APPRoot,
+		config.ApolloConf.APPManager,
+		config.ApolloConf.APPLogDir,
+		config.ApolloConf.APPBackUp,
+		config.ApolloConf.APPCacheDir)
 }

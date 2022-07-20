@@ -1,5 +1,5 @@
 /*
-Project: dirichlet logger.go
+Project: Apollo logger.go
 Created: 2021/11/21 by Landers
 */
 
@@ -7,8 +7,8 @@ package logger
 
 // 日志记录器 zap
 import (
-	"github.com/landers1037/dirichlet/config"
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -61,7 +61,7 @@ func InitLogger() error {
 }
 
 func configEncoding() string {
-	switch config.DirichletConf.Log.Encoding {
+	switch config.ApolloConf.Log.Encoding {
 	case "json", "JSON":
 		return "json"
 	case "console", "Console":
@@ -72,7 +72,7 @@ func configEncoding() string {
 }
 
 func configFunction() string {
-	switch config.DirichletConf.Log.EnableFunction {
+	switch config.ApolloConf.Log.EnableFunction {
 	case "yes", "YES", "Yes":
 		return "Function"
 	case "no", "NO", "No":
@@ -83,10 +83,10 @@ func configFunction() string {
 }
 
 func configLog() []string {
-	switch config.DirichletConf.Log.EnableLog {
+	switch config.ApolloConf.Log.EnableLog {
 	case "yes", "YES", "Yes":
-		if config.DirichletConf.Log.LogFile != "" {
-			return []string{"stderr", config.DirichletConf.Log.LogFile}
+		if config.ApolloConf.Log.LogFile != "" {
+			return []string{"stderr", config.ApolloConf.Log.LogFile}
 		}
 		return []string{"stderr"}
 	case "no", "NO", "No":
@@ -97,7 +97,7 @@ func configLog() []string {
 }
 
 func configStack() bool {
-	switch config.DirichletConf.Log.EnableStack {
+	switch config.ApolloConf.Log.EnableStack {
 	case "yes", "YES", "Yes":
 		return false
 	case "no", "NO", "No":
@@ -108,7 +108,7 @@ func configStack() bool {
 }
 
 func configCaller() string {
-	switch config.DirichletConf.Log.EnableCaller {
+	switch config.ApolloConf.Log.EnableCaller {
 	case "yes", "YES", "Yes":
 		return "Caller"
 	case "no", "NO", "No":

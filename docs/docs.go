@@ -114,8 +114,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "http://service.renj.io/api",
 	Schemes:     []string{},
-	Title:       "Dirichlet ServiceGroup",
-	Description: "Dirichlet服务接口文档",
+	Title:       "Apollo ServiceGroup",
+	Description: "Apollo服务接口文档",
 }
 
 type s struct{}

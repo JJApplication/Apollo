@@ -1,5 +1,5 @@
 /*
-Project: dirichlet consts.go
+Project: Apollo consts.go
 Created: 2021/12/27 by Landers
 */
 

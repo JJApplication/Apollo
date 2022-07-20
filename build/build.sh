@@ -7,8 +7,7 @@ echo "GOARCH: $(go env GOARCH)"
 
 echo $(date -u)
 echo "build swagger docs"
-swag init -g ./dirichlet.go
+swag init -g ./apollo.go
 
 echo "start to build"
-#go build -ldflags='-w -s -extldflags "-static"' -trimpath -o dirichlet ./
-go build -ldflags='-w -s' -trimpath -o dirichlet ./
+go build -ldflags='-w -s' -trimpath -o apollo ./

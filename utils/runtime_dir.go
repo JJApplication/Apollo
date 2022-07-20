@@ -1,5 +1,5 @@
 /*
-Project: dirichlet runtime_dir.go
+Project: Apollo runtime_dir.go
 Created: 2021/11/20 by Landers
 */
 

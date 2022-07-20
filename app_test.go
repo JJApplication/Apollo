@@ -1,5 +1,5 @@
 /*
-Project: dirichlet app_test.go
+Project: Apollo app_test.go
 Created: 2021/11/28 by Landers
 */
 
@@ -8,8 +8,9 @@ package main
 import (
 	"testing"
 
-	"github.com/landers1037/dirichlet/app/app_manager"
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/octopus_meta"
 )
 
 func init() {
@@ -18,15 +19,17 @@ func init() {
 
 // app管理测试
 func TestAppControl(t *testing.T) {
-	app := app_manager.App{Name: "Blog", ID: "test", ManageCMD: app_manager.CMD{
+	var app app_manager.App
+	meta := octopus_meta.App{Name: "Blog", ID: "test", ManageCMD: octopus_meta.CMD{
 		Start:     "start.sh",
 		Stop:      "stop.sh",
 		Restart:   "restart.sh",
 		ForceKill: "kill.sh",
 		Check:     "check.sh",
 	},
-		RunData: app_manager.RunData{RandomPort: true, Ports: []int{1}}}
-	app_manager.APPManager.APPManagerMap.Store(app.Name, app)
+		RunData: octopus_meta.RunData{RandomPort: true, Ports: []int{1}}}
+	app.Meta = meta
+	app_manager.APPManager.APPManagerMap.Store(app.Meta.Name, app)
 	// test app sync
 	app.Sync()
 	// test app toJson

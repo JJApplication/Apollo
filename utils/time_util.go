@@ -1,5 +1,5 @@
 /*
-Project: dirichlet time_util.go
+Project: Apollo time_util.go
 Created: 2022/2/17 by Landers
 */
 

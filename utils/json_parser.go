@@ -1,5 +1,5 @@
 /*
-Project: dirichlet json_parser.go
+Project: Apollo json_parser.go
 Created: 2021/11/20 by Landers
 */
 

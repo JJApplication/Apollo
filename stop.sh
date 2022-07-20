@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 run_path=$(pwd)
-app=dirichlet
+app=apollo
 executable="${run_path}/${app}"
 
 check()

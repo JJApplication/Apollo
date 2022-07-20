@@ -1,5 +1,5 @@
 /*
-Project: dirichlet model_util_test.go
+Project: Apollo model_util_test.go
 Created: 2021/11/20 by Landers
 */
 
@@ -7,6 +7,8 @@ package app_manager
 
 import (
 	"testing"
+
+	"github.com/JJApplication/octopus_meta"
 )
 
 // 加载模型文件
@@ -26,18 +28,7 @@ func TestLoadToMap(t *testing.T) {
 
 // 输出模型文件
 func TestSaveToFile(t *testing.T) {
-	err := SaveToFile(&App{
-		Name:          "TestService",
-		ID:            "testService",
-		Type:          "Service",
-		ReleaseStatus: "",
-		EngDes:        "",
-		CHSDes:        "",
-		ManageCMD:     CMD{},
-		Meta:          Meta{},
-		RunData:       RunData{},
-	}, "TestService")
-
+	err := octopus_meta.NewAppMeta("TestService")
 	if err != nil {
 		t.Log(err)
 	}

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet ticker.go
+Project: Apollo ticker.go
 Created: 2021/11/30 by Landers
 */
 
@@ -7,10 +7,11 @@ package cron
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 
+	"github.com/JJApplication/Apollo/logger"
 	"github.com/google/uuid"
-	"github.com/landers1037/dirichlet/logger"
 )
 
 // 定时器
@@ -45,6 +46,21 @@ func init() {
 	TickerMap = make(map[string]OneTicker, 1)
 }
 
+func recoverTask(f func()) {
+	defer func() {
+		err := recover()
+		switch err.(type) {
+		case runtime.Error:
+			logger.Logger.Error(fmt.Sprintf("job: runtime error: %v", err))
+		default:
+			if err != nil {
+				logger.Logger.Error(fmt.Sprintf("job: task error: %v", err))
+			}
+		}
+	}()
+	f()
+}
+
 // AddTicker 以s为维度的执行轮询任务
 func AddTicker(t int, taskName, des string, f func()) {
 	ticker := time.NewTicker(time.Second * time.Duration(t))
@@ -63,7 +79,7 @@ func AddTicker(t int, taskName, des string, f func()) {
 		for {
 			select {
 			case <-ticker.C:
-				f()
+				recoverTask(f)
 				logger.Logger.Info(fmt.Sprintf("ticker {%s} [%s] task run at :%s", taskName, uuidStr, time.Now().String()))
 			case sig := <-ch:
 				if sig {

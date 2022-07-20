@@ -1,5 +1,5 @@
 /*
-Project: dirichlet manager.go
+Project: Apollo manager.go
 Created: 2021/11/18 by Landers
 */
 
@@ -9,7 +9,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 // 服务管理
@@ -91,10 +91,10 @@ func StartAll() ([]string, error) {
 		app := value.(App)
 		if ok, err := app.Start(); !ok {
 			e = err
-			startList = append(startList, fmt.Sprintf("[%s]: BAD", app.Name))
+			startList = append(startList, fmt.Sprintf("[%s]: BAD", app.Meta.Name))
 			logger.Logger.Error(fmt.Sprintf("%s %s start failed: %s", APPManagerPrefix, key, err.Error()))
 		} else {
-			startList = append(startList, fmt.Sprintf("[%s]: OK", app.Name))
+			startList = append(startList, fmt.Sprintf("[%s]: OK", app.Meta.Name))
 			logger.Logger.Info(fmt.Sprintf("%s %s start success", APPManagerPrefix, key))
 		}
 		return true
@@ -114,10 +114,10 @@ func StopAll() ([]string, error) {
 		app := value.(App)
 		if ok, err := app.Stop(); !ok {
 			e = err
-			stopList = append(stopList, fmt.Sprintf("[%s]: BAD", app.Name))
+			stopList = append(stopList, fmt.Sprintf("[%s]: BAD", app.Meta.Name))
 			logger.Logger.Error(fmt.Sprintf("%s %s stop failed: %s", APPManagerPrefix, key, err.Error()))
 		} else {
-			stopList = append(stopList, fmt.Sprintf("[%s]: OK", app.Name))
+			stopList = append(stopList, fmt.Sprintf("[%s]: OK", app.Meta.Name))
 			logger.Logger.Info(fmt.Sprintf("%s %s stop success", APPManagerPrefix, key))
 		}
 		return true

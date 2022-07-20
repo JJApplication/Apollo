@@ -1,5 +1,5 @@
 /*
-Project: dirichlet errors.go
+Project: Apollo errors.go
 Created: 2021/12/22 by Landers
 */
 

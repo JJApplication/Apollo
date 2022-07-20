@@ -1,5 +1,5 @@
 /*
-Project: dirichlet inner.go
+Project: Apollo inner.go
 Created: 2021/11/26 by Landers
 */
 

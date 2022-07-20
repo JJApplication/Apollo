@@ -1,5 +1,5 @@
 /*
-Project: dirichlet dirichlet_init.go
+Project: Apollo apollo_init.go
 Created: 2021/11/28 by Landers
 */
 
@@ -10,21 +10,21 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/landers1037/dirichlet/app/app_manager"
-	"github.com/landers1037/dirichlet/app/docker_manager"
-	"github.com/landers1037/dirichlet/config"
-	"github.com/landers1037/dirichlet/cron"
-	"github.com/landers1037/dirichlet/database"
-	"github.com/landers1037/dirichlet/engine"
-	"github.com/landers1037/dirichlet/logger"
-	"github.com/landers1037/dirichlet/router/router_app"
-	"github.com/landers1037/dirichlet/router/router_web"
-	"github.com/landers1037/dirichlet/uds"
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/app/docker_manager"
+	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/cron"
+	"github.com/JJApplication/Apollo/database"
+	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/router/router_app"
+	"github.com/JJApplication/Apollo/router/router_web"
+	"github.com/JJApplication/Apollo/uds"
+	"github.com/JJApplication/Apollo/utils"
 )
 
 const (
-	APPName = "[Dirichlet]"
+	APPName = "[Apollo]"
 )
 
 // 初始化运行时数据
@@ -58,18 +58,18 @@ func initAPPManager() {
 	app_manager.InitAPPManager()
 	app_manager.SaveToDB()
 	app_manager.FirstLoad()
-	logger.Logger.Info(APPName + "init APPManager done")
+	logger.Logger.Info(APPName + " init APPManager done")
 }
 
 func initBackgroundJobs() {
 	cron.InitBackgroundJobs()
-	logger.Logger.Info(APPName + "init BackgroundJobs done")
+	logger.Logger.Info(APPName + " init BackgroundJobs done")
 }
 
 func initEngine() {
 	dirEngine := engine.NewEngine(&engine.EngineConfig{
-		Host: config.DirichletConf.Server.Host,
-		Port: config.DirichletConf.Server.Port,
+		Host: config.ApolloConf.Server.Host,
+		Port: config.ApolloConf.Server.Port,
 	})
 	dirEngine.Init()
 

@@ -1,5 +1,5 @@
 /*
-Project: dirichlet cmds.go
+Project: Apollo cmds.go
 Created: 2021/12/9 by Landers
 */
 
@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/landers1037/dirichlet/app/app_manager"
-	"github.com/landers1037/dirichlet/config"
-	"github.com/landers1037/dirichlet/utils"
+	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/utils"
 )
 
 // 支持的命令
@@ -81,9 +81,9 @@ var cmdsMap = map[string]func(args ...string) (result, err string){
 				app := value.(app_manager.App)
 				ok, _ := app.Sync()
 				if !ok {
-					res = append(res, fmt.Sprintf("[%s]: BAD", app.Name))
+					res = append(res, fmt.Sprintf("[%s]: BAD", app.Meta.Name))
 				} else {
-					res = append(res, fmt.Sprintf("[%s]: OK", app.Name))
+					res = append(res, fmt.Sprintf("[%s]: OK", app.Meta.Name))
 				}
 				return true
 			})
@@ -176,6 +176,6 @@ var cmdsMap = map[string]func(args ...string) (result, err string){
 		}
 	},
 	"config": func(args ...string) (result, err string) {
-		return config.DirichletConf.ToJSON(), ""
+		return config.ApolloConf.ToJSON(), ""
 	},
 }

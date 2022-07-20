@@ -1,5 +1,5 @@
 /*
-Project: dirichlet back_up.go
+Project: Apollo back_up.go
 Created: 2021/12/29 by Landers
 */
 
@@ -23,7 +23,7 @@ const (
 	BackDir    = "/var/app.backup.zip"
 	BackDirOld = BackDir + ".old"
 	BackupFlag = "/var/.backup"
-	BackTmp    = "/tmp/dirichlet"
+	BackTmp    = "/tmp/Apollo"
 )
 
 // todo 基于zip的备份 不使用go
@@ -43,10 +43,10 @@ func Backup(src string) error {
 
 // 检查标志文件
 func checkFlag() bool {
-	if _, err := os.Stat(BackupFlag); os.IsExist(err) {
+	if FileExist(BackupFlag) {
 		return false
 	}
-	if _, err := os.Stat(BackupFlag); os.IsNotExist(err) {
+	if FileNotExist(BackupFlag) {
 		return true
 	}
 	return false
@@ -64,7 +64,7 @@ func rmFlag() {
 
 // 开始备份，避免数据io异常先cp到/tmp下操作
 func startBackup(src string) error {
-	if _, err := os.Stat(BackTmp); os.IsNotExist(err) {
+	if FileNotExist(BackTmp) {
 
 	}
 	// 已经存在则删除原有的文件

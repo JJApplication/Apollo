@@ -1,5 +1,5 @@
 /*
-Project: dirichlet cmd_runner.go
+Project: Apollo cmd_runner.go
 Created: 2021/11/27 by Landers
 */
 
@@ -21,6 +21,7 @@ const (
 
 // 异步的命令行只适用于非及时返回的函数
 
+// 脱离父进程的sh执行 避免执行未结束父进程退出 导致变成僵尸进程
 func newCMD(envs []string, cmd ...string) *exec.Cmd {
 	c := &exec.Cmd{
 		Path: BASH,

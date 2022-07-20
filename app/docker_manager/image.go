@@ -1,5 +1,5 @@
 /*
-Project: dirichlet image.go
+Project: Apollo image.go
 Created: 2022/2/21 by Landers
 */
 

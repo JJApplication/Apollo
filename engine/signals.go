@@ -1,5 +1,5 @@
 /*
-Project: dirichlet signals.go
+Project: Apollo signals.go
 Created: 2022/2/18 by Landers
 */
 
@@ -18,7 +18,7 @@ const (
 	Stop      = syscall.SIGUSR2
 	ForceStop = syscall.SIGINT
 	Reload    = syscall.SIGUSR1
-	APPName   = "[Dirichlet]"
+	APPName   = "[Apollo]"
 )
 
 // RegisterSignals 监听部分信号使用

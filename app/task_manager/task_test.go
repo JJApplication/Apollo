@@ -1,5 +1,5 @@
 /*
-Project: dirichlet task_test.go
+Project: Apollo task_test.go
 Created: 2021/12/28 by Landers
 */
 
@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/landers1037/dirichlet/logger"
+	"github.com/JJApplication/Apollo/logger"
 )
 
 func init() {

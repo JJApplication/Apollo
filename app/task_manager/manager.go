@@ -1,5 +1,5 @@
 /*
-Project: dirichlet manager.go
+Project: Apollo manager.go
 Created: 2021/12/27 by Landers
 */
 

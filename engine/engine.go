@@ -1,5 +1,5 @@
 /*
-Project: dirichlet engine.go
+Project: Apollo engine.go
 Created: 2021/11/26 by Landers
 */
 
@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/JJApplication/Apollo/logger"
 	"github.com/gin-gonic/gin"
-	"github.com/landers1037/dirichlet/logger"
 )
 
 func init() {
