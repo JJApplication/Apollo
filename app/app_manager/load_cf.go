@@ -17,8 +17,12 @@ import (
 // LoadManagerCf 加载所有配置文件到全局的字典中
 func LoadManagerCf() error {
 	// 保证读取到配置后再刷新字典
-	os.Setenv("APP_ROOT", config.ApolloConf.APPRoot)
-	tm, ok := octopus_meta.Load("")
+	AppRoot := os.Getenv("APP_ROOT")
+	if AppRoot == "" {
+		os.Setenv("APP_ROOT", config.ApolloConf.APPRoot)
+	}
+
+	tm, ok := octopus_meta.AutoLoad()
 	// 每次刷新
 	if ok == nil {
 		APPManager.APPManagerMap.Range(func(key, value interface{}) bool {

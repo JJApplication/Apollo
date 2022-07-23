@@ -12,9 +12,9 @@ import (
 	"plugin"
 	"strings"
 
-	"github.com/gin-gonic/gin"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/gin-gonic/gin"
 )
 
 // 基于本地配置加载中间件
@@ -64,8 +64,10 @@ func loadMiddleWare(g *gin.Engine) {
 	}
 
 	for i, m := range PreInjectMiddle {
-		logger.Logger.Info(fmt.Sprintf("%s (%d) %s loaded", MiddleWare, i, m.Name))
-		g.Use(MiddleWareMap[m.Name])
+		if m.Active {
+			logger.Logger.Info(fmt.Sprintf("%s (%d) %s loaded", MiddleWare, i, m.Name))
+			g.Use(MiddleWareMap[m.Name])
+		}
 	}
 }
 

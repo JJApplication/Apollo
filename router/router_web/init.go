@@ -6,8 +6,8 @@ Created: 2021/12/22 by Landers
 package router_web
 
 import (
-	"github.com/gin-gonic/gin"
 	_ "github.com/JJApplication/Apollo/docs"
+	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )

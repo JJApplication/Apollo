@@ -14,6 +14,8 @@ var routerApp *gin.RouterGroup
 func Init(r *gin.Engine) {
 	routerApp = r.Group("/api/app")
 	{
+		routerApp.GET("/all", StatusApp)
+		routerApp.GET("/app", StatusApp)
 		routerApp.POST("/start", StartApp)
 		routerApp.POST("/startall", StartAppAll)
 	}
