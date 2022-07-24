@@ -13,7 +13,9 @@ import (
 	"strings"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/router"
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,4 +49,11 @@ func StatusApp(c *gin.Context) {
 	})
 
 	router.Response(c, stat, true)
+}
+
+// FileTree 文件结构树
+func FileTree(c *gin.Context) {
+	var filesTree []utils.File
+	filesTree = utils.GetFileTreeAllDepth(config.ApolloConf.APPRoot, config.ApolloConf.APPRoot)
+	router.Response(c, filesTree, true)
 }

@@ -16,6 +16,8 @@ func Init(r *gin.Engine) {
 	{
 		routerApp.GET("/all", StatusApp)
 		routerApp.GET("/app", StatusApp)
+		routerApp.GET("/tree", FileTree)
+
 		routerApp.POST("/start", StartApp)
 		routerApp.POST("/startall", StartAppAll)
 	}
