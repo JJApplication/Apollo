@@ -36,7 +36,7 @@ func StartApp(c *gin.Context) {
 	router.Response(c, err, true)
 }
 
-// StartAppAll
+// StartAll
 // @Summary 启动所有APP
 // @Tags APP Manager
 // @Description 启动所有APP接口
@@ -44,7 +44,7 @@ func StartApp(c *gin.Context) {
 // @Produce application/json
 // @Success 200
 // @Router /api/app/startall [post]
-func StartAppAll(c *gin.Context) {
+func StartAll(c *gin.Context) {
 	_, err := app_manager.StartAll()
 	if err != nil {
 		router.Response(c, err, false)

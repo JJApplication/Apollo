@@ -27,7 +27,7 @@ type status struct {
 func StatusApp(c *gin.Context) {
 	app := c.Query("name")
 	if app != "" {
-		appStatus, err := app_manager.GetApp(app)
+		appStatus, err := app_manager.Status(app)
 		if err != nil {
 			router.Response(c, appStatus, false)
 			return
@@ -49,6 +49,20 @@ func StatusApp(c *gin.Context) {
 	})
 
 	router.Response(c, stat, true)
+}
+
+func InfoApp(c *gin.Context) {
+	app := c.Query("name")
+	if app != "" {
+		appInfo, err := app_manager.GetApp(app)
+		if err != nil {
+			router.Response(c, appInfo, false)
+			return
+		}
+		router.Response(c, appInfo, true)
+		return
+	}
+	router.Response(c, app_manager.App{}, false)
 }
 
 // FileTree 文件结构树

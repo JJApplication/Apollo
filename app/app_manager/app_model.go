@@ -12,7 +12,7 @@ import (
 
 // App model for app
 type App struct {
-	Meta octopus_meta.App
+	Meta octopus_meta.App `json:"meta" bson:"meta"`
 }
 
 // Validate 适用于model的检查器

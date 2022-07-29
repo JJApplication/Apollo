@@ -50,3 +50,16 @@ func CreateFileX(f string) error {
 	_ = file.Chmod(0750)
 	return file.Close()
 }
+
+// CreateOrCoverFile 覆盖文件或者创建文件
+func CreateOrCoverFile(f string) error {
+	return nil
+}
+
+// RemoveFile 尽力删除 文件不存在 不报错
+func RemoveFile(f string) error {
+	if !FileExist(f) {
+		return nil
+	}
+	return os.RemoveAll(f)
+}

@@ -34,6 +34,7 @@ const (
 )
 
 const APPStatusOK = 0
+const AppUnknown = 555
 const (
 	_ = 100 + iota
 	APPStatusError
@@ -44,6 +45,14 @@ const (
 	APPStatusKilled
 	APPStatusRunning
 )
+
+// StatusMap 返回状态使用的状态表
+var StatusMap = map[int]string{
+	APPStatusOK:    "running",
+	APPStatusError: "stopped",
+	APPStatusExit:  "stopped",
+	AppUnknown:     "unknown",
+}
 
 const (
 	APPNotExist = "app not exist"

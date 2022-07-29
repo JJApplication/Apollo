@@ -19,11 +19,15 @@ import (
 // DaoAPP 数据库操作类
 type DaoAPP struct {
 	mgm.DefaultModel `bson:",inline"`
-	App
+	App              `json:"app" bson:"app"`
 }
 
+const CollectName = "microservice"
+const PersistFile = "apolloServices.bson"
+
+// CollectionName 定义存储名称 不能与app冲突
 func (app *DaoAPP) CollectionName() string {
-	return "app"
+	return CollectName
 }
 
 // SaveToDB 批量插入
@@ -34,7 +38,7 @@ func SaveToDB() {
 	}
 	var data DaoAPP
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
-		if !checkExist(bson.M{"app.name": key}) {
+		if !checkExist(bson.M{"app.meta.name": key}) {
 			data = DaoAPP{
 				App: value.(App),
 			}
@@ -48,7 +52,7 @@ func SaveToDB() {
 			// 更新操作
 			var data DaoAPP
 			v := value.(App)
-			mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": key}).Decode(&data)
+			mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": key}).Decode(&data)
 			if len(v.Meta.RunData.Ports) > 0 {
 				data.Meta.RunData.Ports = v.Meta.RunData.Ports
 			}
@@ -81,9 +85,9 @@ func FirstLoad() {
 		return
 	}
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
-		if checkExist(bson.M{"app.name": key}) {
+		if checkExist(bson.M{"app.meta.name": key}) {
 			var data DaoAPP
-			err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": key}).Decode(&data)
+			err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": key}).Decode(&data)
 			if err == nil {
 				app := value.(App)
 				if app.Meta.RunData.Ports == nil || len(app.Meta.RunData.Ports) == 0 {
@@ -113,7 +117,7 @@ func Persist() {
 		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
 		return
 	}
-	err = utils.SaveBson(&data, "app.bson")
+	err = utils.SaveBson(&data, PersistFile)
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
 	}
@@ -125,7 +129,7 @@ func SavePort(app string, port []int) {
 		return
 	}
 	var data DaoAPP
-	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app}).Decode(&data)
+	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": app}).Decode(&data)
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
 		return
@@ -144,7 +148,7 @@ func SaveRuntimeData(app App) {
 		return
 	}
 	var data DaoAPP
-	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.name": app.Meta.Name}).Decode(&data)
+	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": app.Meta.Name}).Decode(&data)
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error()))
 		return

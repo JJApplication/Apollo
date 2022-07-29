@@ -21,8 +21,9 @@ func init() {
 
 const (
 	PLNACK_PROTO = "+plnack"
-	HTML_GLOB    = "web/**/*"
-	StaticPath   = "./web/static"
+	HtmlTmpl     = "web/tmpl/**/*"
+	StaticPath   = "web/static"
+	TmplPath     = "web/tmpl"
 )
 
 var engine Engine
@@ -57,8 +58,9 @@ func newGin() *gin.Engine {
 	g := gin.New()
 
 	// 废弃方法 不再使用render渲染go模板
-	//g.LoadHTMLGlob(HTML_GLOB)
+	g.LoadHTMLGlob(HtmlTmpl)
 	g.StaticFS("/static", http.Dir(StaticPath))
+	g.StaticFS("/tmpl", http.Dir(TmplPath))
 	g.NoRoute(MiddlewareNoRoute())
 	g.NoMethod(MiddlewareNoMethod())
 	loadMiddleWare(g)

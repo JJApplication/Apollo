@@ -23,6 +23,7 @@ func InitAPPManager() {
 	}
 }
 
+// GetApp 获取指定App
 func GetApp(app string) (App, error) {
 	if Check(app) {
 		a, _ := APPManager.APPManagerMap.Load(app)
@@ -32,6 +33,7 @@ func GetApp(app string) (App, error) {
 	return App{}, errors.New(APPNotExist)
 }
 
+// GetAllApp 获取所有App
 func GetAllApp() ([]App, error) {
 	var apps []App
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
@@ -41,12 +43,32 @@ func GetAllApp() ([]App, error) {
 	return apps, nil
 }
 
+// Check 检查是否存在此App
 func Check(app string) bool {
 	if _, ok := APPManager.APPManagerMap.Load(app); ok {
 		return true
 	}
 
 	return false
+}
+
+// Status 获取指定app状态
+func Status(app string) (string, error) {
+	if Check(app) {
+		a, _ := APPManager.APPManagerMap.Load(app)
+		b := a.(App)
+		ok, err := b.Check()
+		if err != nil {
+			return StatusMap[toCode(err.Error())], err
+		}
+		if ok {
+			return StatusMap[APPStatusOK], nil
+		}
+		return StatusMap[APPStatusStop], nil
+
+	}
+
+	return StatusMap[AppUnknown], errors.New(APPNotExist)
 }
 
 // Start app快速启动
