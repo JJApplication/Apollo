@@ -14,12 +14,10 @@ import (
 
 // 容器操作
 
+// ContainerList 返回容器列表 默认返回全部状态
 func ContainerList() ([]types.Container, error) {
-	list, err := DockerCli.ContainerList(context.Background(), types.ContainerListOptions{})
-	if err != nil {
-		return nil, err
-	}
-	return list, nil
+	list, err := DockerCli.ContainerList(context.Background(), types.ContainerListOptions{All: true})
+	return list, err
 }
 
 func ContainerCreate(c string) (types.IDResponse, error) {

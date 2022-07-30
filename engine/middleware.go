@@ -65,8 +65,10 @@ func loadMiddleWare(g *gin.Engine) {
 
 	for i, m := range PreInjectMiddle {
 		if m.Active {
-			logger.Logger.Info(fmt.Sprintf("%s (%d) %s loaded", MiddleWare, i, m.Name))
+			logger.Logger.Info(fmt.Sprintf("%s <%d> (%s) loaded", MiddleWare, i, m.Name))
 			g.Use(MiddleWareMap[m.Name])
+		} else {
+			logger.Logger.Info(fmt.Sprintf("%s <%d> (%s) disabled", MiddleWare, i, m.Name))
 		}
 	}
 }

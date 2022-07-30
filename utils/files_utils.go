@@ -6,8 +6,16 @@ Created: 2021/11/30 by Landers
 package utils
 
 import (
+	"archive/tar"
+	"compress/gzip"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
+)
+
+const (
+	ArchiveType = ".tar.gz"
 )
 
 // CreateFile 多级目录和文件的创建
@@ -62,4 +70,53 @@ func RemoveFile(f string) error {
 		return nil
 	}
 	return os.RemoveAll(f)
+}
+
+// ArchiveFile 打包文件 默认为tar.gz
+// fileName 要打包的文件
+// dst 要生成的文件名
+func ArchiveFile(fileName string, dst string) error {
+	if !strings.HasSuffix(dst, ArchiveType) {
+		dst = dst + ArchiveType
+	}
+	fileInfo, err := os.Stat(fileName)
+	if err != nil {
+		return err
+	}
+	f, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	// gzip
+	gzw := gzip.NewWriter(f)
+	defer gzw.Close()
+
+	// tar
+	tarw := tar.NewWriter(gzw)
+	defer tarw.Close()
+
+	// start to zip
+	file, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	header := new(tar.Header)
+	// name需要为相对路径 受限于tar
+	header.Name = filepath.Base(filepath.Clean(fileName))
+	header.Size = fileInfo.Size()
+	header.Mode = int64(fileInfo.Mode())
+	header.ModTime = fileInfo.ModTime()
+
+	err = tarw.WriteHeader(header)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(tarw, file)
+	return err
 }

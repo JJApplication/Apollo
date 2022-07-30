@@ -8,6 +8,9 @@ package task_manager
 import (
 	"errors"
 	"fmt"
+	"sort"
+
+	"github.com/JJApplication/Apollo/cron"
 )
 
 // 任务管理
@@ -24,4 +27,17 @@ func ListAllTasks() ([]string, error) {
 			v.TaskName, v.TaskID, v.CreateTime, v.Status))
 	}
 	return list, nil
+}
+
+func GetAllBackgroundTasks() []*cron.OneTicker {
+	var res []*cron.OneTicker
+	for _, v := range cron.TickerMap {
+		res = append(res, v)
+	}
+
+	// 排序
+	sort.SliceStable(res, func(i, j int) bool {
+		return res[i].Name < res[j].Name
+	})
+	return res
 }

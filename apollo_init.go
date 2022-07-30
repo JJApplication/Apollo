@@ -18,6 +18,8 @@ import (
 	"github.com/JJApplication/Apollo/engine"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/router/router_app"
+	"github.com/JJApplication/Apollo/router/router_container"
+	"github.com/JJApplication/Apollo/router/router_tasks"
 	"github.com/JJApplication/Apollo/router/router_web"
 	"github.com/JJApplication/Apollo/uds"
 	"github.com/JJApplication/Apollo/utils"
@@ -76,6 +78,8 @@ func initEngine() {
 	// load router
 	router_app.Init(dirEngine.GetEngine())
 	router_web.Init(dirEngine.GetEngine())
+	router_tasks.Init(dirEngine.GetEngine())
+	router_container.Init(dirEngine.GetEngine())
 
 	err := dirEngine.RunServer()
 	if err != nil && err != http.ErrServerClosed {

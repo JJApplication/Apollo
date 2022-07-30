@@ -8,9 +8,11 @@ package cron
 import (
 	"fmt"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/google/uuid"
 )
 
@@ -27,6 +29,8 @@ type OneTicker struct {
 	Des        string `json:"des"`
 	Stopped    bool   `json:"stopped"`
 	CreateTime int64  `json:"create_time"`
+	Duration   int    `json:"duration"`
+	LastRun    int64  `json:"lastRun"`
 }
 
 func (tc *OneTicker) Start() (uuid string, err error) {
@@ -40,10 +44,10 @@ func (tc *OneTicker) Stop() (uuid string, err error) {
 	return tc.UUID, nil
 }
 
-var TickerMap = map[string]OneTicker{}
+var TickerMap = map[string]*OneTicker{}
 
 func init() {
-	TickerMap = make(map[string]OneTicker, 1)
+	TickerMap = make(map[string]*OneTicker, 1)
 }
 
 func recoverTask(f func()) {
@@ -66,13 +70,15 @@ func AddTicker(t int, taskName, des string, f func()) {
 	ticker := time.NewTicker(time.Second * time.Duration(t))
 	ch := make(chan bool)
 	uuidStr := uuid.NewString()
-	TickerMap[uuidStr] = OneTicker{
+	TickerMap[uuidStr] = &OneTicker{
 		ch:         ch,
 		UUID:       uuidStr,
 		Name:       taskName,
 		Des:        des,
 		Stopped:    false,
 		CreateTime: time.Now().Unix(),
+		Duration:   t,
+		LastRun:    0,
 	}
 
 	go func() {
@@ -80,7 +86,8 @@ func AddTicker(t int, taskName, des string, f func()) {
 			select {
 			case <-ticker.C:
 				recoverTask(f)
-				logger.Logger.Info(fmt.Sprintf("ticker {%s} [%s] task run at :%s", taskName, uuidStr, time.Now().String()))
+				updateLastRun(uuidStr)
+				logger.Logger.Info(fmt.Sprintf("ticker {%s} [%s] task run at :%s", taskName, uuidStr, utils.TimeNowFormat(utils.TimeForLogger)))
 			case sig := <-ch:
 				if sig {
 					ticker.Stop()
@@ -96,4 +103,11 @@ func InsureTickerExit() {
 	for _, t := range TickerMap {
 		t.Stop()
 	}
+}
+
+func updateLastRun(uuid string) {
+	lock := sync.Mutex{}
+	lock.Lock()
+	TickerMap[uuid].LastRun = time.Now().Unix()
+	defer lock.Unlock()
 }

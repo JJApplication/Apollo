@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	docker "github.com/docker/docker/client"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
+	docker "github.com/docker/docker/client"
 )
 
 // docker的客户端
@@ -32,11 +32,12 @@ const (
 func InitDockerClient() {
 	once := sync.Once{}
 	once.Do(func() {
-		DockerCli = getClient()
+		DockerCli = createClient()
 	})
 }
 
-func getClient() *docker.Client {
+// 初始化docker客户端
+func createClient() *docker.Client {
 	client, err := docker.NewClientWithOpts(
 		docker.WithHost(config.ApolloConf.CI.DockerHost),
 		docker.WithTimeout(time.Duration(config.ApolloConf.CI.DockerTimeout)*time.Second),
@@ -49,4 +50,8 @@ func getClient() *docker.Client {
 	logger.Logger.Info(DockerManager + " init docker client success")
 	logger.Logger.Info(DockerManager + " connected to host: " + config.ApolloConf.CI.DockerHost)
 	return client
+}
+
+func getClient() *docker.Client {
+	return DockerCli
 }

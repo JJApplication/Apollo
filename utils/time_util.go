@@ -15,6 +15,7 @@ const (
 	TimeFormat    = "2006/1/2 15:04:05"
 	TimeFormatDay = "2006/1/2"
 	TimeForLogger = "2006-1-2 15:04:05"
+	TimeBetterSep = "2006-1-2-15-04-05"
 )
 
 // TimeNowUnix 计算当前unix时间
@@ -35,6 +36,10 @@ func TimeNowYearDay() string {
 // TimeNowFormat 返回符合格式的时间戳
 func TimeNowFormat(layout string) string {
 	return time.Now().Format(layout)
+}
+
+func TimeNowBetterSep() string {
+	return time.Now().Format(TimeBetterSep)
 }
 
 // TimeCalcUnix 计算ms差
