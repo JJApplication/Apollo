@@ -25,7 +25,8 @@
   },
   "server": {
     "host": "0.0.0.0",
-    "port": 9090
+    "port": 9090,
+    "uds": "/tmp/Apollo.sock"
   },
   "ci": {
     "docker_host": "tcp://192.168.100.10:2375",

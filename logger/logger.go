@@ -14,6 +14,7 @@ import (
 )
 
 var Logger *zap.Logger
+var LoggerSugar *zap.SugaredLogger
 
 func InitLogger() error {
 	logger, err := zap.Config{
@@ -43,7 +44,7 @@ func InitLogger() error {
 		},
 		OutputPaths:      configLog(),
 		ErrorOutputPaths: configLog(),
-		InitialFields:    map[string]interface{}{"Logger": LoggerPrefix},
+		InitialFields:    map[string]interface{}{"Name": LoggerPrefix},
 	}.Build(
 		zap.AddCaller(),
 		zap.AddCallerSkip(1),
@@ -54,6 +55,7 @@ func InitLogger() error {
 	}
 
 	Logger = logger
+	LoggerSugar = logger.Sugar()
 	Logger.Info(LoggerInitSuccess)
 	defer logger.Sync()
 

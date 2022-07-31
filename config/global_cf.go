@@ -80,6 +80,7 @@ type Redis struct {
 type Server struct {
 	Host string `json:"host"`
 	Port int    `json:"port"`
+	Uds  string `json:"uds"`
 }
 
 // CI CI配置

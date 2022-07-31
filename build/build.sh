@@ -11,3 +11,4 @@ swag init -g ./apollo.go
 
 echo "start to build"
 go build -ldflags='-w -s' -trimpath -o apollo ./
+echo "done"

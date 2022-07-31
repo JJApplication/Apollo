@@ -110,7 +110,10 @@ func AddJobLogRotate() {
 	des := "日志定时绕接"
 	AddTicker(DurationLogRotate, "LogRotate", des, func() {
 		if config.ApolloConf.Log.EnableLog == "yes" && config.ApolloConf.Log.LogFile != "" {
-			err := utils.ArchiveFile(config.ApolloConf.Log.LogFile, fmt.Sprintf("%s-%s", config.ApolloConf.Log.LogFile, utils.TimeNowBetterSep()))
+			err := utils.ArchiveFile(
+				config.ApolloConf.Log.LogFile,
+				fmt.Sprintf("%s-%s", config.ApolloConf.Log.LogFile, utils.TimeNowBetterSep()),
+				true)
 			if err != nil {
 				logger.Logger.Error(fmt.Sprintf("job log rotate: failed: %s", err.Error()))
 			}

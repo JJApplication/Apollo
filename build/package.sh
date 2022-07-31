@@ -4,7 +4,7 @@
 package()
 {
   echo "start to package: $(date)"
-  if [[ ! -f ./dirichlet ]];then
+  if [[ ! -f ./apollo ]];then
     echo "binary not exist"
     exit 1
   fi
@@ -17,7 +17,7 @@ package()
   mkdir ./opt
 
   # generate
-  cp dirichlet ./opt
+  cp ./apollo ./opt
   cp -r ./conf ./opt
   cp -r ./web ./opt
   tar -czvf dirichlet.tar.gz ./opt

@@ -9,9 +9,11 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 const (
@@ -75,7 +77,7 @@ func RemoveFile(f string) error {
 // ArchiveFile 打包文件 默认为tar.gz
 // fileName 要打包的文件
 // dst 要生成的文件名
-func ArchiveFile(fileName string, dst string) error {
+func ArchiveFile(fileName string, dst string, autoClear bool) error {
 	if !strings.HasSuffix(dst, ArchiveType) {
 		dst = dst + ArchiveType
 	}
@@ -118,5 +120,19 @@ func ArchiveFile(fileName string, dst string) error {
 	}
 
 	_, err = io.Copy(tarw, file)
-	return err
+	if err != nil {
+		return err
+	}
+	if autoClear {
+		return ClearFile(fileName)
+	}
+	return nil
+}
+
+// ClearFile 清空文件
+func ClearFile(f string) error {
+	lock := sync.Mutex{}
+	lock.Lock()
+	defer lock.Unlock()
+	return ioutil.WriteFile(f, []byte(""), 0644)
 }

@@ -11,6 +11,7 @@ import (
 	"net"
 	"os"
 
+	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 )
 
@@ -44,15 +45,22 @@ func echo(c net.Conn) {
 }
 
 func removeSocket() {
-	_ = os.Remove(sockerAddr)
+	_ = os.Remove(getSocket())
+}
+
+func getSocket() string {
+	if config.ApolloConf.Server.Uds == "" {
+		return socketAddr
+	}
+	return config.ApolloConf.Server.Uds
 }
 
 func listen() {
 	removeSocket()
-	addr, err := net.ResolveUnixAddr("unix", sockerAddr)
+	addr, err := net.ResolveUnixAddr("unix", getSocket())
 
 	l, err := net.ListenUnix("unix", addr)
-	logger.Logger.Info(fmt.Sprintf("UDS Listen at: %s", sockerAddr))
+	logger.Logger.Info(fmt.Sprintf("UDS Listen at: %s", getSocket()))
 	if err != nil {
 		logger.Logger.Error(fmt.Sprintf("UDS Listen failed: %s", err.Error()))
 		return
