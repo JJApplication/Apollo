@@ -25,3 +25,7 @@ type status struct {
 func Index(c *gin.Context) {
 	c.File("./web/index.html")
 }
+
+func Favicon(c *gin.Context) {
+	c.File("./web/favicon.ico")
+}

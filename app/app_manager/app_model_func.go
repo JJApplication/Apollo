@@ -17,6 +17,7 @@ import (
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/octopus_meta"
 )
 
 func appScriptPath(app, c string) string {
@@ -101,6 +102,10 @@ func attachEnvsWithPorts(app *App) []string {
 // 每次启动前应该强制校验 先停止服务
 // rundata中的ports是随机分配的，只能在START中生效
 func (app *App) Start() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
+
 	var ret int
 	if ok, _ := app.Check(); ok {
 		return true, nil
@@ -133,6 +138,9 @@ func (app *App) Start() (bool, error) {
 }
 
 func (app *App) Stop() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
 	var ret int
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
@@ -152,6 +160,9 @@ func (app *App) Stop() (bool, error) {
 }
 
 func (app *App) ReStart() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
 	ok, err := app.Stop()
 	if !ok || err != nil {
 		return false, err
@@ -167,6 +178,9 @@ func (app *App) ReStart() (bool, error) {
 
 // ForceKill 查找进程树 全部强制kill
 func (app *App) ForceKill() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
 	return true, nil
 }
 
@@ -177,6 +191,9 @@ func (app *App) PostTodo() *App {
 
 // Check 状态检查
 func (app *App) Check() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
 	var ret int
 
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check))
@@ -202,6 +219,9 @@ func (app *App) ClonePorts() {
 // BackUp 备份服务
 // 当前的备份比较简单 打包整个服务到tar中，去除所有的日志文件和缓存文件
 func (app *App) BackUp() (bool, error) {
+	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
 	return true, nil
 }
 
@@ -215,14 +235,17 @@ func (app *App) Reload() (bool, error) {
 	return true, nil
 }
 
-// Sync 同步配置文件
+// Sync 同步保存配置文件
 func (app *App) Sync() (bool, error) {
 	lock := sync.Mutex{}
 	lock.Lock()
 	// 运行时数据不存储 所以进行一次app clone
+	// 如果为静态端口 则存储
 	var appClone App
 	appClone = *app
-	appClone.Meta.RunData.Ports = []int{}
+	if !appClone.Meta.RunData.RandomPort {
+		appClone.Meta.RunData.Ports = []int{}
+	}
 
 	err := SaveToFile(&appClone, app.Meta.Name)
 	lock.Unlock()
@@ -234,7 +257,7 @@ func (app *App) Sync() (bool, error) {
 
 // Info 获取app的基础信息
 func (app *App) Info() interface{} {
-	return nil
+	return app.Meta
 }
 
 // Dump 安全的保存运行态数据到Map中
@@ -252,4 +275,13 @@ func (app *App) SyncDB() (bool, error) {
 // ToJSON 导出为json字符串
 func (app *App) ToJSON() string {
 	return utils.PrettyJson(app)
+}
+
+// CheckAppReleaseStatus 检查app发布状态 未发布时不进行操作
+func (app *App) CheckAppReleaseStatus() bool {
+	if app.Meta.ReleaseStatus == octopus_meta.Published {
+		return true
+	}
+	logger.Logger.Warn(fmt.Sprintf("%s [%s] releaseStatus is %s, skip operation", APPManagerPrefix, app.Meta.Name, app.Meta.ReleaseStatus))
+	return false
 }
