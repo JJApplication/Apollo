@@ -77,6 +77,7 @@ func RemoveFile(f string) error {
 // ArchiveFile 打包文件 默认为tar.gz
 // fileName 要打包的文件
 // dst 要生成的文件名
+// autoClear 自动清空文件
 func ArchiveFile(fileName string, dst string, autoClear bool) error {
 	if !strings.HasSuffix(dst, ArchiveType) {
 		dst = dst + ArchiveType

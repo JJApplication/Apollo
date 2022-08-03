@@ -38,6 +38,7 @@ func TimeNowFormat(layout string) string {
 	return time.Now().Format(layout)
 }
 
+// TimeNowBetterSep 形如"2006-1-2-15-04-05"
 func TimeNowBetterSep() string {
 	return time.Now().Format(TimeBetterSep)
 }

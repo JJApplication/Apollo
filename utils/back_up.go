@@ -8,25 +8,27 @@ package utils
 import (
 	"archive/zip"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
+	"github.com/JJApplication/Apollo/config"
 	"github.com/gookit/goutil/fsutil"
 )
 
 // 全局的备份方法
 
-const (
-	BackDir    = "/var/app.backup.zip"
+var (
+	BackDir    = path.Join(config.ApolloConf.APPBackUp, fmt.Sprintf("backup-%s.zip", TimeNowBetterSep())) // 拼接ServiceRoot
 	BackDirOld = BackDir + ".old"
 	BackupFlag = "/var/.backup"
 	BackTmp    = "/tmp/Apollo"
 )
 
-// todo 基于zip的备份 不使用go
 // Backup 备份初始化，全局只能有一个备份任务,使用标志位判断
 func Backup(src string) error {
 	if checkFlag() {

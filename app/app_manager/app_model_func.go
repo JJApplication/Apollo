@@ -36,9 +36,11 @@ func wrapWithCode(envs []string) []string {
 		fmt.Sprintf("%s=%d", "APP_RUN_ERR", APPStatusRunning),
 
 		// 运行时服务路径
-		fmt.Sprintf("%s=%s", "APP_ROOT", config.ApolloConf.APPRoot),
 		fmt.Sprintf("%s=%s", "SERVICE_ROOT", config.ApolloConf.ServiceRoot),
+		fmt.Sprintf("%s=%s", "APP_ROOT", config.ApolloConf.APPRoot),
 		fmt.Sprintf("%s=%s", "APP_LOG", config.ApolloConf.APPLogDir),
+		fmt.Sprintf("%s=%s", "APP_PID", config.ApolloConf.APPPidDir),
+		fmt.Sprintf("%s=%s", "APP_TMP", config.ApolloConf.APPTmpDir),
 	}, envs...)
 }
 

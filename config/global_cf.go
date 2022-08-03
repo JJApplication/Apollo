@@ -32,7 +32,7 @@ type DConfig struct {
 	APPLogDir   string `json:"app_log_dir"`   // 服务日志目录
 	APPTmpDir   string `json:"app_tmp_dir"`   // 服务临时文件目录
 	APPBackUp   string `json:"app_back_up"`   // 服务备份目录
-
+	APPPidDir   string `json:"app_pid_dir"`   // 服务运行时的pid
 	// logger
 	Log DLog `json:"log"`
 

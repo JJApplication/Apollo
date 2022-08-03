@@ -6,6 +6,7 @@
   "app_log_dir": "/renj.io/log",
   "app_tmp_dir": "/renj.io/tmp",
   "app_back_up": "/renj.io/backup",
+  "app_pids": "/renj.io/pids",
   "log": {
     "enable_log": "",
     "enable_stack": "no",
