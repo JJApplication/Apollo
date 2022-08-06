@@ -27,7 +27,7 @@ jobs:
       run: echo "start to build Apollo"
       
     - name: Build
-      run: go build -mod=mod -v -o apollo ./...
+      run: go build -mod=mod -v -o apollo
 
     - name: Done
       run: echo "build success"
