@@ -27,7 +27,7 @@ jobs:
       run: echo "start to build Apollo"
       
     - name: Build
-      run: go build -mod=mod -v ./...
+      run: go build -mod=mod -v -o apollo ./...
 
     - name: Done
       run: echo "build success"
@@ -38,8 +38,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.event.head_commit.id }}
+        release_name: Release ${{ github.event.head_commit.message }}
         body: New Release.
         draft: false
         prerelease: false
