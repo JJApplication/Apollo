@@ -16,15 +16,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/JJApplication/Apollo/config"
 	"github.com/gookit/goutil/fsutil"
 )
 
 // 全局的备份方法
 
 var (
-	BackDir    = path.Join(config.ApolloConf.APPBackUp, fmt.Sprintf("backup-%s.zip", TimeNowBetterSep())) // 拼接ServiceRoot
-	BackDirOld = BackDir + ".old"
+	BackBase   = fmt.Sprintf("backup-%s.zip", TimeNowBetterSep()) // 拼接ServiceRoot
+	BackDirOld = BackBase + ".old"
 	BackupFlag = "/var/.backup"
 	BackTmp    = "/tmp/Apollo"
 )
@@ -81,7 +80,7 @@ func startBackup(src string) error {
 	if err = copyDir(src); err != nil {
 		return err
 	}
-	return zipDir()
+	return zipDir(src)
 }
 
 // io cp操作
@@ -90,7 +89,8 @@ func copyDir(src string) error {
 }
 
 // 压缩目录
-func zipDir() error {
+func zipDir(src string) error {
+	BackDir := path.Join(src, BackBase)
 	if fsutil.FileExists(BackDir) && !fsutil.FileExists(BackDirOld) {
 		_ = fsutil.CopyFile(BackDir, BackDirOld)
 		err := fsutil.DeleteIfFileExist(BackDir)
@@ -108,11 +108,11 @@ func zipDir() error {
 			return err
 		}
 	}
-	return zipFunc(BackTmp)
+	return zipFunc(BackDir, BackTmp)
 }
 
-func zipFunc(src string) error {
-	zipFile, err := os.Create(BackDir)
+func zipFunc(dst, src string) error {
+	zipFile, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
