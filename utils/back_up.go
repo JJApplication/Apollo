@@ -119,7 +119,7 @@ func zipFunc(dst, src string) error {
 			return err
 		}
 		if filter(info.Name()) {
-			return filepath.SkipDir
+			return nil
 		}
 		header, err := zip.FileInfoHeader(info)
 		if err != nil {
@@ -148,15 +148,30 @@ func zipFunc(dst, src string) error {
 	return err
 }
 
-var filterFiles = []string{}
+var filterFiles = []string{
+	".log",
+	".git",
+	"cache",
+	"CACHE",
+	"__pycache__",
+	"__cache__",
+	".rc",
+	".bashrc",
+	".profile",
+	".bash_history",
+	".bash_logout",
+	".sock",
+	".tmp",
+	"node_modules",
+	".gnupg",
+}
 
 // 过滤文件 文件夹
-// 不过滤时返回true
 func filter(name string) bool {
 	for _, f := range filterFiles {
-		if f == name {
-			return false
+		if f == name || strings.HasSuffix(name, f) {
+			return true
 		}
 	}
-	return true
+	return false
 }

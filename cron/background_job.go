@@ -132,7 +132,7 @@ func AddJobBackup() {
 		if err != nil {
 			logger.Logger.Error(fmt.Sprintf("job app backup: failed: %s", err.Error()))
 		} else {
-			logger.Logger.Error("job app backup: success")
+			logger.Logger.Info("job app backup: success")
 		}
 	})
 }
