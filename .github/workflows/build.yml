@@ -27,24 +27,7 @@ jobs:
       run: echo "start to build Apollo"
       
     - name: Build
-      run: go build -mod=mod -v ./...
+      run: go build -mod=mod -v -o apollo
 
     - name: Done
       run: echo "build success"
-      
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: New Release.
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./apollo
-        asset_name: apollo
