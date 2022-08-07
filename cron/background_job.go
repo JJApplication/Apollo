@@ -23,6 +23,7 @@ const (
 	DurationAppSyncdb = 60
 	DurationAppCheck  = 60 * 60
 	DurationLogRotate = 7 * 60 * 60 * 24
+	DurationAppBackup = 14 * 60 * 60 * 24
 )
 
 func InitBackgroundJobs() {
@@ -32,6 +33,7 @@ func InitBackgroundJobs() {
 	AddJobAPPDumps()
 	AddJobAPPCheck()
 	AddJobLogRotate()
+	AddJobBackup()
 }
 
 // AddJobDBSaver 数据库刷新
@@ -117,6 +119,20 @@ func AddJobLogRotate() {
 			if err != nil {
 				logger.Logger.Error(fmt.Sprintf("job log rotate: failed: %s", err.Error()))
 			}
+		}
+	})
+}
+
+// AddJobBackup 定时备份App
+func AddJobBackup() {
+	logger.Logger.Info("job: app backup start")
+	des := "微服务定时备份"
+	AddTicker(DurationAppBackup, "AppBackup", des, func() {
+		err := utils.Backup(config.ApolloConf.APPRoot, config.ApolloConf.APPBackUp)
+		if err != nil {
+			logger.Logger.Error(fmt.Sprintf("job app backup: failed: %s", err.Error()))
+		} else {
+			logger.Logger.Error("job app backup: success")
 		}
 	})
 }

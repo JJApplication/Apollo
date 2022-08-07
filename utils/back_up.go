@@ -17,37 +17,35 @@ import (
 	"strings"
 
 	"github.com/gookit/goutil/fsutil"
+	copyfs "github.com/otiai10/copy"
 )
 
 // 全局的备份方法
 
 var (
-	BackBase   = fmt.Sprintf("backup-%s.zip", TimeNowBetterSep()) // 拼接ServiceRoot
-	BackDirOld = BackBase + ".old"
+	BackBase   = "backup-%s.zip" // 拼接ServiceRoot
 	BackupFlag = "/var/.backup"
 	BackTmp    = "/tmp/Apollo"
 )
 
 // Backup 备份初始化，全局只能有一个备份任务,使用标志位判断
-func Backup(src string) error {
+// src 为要备份的目录
+func Backup(src, back string) error {
 	if checkFlag() {
 		return errors.New("backup progress is running")
 	}
 	setFlag()
-	err := startBackup(src)
+	err := startBackup(src, back)
+	defer rmFlag()
 	if err != nil {
 		return err
 	}
-	rmFlag()
 	return nil
 }
 
 // 检查标志文件
 func checkFlag() bool {
 	if FileExist(BackupFlag) {
-		return false
-	}
-	if FileNotExist(BackupFlag) {
 		return true
 	}
 	return false
@@ -64,9 +62,12 @@ func rmFlag() {
 }
 
 // 开始备份，避免数据io异常先cp到/tmp下操作
-func startBackup(src string) error {
-	if FileNotExist(BackTmp) {
-
+func startBackup(src, back string) error {
+	if FileNotExist(src) {
+		return errors.New("backup src is not exist")
+	}
+	if FileNotExist(back) {
+		return errors.New("backup dst is not exist")
 	}
 	// 已经存在则删除原有的文件
 	err := os.RemoveAll(BackTmp)
@@ -80,30 +81,22 @@ func startBackup(src string) error {
 	if err = copyDir(src); err != nil {
 		return err
 	}
-	return zipDir(src)
+	return zipDir(back)
 }
 
 // io cp操作
+// 拷贝要备份的目录到临时目录下
 func copyDir(src string) error {
-	return fsutil.CopyFile(src, BackTmp)
+	return copyfs.Copy(src, BackTmp)
 }
 
 // 压缩目录
-func zipDir(src string) error {
-	BackDir := path.Join(src, BackBase)
-	if fsutil.FileExists(BackDir) && !fsutil.FileExists(BackDirOld) {
-		_ = fsutil.CopyFile(BackDir, BackDirOld)
+// src为要压缩的原目录
+// 已经存在备份文件时删除后进行压缩
+func zipDir(back string) error {
+	BackDir := path.Join(back, fmt.Sprintf(BackBase, TimeNowBetterSep()))
+	if fsutil.FileExists(BackDir) {
 		err := fsutil.DeleteIfFileExist(BackDir)
-		if err != nil {
-			return err
-		}
-	} else if fsutil.FileExists(BackDir) && fsutil.FileExists(BackDirOld) {
-		err := fsutil.DeleteIfFileExist(BackDirOld)
-		if err != nil {
-			return err
-		}
-		_ = fsutil.CopyFile(BackDir, BackDirOld)
-		err = fsutil.DeleteIfFileExist(BackDir)
 		if err != nil {
 			return err
 		}
@@ -124,6 +117,9 @@ func zipFunc(dst, src string) error {
 	err = filepath.Walk(BackTmp, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
+		}
+		if filter(info.Name()) {
+			return filepath.SkipDir
 		}
 		header, err := zip.FileInfoHeader(info)
 		if err != nil {
@@ -150,4 +146,17 @@ func zipFunc(dst, src string) error {
 		return err
 	})
 	return err
+}
+
+var filterFiles = []string{}
+
+// 过滤文件 文件夹
+// 不过滤时返回true
+func filter(name string) bool {
+	for _, f := range filterFiles {
+		if f == name {
+			return false
+		}
+	}
+	return true
 }

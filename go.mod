@@ -18,6 +18,7 @@ require (
 	github.com/landers1037/configen v1.0.6
 	github.com/landers1037/plnack-proto v1.0.5
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
+	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/swaggo/gin-swagger v1.3.3
 	github.com/swaggo/swag v1.7.8
