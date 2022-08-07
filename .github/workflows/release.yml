@@ -3,7 +3,6 @@ name: Apollo release
 
 on:
   push:
-    branches: [ "master" ]
     tags:
       - "v*"
   workflow_dispatch:  
@@ -53,3 +52,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./apollo
         asset_name: apollo
+        asset_content_type: application/octet-stream
