@@ -9,16 +9,18 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"os"
+	"syscall"
 
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 )
 
+const MaxReadSize = 4096
+
 func echo(c net.Conn) {
 	logger.Logger.Info(fmt.Sprintf("client connected: [%s]", c.RemoteAddr().Network()))
 	for {
-		buf := make([]byte, 1024)
+		buf := make([]byte, MaxReadSize)
 		cnt, err := c.Read(buf)
 		if err != nil {
 			if err == io.EOF {
@@ -45,7 +47,7 @@ func echo(c net.Conn) {
 }
 
 func removeSocket() {
-	_ = os.Remove(getSocket())
+	_ = syscall.Unlink(getSocket())
 }
 
 func getSocket() string {
