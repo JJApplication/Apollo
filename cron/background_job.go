@@ -7,6 +7,7 @@ package cron
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
 	"github.com/JJApplication/Apollo/config"
@@ -22,7 +23,7 @@ const (
 	DurationAppsync   = 60 * 60
 	DurationAppSyncdb = 60
 	DurationAppCheck  = 60 * 60
-	DurationLogRotate = 7 * 60 * 60 * 24
+	DurationLogRotate = 1 * 60 * 60 * 24
 	DurationAppBackup = 14 * 60 * 60 * 24
 )
 
@@ -107,19 +108,23 @@ func AddJobAPPCheck() {
 }
 
 // AddJobLogRotate 日志裁剪任务
+// 对log目录下的所有日志绕接
 func AddJobLogRotate() {
 	logger.Logger.Info("job: log rotate start")
 	des := "日志定时绕接"
 	AddTicker(DurationLogRotate, "LogRotate", des, func() {
-		if config.ApolloConf.Log.EnableLog == "yes" && config.ApolloConf.Log.LogFile != "" {
-			err := utils.ArchiveFile(
-				config.ApolloConf.Log.LogFile,
-				fmt.Sprintf("%s-%s", config.ApolloConf.Log.LogFile, utils.TimeNowBetterSep()),
-				true)
-			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("job log rotate: failed: %s", err.Error()))
-			}
-		}
+		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+			go func() {
+				app := value.(app_manager.App)
+				err := utils.Rotate(filepath.Join(config.ApolloConf.APPLogDir, app.Meta.Name, app.Meta.Name+".log"))
+				if err != nil {
+					if err != nil {
+						logger.Logger.Error(fmt.Sprintf("job log rotate: failed: [%s] %s", app.Meta.Name, err.Error()))
+					}
+				}
+			}()
+			return true
+		})
 	})
 }
 

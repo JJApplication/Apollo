@@ -8,6 +8,7 @@ package utils
 import (
 	"archive/tar"
 	"compress/gzip"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -18,6 +19,7 @@ import (
 
 const (
 	ArchiveType = ".tar.gz"
+	RotateSize  = 20 << 20 // 20mb
 )
 
 // CreateFile 多级目录和文件的创建
@@ -135,5 +137,27 @@ func ClearFile(f string) error {
 	lock := sync.Mutex{}
 	lock.Lock()
 	defer lock.Unlock()
-	return ioutil.WriteFile(f, []byte(""), 0644)
+	return ioutil.WriteFile(f, []byte(""), 0664)
+}
+
+// GetFileSize 获取文件大小 不存在时为0
+func GetFileSize(file string) int64 {
+	if FileExist(file) {
+		info, err := os.Stat(file)
+		if err != nil {
+			return 0
+		}
+		return info.Size()
+	}
+	return 0
+}
+
+// Rotate 日志绕接
+// 计算大小阈值 超过才会压缩 否则跳过
+func Rotate(appLog string) error {
+	if GetFileSize(appLog) < RotateSize {
+		return nil
+	}
+	gzName := fmt.Sprintf("%s-%s", appLog, TimeNowBetterSep())
+	return ArchiveFile(appLog, gzName, true)
 }
