@@ -90,6 +90,10 @@ func copyDir(src string) error {
 	return copyfs.Copy(src, BackTmp)
 }
 
+func copyN(src, dst string) error {
+	return copyfs.Copy(src, dst)
+}
+
 // 压缩目录
 // src为要压缩的原目录
 // 已经存在备份文件时删除后进行压缩

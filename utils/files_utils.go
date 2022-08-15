@@ -80,14 +80,23 @@ func RemoveFile(f string) error {
 // fileName 要打包的文件
 // dst 要生成的文件名
 // autoClear 自动清空文件
+// 写时复制 会导致writeToolong 将当前文件备份到tmp后压缩并删除
 func ArchiveFile(fileName string, dst string, autoClear bool) error {
 	if !strings.HasSuffix(dst, ArchiveType) {
 		dst = dst + ArchiveType
 	}
-	fileInfo, err := os.Stat(fileName)
+	_, err := os.Stat(fileName)
 	if err != nil {
 		return err
 	}
+
+	// copy when write
+	fileTmpName := copyWhenWrite(fileName)
+	fileInfo, err := os.Stat(fileTmpName)
+	if err != nil {
+		return err
+	}
+
 	f, err := os.Create(dst)
 	if err != nil {
 		return err
@@ -104,7 +113,7 @@ func ArchiveFile(fileName string, dst string, autoClear bool) error {
 	defer tarw.Close()
 
 	// start to zip
-	file, err := os.Open(fileName)
+	file, err := os.Open(fileTmpName)
 	if err != nil {
 		return err
 	}
@@ -112,7 +121,7 @@ func ArchiveFile(fileName string, dst string, autoClear bool) error {
 
 	header := new(tar.Header)
 	// name需要为相对路径 受限于tar
-	header.Name = filepath.Base(filepath.Clean(fileName))
+	header.Name = filepath.Base(filepath.Clean(fileTmpName))
 	header.Size = fileInfo.Size()
 	header.Mode = int64(fileInfo.Mode())
 	header.ModTime = fileInfo.ModTime()
@@ -126,7 +135,10 @@ func ArchiveFile(fileName string, dst string, autoClear bool) error {
 	if err != nil {
 		return err
 	}
+
+	// 自动清理不保证成功
 	if autoClear {
+		_ = RemoveFile(fileTmpName)
 		return ClearFile(fileName)
 	}
 	return nil
@@ -150,6 +162,15 @@ func GetFileSize(file string) int64 {
 		return info.Size()
 	}
 	return 0
+}
+
+// 不保证成功的写时复制
+// 默认的目录/tmp
+// 返回tmpDst
+func copyWhenWrite(src string) string {
+	tmpFile := filepath.Join(os.TempDir(), filepath.Base(src))
+	_ = copyN(src, tmpFile)
+	return tmpFile
 }
 
 // Rotate 日志绕接
