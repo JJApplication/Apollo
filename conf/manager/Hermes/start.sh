@@ -5,7 +5,7 @@ if [[ ! -d "${APP_LOG}/${APP}" ]];then
 fi
 
 . env.sh
-nohup "${APP_ROOT}/${APP}/hermes" > "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+nohup "${APP_ROOT}/${APP}/hermes" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

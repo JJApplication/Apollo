@@ -8,7 +8,7 @@ conf="${APP_ROOT}/${APP}/conf/jjgo.ini"
 conf_temp="${APP_ROOT}/${APP}/conf/jjgo.ini.env"
 envsubst < "$conf_temp" > "$conf"
 
-nohup "${APP_ROOT}/${APP}/app_jjgo" > "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+nohup "${APP_ROOT}/${APP}/app_jjgo" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

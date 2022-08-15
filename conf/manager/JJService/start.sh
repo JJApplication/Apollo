@@ -9,7 +9,7 @@ conf="${APP_ROOT}/${APP}/conf/production.ini"
 conf_temp="${APP_ROOT}/${APP}/conf/production.ini.env"
 envsubst < "$conf_temp" > "$conf"
 
-nohup  "${APP_ROOT}/${APP}/app_jjservice" > "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+nohup  "${APP_ROOT}/${APP}/app_jjservice" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

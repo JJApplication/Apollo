@@ -5,7 +5,7 @@ if [[ ! -d "${APP_LOG}/${APP}" ]];then
   mkdir -p "${APP_LOG}/${APP}"
 fi
 
-nohup gunicorn -c "${APP_ROOT}/${APP}/gun_mgek.py" app_mgek:app > "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+nohup gunicorn -c "${APP_ROOT}/${APP}/gun_mgek.py" app_mgek:app >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"
