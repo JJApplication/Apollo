@@ -41,6 +41,7 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Apollo ${{ github.ref }}
         body: 🚀New Release.
+              
               🤖published by bot
               
               ${{ github.event.head_commit.message }}
