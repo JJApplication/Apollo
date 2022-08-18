@@ -59,7 +59,7 @@ func AddJobDBPersist() {
 // 同步配置文件到配置文件目录
 func AddJobAPPSync() {
 	logger.Logger.Info("job: app config sync start")
-	des := "同步存储微服务模型文件"
+	des := "同步微服务模型文件"
 	AddTicker(DurationAppsync, "AppConfigSync", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)

@@ -5,7 +5,7 @@ echo "GOPROXY: $(go env GOPROXY)"
 echo "GOOS: $(go env GOOS)"
 echo "GOARCH: $(go env GOARCH)"
 
-echo $(date -u)
+date -u
 echo "build swagger docs"
 swag init -g ./apollo.go
 

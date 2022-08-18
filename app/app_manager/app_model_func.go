@@ -237,7 +237,8 @@ func (app *App) Reload() (bool, error) {
 	return true, nil
 }
 
-// Sync 同步保存配置文件
+// Sync 从本地文件同步模型数据
+// 能够同步的数据仅包括非运行时数据
 func (app *App) Sync() (bool, error) {
 	lock := sync.Mutex{}
 	lock.Lock()
@@ -249,11 +250,23 @@ func (app *App) Sync() (bool, error) {
 		appClone.Meta.RunData.Ports = []int{}
 	}
 
-	err := SaveToFile(&appClone, app.Meta.Name)
-	lock.Unlock()
-	if err != nil {
-		return false, err
+	var cf octopus_meta.App
+	cf, err := octopus_meta.LoadApp(app.Meta.Name)
+	if err != nil || cf.Validate() {
+		return false, errors.New("can't load from config file")
 	}
+
+	appClone.Meta.ID = cf.ID
+	appClone.Meta.Type = cf.Type
+	appClone.Meta.ReleaseStatus = cf.ReleaseStatus
+	appClone.Meta.EngDes = cf.EngDes
+	appClone.Meta.CHSDes = cf.CHSDes
+	appClone.Meta.Link = cf.Link
+	appClone.Meta.ManageCMD = cf.ManageCMD
+	appClone.Meta.Meta = cf.Meta
+	appClone.Meta.ResourceLimit = cf.ResourceLimit
+	APPManager.APPManagerMap.Store(app.Meta.Name, appClone)
+	lock.Unlock()
 	return true, nil
 }
 
