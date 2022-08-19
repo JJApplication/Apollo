@@ -18,19 +18,21 @@ import (
 // 启动时执行的轮询任务 用于随时刷新持久化数据
 // 持久化数据用于恢复
 const (
-	DurationDbSaver   = 60 * 60
-	DurationDbPersist = 60 * 60 * 24
-	DurationAppsync   = 60 * 60
-	DurationAppSyncdb = 60
-	DurationAppCheck  = 60 * 60
-	DurationLogRotate = 1 * 60 * 60 * 24
-	DurationAppBackup = 14 * 60 * 60 * 24
+	DurationDbSaver     = 60 * 60
+	DurationDbPersist   = 60 * 60 * 24
+	DurationAppsync     = 60 * 60
+	DurationOctopusSync = 60 * 60
+	DurationAppSyncDB   = 60
+	DurationAppCheck    = 60 * 60
+	DurationLogRotate   = 1 * 60 * 60 * 24
+	DurationAppBackup   = 7 * 60 * 60 * 24
 )
 
 func InitBackgroundJobs() {
 	AddJobDBSaver()
 	AddJobDBPersist()
 	AddJobAPPSync()
+	AddJobOctopusMetaSync()
 	AddJobAPPDumps()
 	AddJobAPPCheck()
 	AddJobLogRotate()
@@ -72,12 +74,24 @@ func AddJobAPPSync() {
 	})
 }
 
+// AddJobOctopusMetaSync 重载整个octopus目录
+func AddJobOctopusMetaSync() {
+	logger.Logger.Info("job: octopus-meta sync start")
+	des := "重载octopus模型文件"
+	AddTicker(DurationOctopusSync, "OctopusMetaSync", des, func() {
+		err := app_manager.ReloadManagerMap()
+		if err != nil {
+			logger.Logger.Error(fmt.Sprintf("job octopus-meta sync failed: %s", err.Error()))
+		}
+	})
+}
+
 // AddJobAPPDumps 从缓存同步配置到mongo
 // 用于同步配置参数和端口变量
 func AddJobAPPDumps() {
 	logger.Logger.Info("job: app runtime sync start")
 	des := "同步存储缓存数据到数据库"
-	AddTicker(DurationAppSyncdb, "AppRuntimeSync", des, func() {
+	AddTicker(DurationAppSyncDB, "AppRuntimeSync", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)
 			_, err := app.SyncDB()

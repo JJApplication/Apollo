@@ -40,3 +40,24 @@ func LoadManagerCf() error {
 
 	return ok
 }
+
+// ReloadManagerMap 运行时刷新数据
+// 只做增量更新 数据的更新由AppSync任务完成
+func ReloadManagerMap() error {
+	apps, err := octopus_meta.AutoLoad()
+	if err != nil {
+		return err
+	}
+	// 存在app时跳过
+	for k, v := range apps {
+		app, ok := APPManager.APPManagerMap.Load(k)
+		if ok && app.(App).Meta.Name == k {
+			continue
+		}
+		if !ok {
+			continue
+		}
+		APPManager.APPManagerMap.Store(k, App{Meta: v})
+	}
+	return nil
+}
