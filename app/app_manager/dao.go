@@ -42,11 +42,11 @@ func SaveToDB() {
 			data = DaoAPP{
 				App: value.(App),
 			}
-			res, e := mgm.Coll(&DaoAPP{}).InsertOne(context.Background(), data)
+			e := mgm.Coll(&DaoAPP{}).Create(&data)
 			if e != nil {
 				logger.Logger.Error(fmt.Sprintf("%s insert app %s to db failed: %s", APPManagerPrefix, key, e.Error()))
 			} else {
-				logger.Logger.Info(fmt.Sprintf("%s insert app %s to db, resID: %v", APPManagerPrefix, key, res.InsertedID))
+				logger.Logger.Info(fmt.Sprintf("%s insert app %s to db", APPManagerPrefix, key))
 			}
 		} else {
 			// 更新操作

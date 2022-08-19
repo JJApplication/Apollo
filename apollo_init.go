@@ -17,6 +17,7 @@ import (
 	"github.com/JJApplication/Apollo/database"
 	"github.com/JJApplication/Apollo/engine"
 	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/router/router_alarm"
 	"github.com/JJApplication/Apollo/router/router_app"
 	"github.com/JJApplication/Apollo/router/router_container"
 	"github.com/JJApplication/Apollo/router/router_tasks"
@@ -69,19 +70,20 @@ func initBackgroundJobs() {
 }
 
 func initEngine() {
-	dirEngine := engine.NewEngine(&engine.EngineConfig{
+	apolloEngine := engine.NewEngine(&engine.EngineConfig{
 		Host: config.ApolloConf.Server.Host,
 		Port: config.ApolloConf.Server.Port,
 	})
-	dirEngine.Init()
+	apolloEngine.Init()
 
 	// load router
-	router_app.Init(dirEngine.GetEngine())
-	router_web.Init(dirEngine.GetEngine())
-	router_tasks.Init(dirEngine.GetEngine())
-	router_container.Init(dirEngine.GetEngine())
+	router_app.Init(apolloEngine.GetEngine())
+	router_web.Init(apolloEngine.GetEngine())
+	router_tasks.Init(apolloEngine.GetEngine())
+	router_container.Init(apolloEngine.GetEngine())
+	router_alarm.Init(apolloEngine.GetEngine())
 
-	err := dirEngine.RunServer()
+	err := apolloEngine.RunServer()
 	if err != nil && err != http.ErrServerClosed {
 		logger.Logger.Error(APPName + " server start failed")
 		logger.Logger.Error(fmt.Sprintf("%s %s", APPName, err.Error()))
