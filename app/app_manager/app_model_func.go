@@ -252,10 +252,13 @@ func (app *App) Sync() (bool, error) {
 
 	var cf octopus_meta.App
 	cf, err := octopus_meta.LoadApp(app.Meta.Name)
-	if err != nil || cf.Validate() {
-		return false, errors.New("can't load from config file")
+	if err != nil {
+		return false, errors.New("can't load from config file, " + err.Error())
 	}
 
+	if !cf.Validate() {
+		return false, errors.New("can't load from config file, validate failed")
+	}
 	appClone.Meta.ID = cf.ID
 	appClone.Meta.Type = cf.Type
 	appClone.Meta.ReleaseStatus = cf.ReleaseStatus

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"runtime"
+
 	"github.com/JJApplication/Apollo/logger"
 )
 
@@ -19,6 +21,17 @@ func main() {
 		logger.Logger.Error(logger.LoggerInitFailed)
 		return
 	}
+
+	// init recover
+	defer func() {
+		if r := recover(); r != nil {
+			logger.LoggerSugar.Error(r)
+			// add stack
+			var stackBuf [1 << 16]byte
+			stackLen := runtime.Stack(stackBuf[:], false)
+			logger.LoggerSugar.Errorf("%s", stackBuf[:stackLen])
+		}
+	}()
 
 	// init database
 	initMongo()
