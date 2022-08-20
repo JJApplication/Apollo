@@ -18,6 +18,7 @@
   "db": {
     "sqlite": {},
     "mongo": {
+      "name": "ApolloMongo",
       "url": "mongodb://192.168.100.10:27017",
       "user": "",
       "pass_wd": ""
