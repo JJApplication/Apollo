@@ -7,7 +7,6 @@ package cron
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 
@@ -82,9 +81,9 @@ func (c *CronManager) AddTask(spec, name string, f func()) (cronID cron.EntryID,
 	}
 	id, err := c.innerNewCronTask(spec, name, f)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("cronjob {%s} [%s] created failed", name, spec))
+		logger.LoggerSugar.Errorf("cronjob {%s} [%s] created failed", name, spec)
 	}
-	logger.Logger.Info(fmt.Sprintf("cronjob {%d} {%s} [%s] created successfully", id, name, spec))
+	logger.LoggerSugar.Infof("cronjob {%d} {%s} [%s] created successfully", id, name, spec)
 
 	return id, err
 }

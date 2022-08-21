@@ -6,7 +6,6 @@ Created: 2021/11/30 by Landers
 package cron
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
@@ -25,7 +24,7 @@ const (
 	DurationAppSyncDB   = 60
 	DurationAppCheck    = 60 * 60
 	DurationLogRotate   = 1 * 60 * 60 * 24
-	DurationAppBackup   = 7 * 60 * 60 * 24
+	DurationAppBackup   = 1 * 60 * 60 * 24
 )
 
 func InitBackgroundJobs() {
@@ -67,7 +66,7 @@ func AddJobAPPSync() {
 			app := value.(app_manager.App)
 			_, err := app.Sync()
 			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("job app config sync failed: %s", err.Error()))
+				logger.LoggerSugar.Errorf("job app config sync failed: %s", err.Error())
 			}
 			return true
 		})
@@ -81,7 +80,7 @@ func AddJobOctopusMetaSync() {
 	AddTicker(DurationOctopusSync, "OctopusMetaSync", des, func() {
 		err := app_manager.ReloadManagerMap()
 		if err != nil {
-			logger.Logger.Error(fmt.Sprintf("job octopus-meta sync failed: %s", err.Error()))
+			logger.LoggerSugar.Errorf("job octopus-meta sync failed: %s", err.Error())
 		}
 	})
 }
@@ -96,7 +95,7 @@ func AddJobAPPDumps() {
 			app := value.(app_manager.App)
 			_, err := app.SyncDB()
 			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("job app runtime syncDB failed: %s", err.Error()))
+				logger.LoggerSugar.Errorf("job app runtime syncDB failed: %s", err.Error())
 			}
 			return true
 		})
@@ -112,9 +111,9 @@ func AddJobAPPCheck() {
 			app := value.(app_manager.App)
 			_, err := app.Check()
 			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("job app checker: %s check failed: %s try to restart", key, err.Error()))
+				logger.LoggerSugar.Errorf("job app checker: %s check failed: %s try to restart", key, err.Error())
 				_, err = app.ReStart()
-				logger.Logger.Warn(fmt.Sprintf("job app checker: %s restart result: %s", key, err.Error()))
+				logger.LoggerSugar.Warnf("job app checker: %s restart result: %s", key, err.Error())
 			}
 			return true
 		})
@@ -133,7 +132,7 @@ func AddJobLogRotate() {
 				err := utils.Rotate(filepath.Join(config.ApolloConf.APPLogDir, app.Meta.Name, app.Meta.Name+".log"))
 				if err != nil {
 					if err != nil {
-						logger.Logger.Error(fmt.Sprintf("job log rotate: failed: [%s] %s", app.Meta.Name, err.Error()))
+						logger.LoggerSugar.Errorf("job log rotate: failed: [%s] %s", app.Meta.Name, err.Error())
 					}
 				}
 			}()
@@ -143,15 +142,16 @@ func AddJobLogRotate() {
 }
 
 // AddJobBackup 定时备份App
+// 使用cron任务代替 此任务仅作删除old备份使用
 func AddJobBackup() {
 	logger.Logger.Info("job: app backup start")
 	des := "微服务定时备份"
 	AddTicker(DurationAppBackup, "AppBackup", des, func() {
 		err := utils.Backup(config.ApolloConf.APPRoot, config.ApolloConf.APPBackUp)
 		if err != nil {
-			logger.Logger.Error(fmt.Sprintf("job app backup: failed: %s", err.Error()))
+			logger.LoggerSugar.Errorf("job app backup: failed: %s", err.Error())
 		} else {
-			logger.Logger.Info("job app backup: success")
+			logger.LoggerSugar.Info("job app backup: success")
 		}
 	})
 }

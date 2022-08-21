@@ -12,6 +12,7 @@ import (
 
 	"github.com/JJApplication/Apollo/app/app_manager"
 	"github.com/JJApplication/Apollo/app/docker_manager"
+	"github.com/JJApplication/Apollo/app/task_manager"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/cron"
 	"github.com/JJApplication/Apollo/database"
@@ -61,12 +62,22 @@ func initAPPManager() {
 	app_manager.InitAPPManager()
 	app_manager.SaveToDB()
 	app_manager.FirstLoad()
-	logger.Logger.Info(APPName + " init APPManager done")
+	logger.LoggerSugar.Infof("%s init APPManager done", APPName)
+}
+
+// 任务管理初始化
+func initTaskManager() {
+	task_manager.InitTaskManager()
 }
 
 func initBackgroundJobs() {
 	cron.InitBackgroundJobs()
-	logger.Logger.Info(APPName + " init BackgroundJobs done")
+	logger.LoggerSugar.Infof("%s init BackgroundJobs done", APPName)
+}
+
+func initCronJobs() {
+	cron.InitCronJobs()
+	logger.LoggerSugar.Infof("%s init CronJobs done", APPName)
 }
 
 func initEngine() {
@@ -85,8 +96,8 @@ func initEngine() {
 
 	err := apolloEngine.RunServer()
 	if err != nil && err != http.ErrServerClosed {
-		logger.Logger.Error(APPName + " server start failed")
-		logger.Logger.Error(fmt.Sprintf("%s %s", APPName, err.Error()))
+		logger.LoggerSugar.Errorf("%s server start failed", APPName)
+		logger.LoggerSugar.Errorf("%s %s", APPName, err.Error())
 		cron.InsureTickerExit()
 		fmt.Println(APPName + " server start failed ⚠️")
 		return

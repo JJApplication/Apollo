@@ -6,7 +6,6 @@ Created: 2022/2/18 by Landers
 package docker_manager
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -44,11 +43,11 @@ func createClient() *docker.Client {
 		docker.WithVersion(config.ApolloConf.CI.DockerAPIVersion),
 	)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s failed to create docker client: %s", DockerManager, err.Error()))
+		logger.LoggerSugar.Errorf("%s failed to create docker client: %s", DockerManager, err.Error())
 		return nil
 	}
-	logger.Logger.Info(DockerManager + " init docker client success")
-	logger.Logger.Info(DockerManager + " connected to host: " + config.ApolloConf.CI.DockerHost)
+	logger.LoggerSugar.Infof("%s init docker client success", DockerManager)
+	logger.LoggerSugar.Infof("%s connected to host: %s", DockerManager, config.ApolloConf.CI.DockerHost)
 	return client
 }
 

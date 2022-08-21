@@ -91,13 +91,13 @@ func (e *Engine) SetHeadersMap(m map[string]string) {
 
 func (e *Engine) Run() error {
 	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
-	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
+	logger.LoggerSugar.Infof("listening on %s", path)
 	return e.ginEngine.Run(path)
 }
 
 func (e *Engine) RunServer() error {
 	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
-	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
+	logger.LoggerSugar.Infof("listening on %s", path)
 
 	server := new(http.Server)
 	server.Handler = e.ginEngine
@@ -114,7 +114,7 @@ func (e *Engine) RunServer() error {
 
 func (e *Engine) RunServerTLS(cert, key string) error {
 	path := fmt.Sprintf("%s:%d", e.Config.Host, e.Config.Port)
-	logger.Logger.Info(fmt.Sprintf("listening on %s", path))
+	logger.LoggerSugar.Infof("listening on %s", path)
 
 	server := new(http.Server)
 	server.Handler = e.ginEngine

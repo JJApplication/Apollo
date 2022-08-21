@@ -6,7 +6,6 @@ Created: 2022/2/17 by Landers
 package engine
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/JJApplication/Apollo/logger"
@@ -34,7 +33,7 @@ const (
 // LoadMiddleWareConfig 同步的加载配置
 func LoadMiddleWareConfig() []MiddleWareConfig {
 	if err := initEmptyConfig(); err != nil {
-		logger.Logger.Warn(MiddleWare + " failed to init empty middleware config.")
+		logger.LoggerSugar.Warnf("%s failed to init empty middleware config.", MiddleWare)
 	}
 	var c []MiddleWareConfig
 	t := time.Now()
@@ -43,10 +42,10 @@ func LoadMiddleWareConfig() []MiddleWareConfig {
 			utils.GetAppDir(),
 			MiddleConfigRoot,
 			MiddleConfigFile)); err != nil {
-		logger.Logger.Error(MiddleWare + " failed to parse middleware config.")
-		logger.Logger.Warn(MiddleWare + " using default middleware config.")
+		logger.LoggerSugar.Errorf("%s failed to parse middleware config.", MiddleWare)
+		logger.LoggerSugar.Warnf("%s using default middleware config.", MiddleWare)
 	} else {
-		logger.Logger.Info(fmt.Sprintf("%s load middleware config in %dms.", MiddleWare, utils.TimeCalcUnix(t)))
+		logger.LoggerSugar.Infof("%s load middleware config in %dms.", MiddleWare, utils.TimeCalcUnix(t))
 	}
 
 	return c
@@ -67,7 +66,7 @@ func initEmptyConfig() error {
 		utils.GetAppDir(),
 		MiddleConfigRoot,
 		MiddleConfigFile)) {
-		logger.Logger.Warn(MiddleWare + " no config exists, using default middleware config.")
+		logger.LoggerSugar.Warnf("%s no config exists, using default middleware config.", MiddleWare)
 		return configen.SaveConfig(&DefaultMiddleWare,
 			configen.Pig,
 			utils.CalDir(

@@ -6,7 +6,6 @@ Created: 2021/11/20 by Landers
 package app_manager
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/JJApplication/Apollo/config"
@@ -31,7 +30,7 @@ func LoadManagerCf() error {
 		})
 
 		for k, v := range tm {
-			logger.Logger.Info(fmt.Sprintf("store app [%s] config: %+v", k, v))
+			logger.LoggerSugar.Infof("store app [%s] config: %+v", k, v)
 			APPManager.APPManagerMap.Store(k, App{Meta: v})
 		}
 	}
@@ -57,7 +56,7 @@ func ReloadManagerMap() error {
 		if !ok {
 			continue
 		}
-		
+
 		APPManager.APPManagerMap.Store(k, App{Meta: v})
 	}
 	return nil

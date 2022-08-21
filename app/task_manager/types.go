@@ -8,11 +8,10 @@ package task_manager
 import (
 	"context"
 	"errors"
-	"fmt"
 	"runtime"
+	"sync"
 	"time"
 
-	"github.com/JJApplication/Apollo/cron"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/google/uuid"
 )
@@ -32,6 +31,7 @@ type taskInterface interface {
 type task struct {
 	TaskID      string `json:"task_id"`
 	TaskName    string `json:"task_name"`
+	Spec        string `json:"spec"`
 	CreateTime  int64  `json:"create_time"`
 	UpdateTime  int64  `json:"update_time"`
 	GoroutineID int    `json:"goroutine_id"` // 只有在任务启动时才会分配
@@ -46,7 +46,7 @@ type status int
 
 const (
 	Created status = iota
-	// Started
+	Started
 	Stopped
 	Running
 	Done
@@ -57,9 +57,9 @@ const (
 const EmptyName = ""
 
 type taskManager struct {
-	CronJobs       map[string]interface{}
-	BackGroundJobs map[string]cron.OneTicker
-	Tasks          map[string]task
+	lock           sync.Mutex
+	CronJobs       map[string]task
+	BackGroundJobs map[string]*OneTicker
 }
 
 func NewTask(name string, timeout int) *task {
@@ -103,7 +103,7 @@ func (t *task) Start() (uuid string, err error) {
 						select {
 						case <-ctx.Done():
 							t.sureTimeout()
-							logger.Logger.Error(fmt.Sprintf("%s [task %s]: %s", TaskManagerPrefix, t.TaskID, ErrTaskTimeout))
+							logger.LoggerSugar.Errorf("%s [task %s]: %s", TaskManagerPrefix, t.TaskID, ErrTaskTimeout)
 							runtime.Goexit()
 						}
 					}

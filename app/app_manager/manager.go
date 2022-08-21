@@ -19,7 +19,7 @@ import (
 func InitAPPManager() {
 	err := LoadManagerCf()
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("init APPManager failed: %s", err.Error()))
+		logger.LoggerSugar.Errorf("init APPManager failed: %s", err.Error())
 	}
 }
 
@@ -114,10 +114,10 @@ func StartAll() ([]string, error) {
 		if ok, err := app.Start(); !ok {
 			e = err
 			startList = append(startList, fmt.Sprintf("[%s]: BAD", app.Meta.Name))
-			logger.Logger.Error(fmt.Sprintf("%s %s start failed: %s", APPManagerPrefix, key, err.Error()))
+			logger.LoggerSugar.Errorf("%s %s start failed: %s", APPManagerPrefix, key, err.Error())
 		} else {
 			startList = append(startList, fmt.Sprintf("[%s]: OK", app.Meta.Name))
-			logger.Logger.Info(fmt.Sprintf("%s %s start success", APPManagerPrefix, key))
+			logger.LoggerSugar.Infof("%s %s start success", APPManagerPrefix, key)
 		}
 		return true
 	})
@@ -137,10 +137,10 @@ func StopAll() ([]string, error) {
 		if ok, err := app.Stop(); !ok {
 			e = err
 			stopList = append(stopList, fmt.Sprintf("[%s]: BAD", app.Meta.Name))
-			logger.Logger.Error(fmt.Sprintf("%s %s stop failed: %s", APPManagerPrefix, key, err.Error()))
+			logger.LoggerSugar.Errorf("%s %s stop failed: %s", APPManagerPrefix, key, err.Error())
 		} else {
 			stopList = append(stopList, fmt.Sprintf("[%s]: OK", app.Meta.Name))
-			logger.Logger.Info(fmt.Sprintf("%s %s stop success", APPManagerPrefix, key))
+			logger.LoggerSugar.Infof("%s %s stop success", APPManagerPrefix, key)
 		}
 		return true
 	})
@@ -159,10 +159,10 @@ func StatusAll() ([]string, error) {
 		if ok, err := app.Check(); !ok {
 			e = err
 			statusList = append(statusList, fmt.Sprintf("[%s]: BAD", key))
-			logger.Logger.Error(fmt.Sprintf("%s %s check failed: %s", APPManagerPrefix, key, err.Error()))
+			logger.LoggerSugar.Errorf("%s %s check failed: %s", APPManagerPrefix, key, err.Error())
 		} else {
 			statusList = append(statusList, fmt.Sprintf("[%s]: OK", key))
-			logger.Logger.Info(fmt.Sprintf("%s %s check success", APPManagerPrefix, key))
+			logger.LoggerSugar.Infof("%s %s check success", APPManagerPrefix, key)
 		}
 		return true
 	})

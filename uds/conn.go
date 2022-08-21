@@ -6,7 +6,6 @@ Created: 2021/12/8 by Landers
 package uds
 
 import (
-	"fmt"
 	"io"
 	"net"
 	"syscall"
@@ -18,7 +17,7 @@ import (
 const MaxReadSize = 4096
 
 func echo(c net.Conn) {
-	logger.Logger.Info(fmt.Sprintf("client connected: [%s]", c.RemoteAddr().Network()))
+	logger.LoggerSugar.Infof("client connected: [%s]", c.RemoteAddr().Network())
 	for {
 		buf := make([]byte, MaxReadSize)
 		cnt, err := c.Read(buf)
@@ -27,7 +26,7 @@ func echo(c net.Conn) {
 				logger.Logger.Info("read from UDS Client, client disconnect from server")
 				break
 			}
-			logger.Logger.Info(fmt.Sprintf("read from UDS Client failed: %s", err.Error()))
+			logger.LoggerSugar.Infof("read from UDS Client failed: %s", err.Error())
 			break
 		}
 
@@ -62,9 +61,9 @@ func listen() {
 	addr, err := net.ResolveUnixAddr("unix", getSocket())
 
 	l, err := net.ListenUnix("unix", addr)
-	logger.Logger.Info(fmt.Sprintf("UDS Listen at: %s", getSocket()))
+	logger.LoggerSugar.Infof("UDS Listen at: %s", getSocket())
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("UDS Listen failed: %s", err.Error()))
+		logger.LoggerSugar.Errorf("UDS Listen failed: %s", err.Error())
 		return
 	}
 	defer l.Close()

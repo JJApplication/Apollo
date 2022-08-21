@@ -37,10 +37,12 @@ func main() {
 	initMongo()
 	// init app manager
 	initAPPManager()
+	// init task manager
+	initTaskManager()
 	// init background ticker
 	initBackgroundJobs()
 	// init background cron job
-
+	initCronJobs()
 	// init docker
 	initDockerClient()
 	// only all manager init, can uds server be active

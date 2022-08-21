@@ -6,7 +6,6 @@ Created: 2021/12/9 by Landers
 package uds
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/JJApplication/Apollo/logger"
@@ -23,7 +22,7 @@ func execCmd(c string) UDSRes {
 			Data:  "",
 		}
 	}
-	logger.Logger.Info(fmt.Sprintf("recieved cmd from UDS: %s", c))
+	logger.LoggerSugar.Infof("recieved cmd from UDS: %s", c)
 	fn, ok := cmdsMap[args[0]]
 	if !ok {
 		return UDSRes{

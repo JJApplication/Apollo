@@ -7,7 +7,6 @@ package app_manager
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/JJApplication/Apollo/database"
 	"github.com/JJApplication/Apollo/logger"
@@ -44,9 +43,9 @@ func SaveToDB() {
 			}
 			e := mgm.Coll(&DaoAPP{}).Create(&data)
 			if e != nil {
-				logger.Logger.Error(fmt.Sprintf("%s insert app %s to db failed: %s", APPManagerPrefix, key, e.Error()))
+				logger.LoggerSugar.Errorf("%s insert app %s to db failed: %s", APPManagerPrefix, key, e.Error())
 			} else {
-				logger.Logger.Info(fmt.Sprintf("%s insert app %s to db", APPManagerPrefix, key))
+				logger.LoggerSugar.Infof("%s insert app %s to db", APPManagerPrefix, key)
 			}
 		} else {
 			// 更新操作
@@ -69,9 +68,9 @@ func SaveToDB() {
 
 			err := mgm.Coll(&DaoAPP{}).Update(&data)
 			if err != nil {
-				logger.Logger.Error(fmt.Sprintf("%s update [%s] data to db failed: %s", APPManagerPrefix, key, err.Error()))
+				logger.LoggerSugar.Errorf("%s update [%s] data to db failed: %s", APPManagerPrefix, key, err.Error())
 			} else {
-				logger.Logger.Info(fmt.Sprintf("%s update [%s] data to db", APPManagerPrefix, key))
+				logger.LoggerSugar.Infof("%s update [%s] data to db", APPManagerPrefix, key)
 			}
 		}
 		return true
@@ -97,7 +96,7 @@ func FirstLoad() {
 					app.Meta.RunData.Envs = data.Meta.RunData.Envs
 				}
 				APPManager.APPManagerMap.Store(key, app)
-				logger.Logger.Info(fmt.Sprintf("%s first load %s runtime data to appCache", APPManagerPrefix, key))
+				logger.LoggerSugar.Infof("%s first load %s runtime data to appCache", APPManagerPrefix, key)
 			}
 		}
 		return true
@@ -114,12 +113,12 @@ func Persist() {
 	var data []DaoAPP
 	err := mgm.Coll(&DaoAPP{}).SimpleFind(&data, bson.M{})
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
+		logger.LoggerSugar.Errorf("%s persist from db failed: %s", APPManagerPrefix, err.Error())
 		return
 	}
 	err = utils.SaveBson(&data, PersistFile)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s persist from db failed: %s", APPManagerPrefix, err.Error()))
+		logger.LoggerSugar.Errorf("%s persist from db failed: %s", APPManagerPrefix, err.Error())
 	}
 }
 
@@ -131,15 +130,15 @@ func SavePort(app string, port []int) {
 	var data DaoAPP
 	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": app}).Decode(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
+		logger.LoggerSugar.Errorf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error())
 		return
 	}
 	data.Meta.RunData.Ports = port
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error()))
+		logger.LoggerSugar.Errorf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error())
 	}
-	logger.Logger.Info(fmt.Sprintf("%s save [%s] runtime port to db", APPManagerPrefix, app))
+	logger.LoggerSugar.Infof("%s save [%s] runtime port to db", APPManagerPrefix, app)
 }
 
 func SaveRuntimeData(app App) {
@@ -150,15 +149,15 @@ func SaveRuntimeData(app App) {
 	var data DaoAPP
 	err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": app.Meta.Name}).Decode(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error()))
+		logger.LoggerSugar.Errorf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error())
 		return
 	}
 	data.Meta.RunData = app.Meta.RunData
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error()))
+		logger.LoggerSugar.Errorf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error())
 	}
-	logger.Logger.Info(fmt.Sprintf("%s save [%s] runtime data to db", APPManagerPrefix, app.Meta.Name))
+	logger.LoggerSugar.Infof("%s save [%s] runtime data to db", APPManagerPrefix, app.Meta.Name)
 }
 
 func checkExist(filter interface{}) bool {

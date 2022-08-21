@@ -30,7 +30,27 @@ var (
 
 // Backup 备份初始化，全局只能有一个备份任务,使用标志位判断
 // src 为要备份的目录
+
+// Backup 检查是否存在备份文件
 func Backup(src, back string) error {
+	if FileNotExist(back) {
+		return errors.New("backup dir not exist")
+	}
+	var hasBackup bool
+	_ = filepath.Walk(back, func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		hasBackup = true
+		return nil
+	})
+	if !hasBackup {
+		return errors.New("backup file is not exist")
+	}
+	return nil
+}
+
+func BackupOld(src, back string) error {
 	if checkFlag() {
 		return errors.New("backup progress is running")
 	}

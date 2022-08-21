@@ -6,7 +6,6 @@ Created: 2021/11/26 by Landers
 package engine
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
 	"plugin"
@@ -65,10 +64,10 @@ func loadMiddleWare(g *gin.Engine) {
 
 	for i, m := range PreInjectMiddle {
 		if m.Active {
-			logger.Logger.Info(fmt.Sprintf("%s <%d> (%s) loaded", MiddleWare, i, m.Name))
+			logger.LoggerSugar.Infof("%s <%d> (%s) loaded", MiddleWare, i, m.Name)
 			g.Use(MiddleWareMap[m.Name])
 		} else {
-			logger.Logger.Info(fmt.Sprintf("%s <%d> (%s) disabled", MiddleWare, i, m.Name))
+			logger.LoggerSugar.Infof("%s <%d> (%s) disabled", MiddleWare, i, m.Name)
 		}
 	}
 }
@@ -79,15 +78,15 @@ func loadMiddlePlugins(g *gin.Engine) {
 	for i, p := range plugins {
 		pl, err := plugin.Open(p)
 		if err != nil {
-			logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded failed", MiddleWare, i, p))
+			logger.LoggerSugar.Infof("%s (%d) %s plugin loaded failed", MiddleWare, i, p)
 			continue
 		}
 		syb, err := pl.Lookup("Patch")
 		if err != nil {
-			logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded failed", MiddleWare, i, p))
+			logger.LoggerSugar.Infof("%s (%d) %s plugin loaded failed", MiddleWare, i, p)
 		}
 		g.Use(syb.(gin.HandlerFunc))
-		logger.Logger.Info(fmt.Sprintf("%s (%d) %s plugin loaded", MiddleWare, i, p))
+		logger.LoggerSugar.Infof("%s (%d) %s plugin loaded", MiddleWare, i, p)
 	}
 }
 
@@ -107,7 +106,7 @@ func findAllPlugins() []string {
 		return nil
 	})
 	if err != nil {
-		logger.Logger.Info(fmt.Sprintf("%s failed to find plugins: %s", MiddleWare, err.Error()))
+		logger.LoggerSugar.Infof("%s failed to find plugins: %s", MiddleWare, err.Error())
 	}
 
 	return plugins

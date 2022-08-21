@@ -121,21 +121,21 @@ func (app *App) Start() (bool, error) {
 				app.ClearPorts()
 			}
 
-			logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error()))
+			logger.LoggerSugar.Error("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
 			ret = toCode(err.Error())
 			return false, errors.New(errCode(ret))
 		}
-		logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start)))
+		logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 		return true, err
 	}
 
 	_, err := utils.CMDRun(attachEnvsSp(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error()))
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
-	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start)))
+	logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 	return true, nil
 }
 
@@ -147,7 +147,7 @@ func (app *App) Stop() (bool, error) {
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
 		// 停止失败时 保留原有的数据
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop), err.Error()))
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -157,7 +157,7 @@ func (app *App) Stop() (bool, error) {
 		app.ClearPorts()
 	}
 
-	logger.Logger.Info(fmt.Sprintf("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop)))
+	logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	return true, nil
 }
 
@@ -200,7 +200,7 @@ func (app *App) Check() (bool, error) {
 
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check))
 	if err != nil {
-		logger.Logger.Error(fmt.Sprintf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error()))
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -300,6 +300,6 @@ func (app *App) CheckAppReleaseStatus() bool {
 	if app.Meta.ReleaseStatus == octopus_meta.Published {
 		return true
 	}
-	logger.Logger.Warn(fmt.Sprintf("%s [%s] releaseStatus is %s, skip operation", APPManagerPrefix, app.Meta.Name, app.Meta.ReleaseStatus))
+	logger.LoggerSugar.Warnf("%s [%s] releaseStatus is %s, skip operation", APPManagerPrefix, app.Meta.Name, app.Meta.ReleaseStatus)
 	return false
 }
