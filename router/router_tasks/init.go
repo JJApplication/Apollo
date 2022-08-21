@@ -15,6 +15,7 @@ import (
 func Init(r *gin.Engine) {
 	routerTask := r.Group("/api/task")
 	{
-		routerTask.GET("", GetAllBackgroundTasks)
+		routerTask.GET("/bg", GetAllBackgroundTasks)
+		routerTask.GET("/cron", GetAllCronTasks)
 	}
 }

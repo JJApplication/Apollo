@@ -17,7 +17,17 @@ package task_manager
 var TickerMap = map[string]*OneTicker{}
 
 type OneTicker struct {
-	Ch         chan bool
+	Ch         chan bool `json:",omitempty"`
+	UUID       string    `json:"uuid"`
+	Name       string    `json:"name"`
+	Des        string    `json:"des"`
+	Stopped    bool      `json:"stopped"`
+	CreateTime int64     `json:"create_time"`
+	Duration   int       `json:"duration"`
+	LastRun    int64     `json:"lastRun"`
+}
+
+type OneTickerRes struct {
 	UUID       string `json:"uuid"`
 	Name       string `json:"name"`
 	Des        string `json:"des"`

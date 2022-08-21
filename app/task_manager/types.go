@@ -43,6 +43,18 @@ type task struct {
 }
 
 type status int
+type taskRes struct {
+	TaskID      string `json:"task_id"`
+	TaskName    string `json:"task_name"`
+	Spec        string `json:"spec"`
+	CreateTime  int64  `json:"create_time"`
+	UpdateTime  int64  `json:"update_time"`
+	GoroutineID int    `json:"goroutine_id"`
+	Stopped     bool   `json:"stopped"`
+	IsDeadLine  bool   `json:"is_deadline"`
+	MaxTimeOut  int    `json:"max_timeout"`
+	Status      status `json:"status"`
+}
 
 const (
 	Created status = iota

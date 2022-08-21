@@ -18,10 +18,18 @@ func ListAllTasks() ([]string, error) {
 	return list, nil
 }
 
-func GetAllBackgroundTasks() []*OneTicker {
-	var res []*OneTicker
+func GetAllBackgroundTasks() []OneTickerRes {
+	var res []OneTickerRes
 	for _, v := range TickerMap {
-		res = append(res, v)
+		res = append(res, OneTickerRes{
+			UUID:       v.UUID,
+			Name:       v.Name,
+			Des:        v.Des,
+			Stopped:    v.Stopped,
+			CreateTime: v.CreateTime,
+			Duration:   v.Duration,
+			LastRun:    v.LastRun,
+		})
 	}
 
 	// 排序
@@ -32,10 +40,21 @@ func GetAllBackgroundTasks() []*OneTicker {
 }
 
 // GetAllCronTasks 定时任务
-func GetAllCronTasks() []task {
-	var res []task
+func GetAllCronTasks() []taskRes {
+	var res []taskRes
 	for _, v := range TaskManager.CronJobs {
-		res = append(res, v)
+		res = append(res, taskRes{
+			TaskID:      v.TaskID,
+			TaskName:    v.TaskName,
+			Spec:        v.Spec,
+			CreateTime:  v.CreateTime,
+			UpdateTime:  v.UpdateTime,
+			GoroutineID: v.GoroutineID,
+			Stopped:     v.Stopped,
+			IsDeadLine:  v.IsDeadLine,
+			MaxTimeOut:  v.MaxTimeOut,
+			Status:      v.Status,
+		})
 	}
 	sort.SliceStable(res, func(i, j int) bool {
 		return res[i].TaskName < res[j].TaskName
