@@ -57,6 +57,7 @@ func ReloadManagerMap() error {
 		if !ok {
 			continue
 		}
+		
 		APPManager.APPManagerMap.Store(k, App{Meta: v})
 	}
 	return nil

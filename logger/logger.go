@@ -88,13 +88,13 @@ func configLog() []string {
 	switch config.ApolloConf.Log.EnableLog {
 	case "yes", "YES", "Yes":
 		if config.ApolloConf.Log.LogFile != "" {
-			return []string{"stderr", config.ApolloConf.Log.LogFile}
+			return []string{"stdout", config.ApolloConf.Log.LogFile}
 		}
-		return []string{"stderr"}
+		return []string{"stdout"}
 	case "no", "NO", "No":
 		return []string{}
 	default:
-		return []string{"stderr"}
+		return []string{"stdout"}
 	}
 }
 

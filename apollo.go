@@ -21,7 +21,7 @@ func main() {
 		logger.Logger.Error(logger.LoggerInitFailed)
 		return
 	}
-
+	logger.CoreDump()
 	// init recover
 	defer func() {
 		if r := recover(); r != nil {

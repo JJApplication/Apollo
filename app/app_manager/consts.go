@@ -8,16 +8,15 @@ package app_manager
 import "sync"
 
 type appManager struct {
-	APPManagerMap *sync.Map
+	APPManagerMap sync.Map
 	APPUsingPorts map[int]struct{}
 }
 
 // AppManagerMap 应用的全局字典 每次配置更新后重载到全局字典中
 // 键值对appName: App
-var appManagerMap sync.Map
 
 var APPManager = appManager{
-	APPManagerMap: &appManagerMap,
+	APPManagerMap: sync.Map{},
 	APPUsingPorts: map[int]struct{}{},
 }
 
