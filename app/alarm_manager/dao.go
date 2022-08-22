@@ -12,6 +12,7 @@ import (
 	"context"
 
 	"github.com/kamva/mgm/v3"
+	"github.com/kamva/mgm/v3/operator"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -60,4 +61,33 @@ func getAlarm(id string) (Alarm, error) {
 func deleteAlarm(id string) error {
 	_, err := mgm.Coll(&Alarm{}).DeleteOne(context.Background(), bson.M{"_id": id})
 	return err
+}
+
+func getCountAlarm() int64 {
+	count, err := mgm.Coll(&Alarm{}).CountDocuments(context.Background(), bson.M{})
+	if err != nil {
+		return 0
+	}
+	return count
+}
+
+func deleteLastN() (int64, error) {
+	// 按照日期的创建逆序排列 最新的N条
+	count := getCountAlarm()
+	if count >= AlarmSizeLimit {
+		// 取最近的第N+1条数据
+		var res []Alarm
+		op := new(options.FindOptions)
+		op.SetLimit(AlarmSizeTrim)
+		op.SetSort(bson.M{"created_at": -1})
+		err := mgm.Coll(&Alarm{}).SimpleFind(&res, bson.M{}, op)
+		if err != nil {
+			return 0, err
+		}
+		// 取条件日期
+		date := res[len(res)-1].CreatedAt
+		delRes, err := mgm.Coll(&Alarm{}).DeleteMany(context.Background(), bson.M{"created_at": bson.M{operator.Lt: date}})
+		return delRes.DeletedCount, err
+	}
+	return 0, nil
 }

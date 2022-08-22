@@ -6,10 +6,12 @@ Created: 2021/11/26 by Landers
 package engine
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
 	"plugin"
 	"strings"
+	"time"
 
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
@@ -49,7 +51,27 @@ var DefaultMiddleWare = []MiddleWareConfig{
 	},
 }
 var MiddleWareMap = map[string]gin.HandlerFunc{
-	"log":      gin.Logger(),
+	"log": gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
+		var statusColor, methodColor, resetColor string
+		if param.IsOutputColor() {
+			statusColor = param.StatusCodeColor()
+			methodColor = param.MethodColor()
+			resetColor = param.ResetColor()
+		}
+
+		if param.Latency > time.Minute {
+			param.Latency = param.Latency.Truncate(time.Second)
+		}
+		return fmt.Sprintf("[Apollo] %v |%s %3d %s| %13v | %15s |%s %-7s %s %#v\n%s",
+			param.TimeStamp.Format("2006/01/02 - 15:04:05"),
+			statusColor, param.StatusCode, resetColor,
+			param.Latency,
+			param.ClientIP,
+			methodColor, param.Method, resetColor,
+			param.Path,
+			param.ErrorMessage,
+		)
+	}),
 	"recovery": gin.Recovery(),
 	"cors":     MiddleWareCors(),
 	"plnack":   MiddlewarePlnack(),

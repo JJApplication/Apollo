@@ -13,8 +13,10 @@ import (
 )
 
 const (
-	TopN         = 10
-	AlarmManager = "[Alarm Manager]"
+	TopN           = 10
+	AlarmManager   = "[Alarm Manager]"
+	AlarmSizeLimit = 50 // 超过50开始删除
+	AlarmSizeTrim  = 20 // 保留最近的20条
 )
 
 // GetAllAlarm 获取全部告警信息
@@ -53,5 +55,17 @@ func DeleteAlarm(id string) error {
 	if err != nil {
 		logger.LoggerSugar.Errorf("%s failed to delete Alarm [%s], error: %s", AlarmManager, id, err.Error())
 	}
+	return nil
+}
+
+// ClearAlarmLimit 告警清除任务
+// 满足条件 数量大于指定条数 则删除最旧的M条
+func ClearAlarmLimit() error {
+	count, err := deleteLastN()
+	if err != nil {
+		logger.LoggerSugar.Errorf("%s failed to delete Last Alarm, error: %s", AlarmManager, err.Error())
+		return err
+	}
+	logger.LoggerSugar.Infof("%s delete Last Alarm success, count %d", AlarmManager, count)
 	return nil
 }
