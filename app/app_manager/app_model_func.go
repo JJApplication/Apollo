@@ -152,7 +152,8 @@ func (app *App) Stop() (bool, error) {
 		return false, errors.New(errCode(ret))
 	}
 	// 停止成功时 清空保留的ports
-	if len(app.Meta.RunData.Ports) > 0 {
+	// 仅清除动态端口
+	if app.Meta.RunData.RandomPort && len(app.Meta.RunData.Ports) > 0 {
 		APPManager.delPorts(app.Meta.RunData.Ports[0])
 		app.ClearPorts()
 	}
@@ -242,11 +243,12 @@ func (app *App) Reload() (bool, error) {
 func (app *App) Sync() (bool, error) {
 	lock := sync.Mutex{}
 	lock.Lock()
-	// 运行时数据不存储 所以进行一次app clone
-	// 如果为静态端口 则存储
+	// 运行时数据跳过
 	var appClone App
 	appClone = *app
-	if !appClone.Meta.RunData.RandomPort {
+	if len(app.Meta.RunData.Ports) > 0 {
+		appClone.Meta.RunData.Ports = app.Meta.RunData.Ports
+	} else {
 		appClone.Meta.RunData.Ports = []int{}
 	}
 
