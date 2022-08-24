@@ -112,6 +112,10 @@ func (app *App) Start() (bool, error) {
 	if ok, _ := app.Check(); ok {
 		return true, nil
 	}
+	if !app.DepCheck() {
+		logger.LoggerSugar.Errorf("%s [%s] start failed, app's dependencies is not ready", APPManagerPrefix, app.Meta.Name)
+		return false, errors.New("app's dependencies is not ready")
+	}
 	// 判断是否需要随机端口运行
 	if app.Meta.RunData.RandomPort {
 		_, err := utils.CMDRun(attachEnvsWithPorts(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
@@ -121,7 +125,7 @@ func (app *App) Start() (bool, error) {
 				app.ClearPorts()
 			}
 
-			logger.LoggerSugar.Error("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
+			logger.LoggerSugar.Error("%s execute cmd (%s) failed: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
 			ret = toCode(err.Error())
 			return false, errors.New(errCode(ret))
 		}
@@ -131,7 +135,7 @@ func (app *App) Start() (bool, error) {
 
 	_, err := utils.CMDRun(attachEnvsSp(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 	if err != nil {
-		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) failed: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -147,7 +151,7 @@ func (app *App) Stop() (bool, error) {
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
 		// 停止失败时 保留原有的数据
-		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop), err.Error())
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) failed: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -201,7 +205,7 @@ func (app *App) Check() (bool, error) {
 
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check))
 	if err != nil {
-		logger.LoggerSugar.Errorf("%s execute cmd (%s) faield: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error())
+		logger.LoggerSugar.Errorf("%s execute cmd (%s) failed: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error())
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
@@ -304,4 +308,29 @@ func (app *App) CheckAppReleaseStatus() bool {
 	}
 	logger.LoggerSugar.Warnf("%s [%s] releaseStatus is %s, skip operation", APPManagerPrefix, app.Meta.Name, app.Meta.ReleaseStatus)
 	return false
+}
+
+// DepCheck 运行时依赖检查
+// 依赖异常时 无法成功启动 停止不受影响
+// 不存在依赖时跳过
+func (app *App) DepCheck() bool {
+	deps := app.Meta.RunData.RunDep
+	if deps == nil || len(deps) <= 0 {
+		return true
+	}
+	var apps []App
+	for _, dep := range deps {
+		if ok, a := APPManager.hasApp(dep); ok {
+			apps = append(apps, a)
+		}
+	}
+
+	// check
+	for _, depApp := range apps {
+		ok, err := depApp.Check()
+		if !ok || err != nil {
+			return false
+		}
+	}
+	return true
 }

@@ -101,3 +101,11 @@ func (am *appManager) delPorts(port int) {
 		delete(am.APPUsingPorts, port)
 	}
 }
+
+// 是否存在此服务
+func (am *appManager) hasApp(app string) (bool, App) {
+	if a, ok := am.APPManagerMap.Load(app); ok {
+		return true, a.(App)
+	}
+	return false, App{}
+}
