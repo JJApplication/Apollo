@@ -109,7 +109,7 @@ func initEngine() {
 }
 
 func initUDS() {
-	uds.Register()
+	uds.Listen()
 }
 
 func initDockerClient() {

@@ -43,6 +43,15 @@ func GetAllApp() ([]App, error) {
 	return apps, nil
 }
 
+func GetAllAppName() ([]string, error) {
+	var apps []string
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		apps = append(apps, key.(string))
+		return true
+	})
+	return apps, nil
+}
+
 // Check 检查是否存在此App
 func Check(app string) bool {
 	if _, ok := APPManager.APPManagerMap.Load(app); ok {
@@ -171,4 +180,24 @@ func StatusAll() ([]string, error) {
 		return statusList, errors.New("apps check has failure")
 	}
 	return statusList, nil
+}
+
+func SyncApp(app string) (bool, error) {
+	if Check(app) {
+		a, _ := APPManager.APPManagerMap.Load(app)
+		b := a.(App)
+		return b.Sync()
+	}
+	return false, errors.New(APPNotExist)
+}
+
+func SyncAll() error {
+	var err error
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		app := value.(App)
+		_, err = app.Sync()
+		return true
+	})
+
+	return err
 }

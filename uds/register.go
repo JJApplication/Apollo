@@ -13,3 +13,7 @@ const (
 func Register() {
 	go listen()
 }
+
+func Listen() {
+	run()
+}
