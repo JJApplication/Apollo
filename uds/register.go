@@ -15,5 +15,5 @@ func Register() {
 }
 
 func Listen() {
-	run()
+	go run()
 }
