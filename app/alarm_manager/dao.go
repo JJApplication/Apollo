@@ -11,6 +11,7 @@ package alarm_manager
 import (
 	"context"
 
+	"github.com/JJApplication/Apollo/utils"
 	"github.com/kamva/mgm/v3"
 	"github.com/kamva/mgm/v3/operator"
 	"go.mongodb.org/mongo-driver/bson"
@@ -37,7 +38,7 @@ func getAllAlarm() ([]Alarm, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res, err
+	return toLocalTime(res), err
 }
 
 func getTopNAlarm() ([]Alarm, error) {
@@ -49,12 +50,14 @@ func getTopNAlarm() ([]Alarm, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res, err
+	return toLocalTime(res), err
 }
 
 func getAlarm(id string) (Alarm, error) {
 	var res Alarm
 	err := mgm.Coll(&Alarm{}).SimpleFind(&res, bson.M{"_id": id})
+	res.CreatedAt = utils.TimeToLocal(res.CreatedAt)
+	res.UpdatedAt = utils.TimeToLocal(res.UpdatedAt)
 	return res, err
 }
 
@@ -90,4 +93,15 @@ func deleteLastN() (int64, error) {
 		return delRes.DeletedCount, err
 	}
 	return 0, nil
+}
+
+func toLocalTime(res []Alarm) []Alarm {
+	var result []Alarm
+	for _, r := range res {
+		r.CreatedAt = utils.TimeToLocal(r.CreatedAt)
+		r.UpdatedAt = utils.TimeToLocal(r.UpdatedAt)
+
+		result = append(result, r)
+	}
+	return result
 }

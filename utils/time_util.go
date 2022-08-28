@@ -52,3 +52,9 @@ func TimeCalcUnix(last time.Time) int64 {
 func TimeCalcString(last time.Time) string {
 	return time.Since(last).String()
 }
+
+// TimeToLocal 时区转换
+// 转换为当地时区 ->东8区
+func TimeToLocal(t time.Time) time.Time {
+	return t.Local()
+}
