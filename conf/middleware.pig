@@ -22,5 +22,11 @@
     "mode": "global",
     "active": true,
     "urls": null
+  },
+  {
+    "name": "gzip",
+    "mode": "global",
+    "active": true,
+    "urls": null
   }
 ]

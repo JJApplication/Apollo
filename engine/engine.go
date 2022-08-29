@@ -57,6 +57,7 @@ func newGin() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	g := gin.New()
 
+	// 默认会开启gzip
 	// 废弃方法 不再使用render渲染go模板
 	g.LoadHTMLGlob(HtmlTmpl)
 	g.StaticFS("/static", http.Dir(StaticPath))

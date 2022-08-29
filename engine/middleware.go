@@ -15,6 +15,7 @@ import (
 
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
 
@@ -75,6 +76,7 @@ var MiddleWareMap = map[string]gin.HandlerFunc{
 	"recovery": gin.Recovery(),
 	"cors":     MiddleWareCors(),
 	"plnack":   MiddlewarePlnack(),
+	"gzip":     gzip.Gzip(gzip.BestCompression, gzip.WithExcludedPaths([]string{"/api/"})),
 }
 
 // 中间件加载

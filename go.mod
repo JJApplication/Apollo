@@ -11,6 +11,7 @@ require (
 	github.com/fatih/set v0.2.1
 	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-contrib/cors v1.4.0
+	github.com/gin-contrib/gzip v0.0.6
 	github.com/gin-gonic/gin v1.8.1
 	github.com/google/uuid v1.3.0
 	github.com/gookit/goutil v0.5.8
