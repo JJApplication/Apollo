@@ -9,6 +9,7 @@ require (
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.3-0.20220208084023-a5c757555091+incompatible
 	github.com/fatih/set v0.2.1
+	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/google/uuid v1.3.0

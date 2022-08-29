@@ -7,6 +7,7 @@ package router_web
 
 import (
 	_ "github.com/JJApplication/Apollo/docs"
+	"github.com/JJApplication/Apollo/engine"
 	"github.com/JJApplication/Apollo/router"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -18,8 +19,8 @@ var routerWeb *gin.RouterGroup
 func Init(r *gin.Engine) {
 	routerWeb = r.Group("")
 	{
-		routerWeb.GET("/", Index)
-		routerWeb.GET("/favicon.ico", Favicon)
+		routerWeb.GET("/", engine.MiddleCache(Index))
+		routerWeb.GET("/favicon.ico", engine.MiddleCache(Favicon))
 		routerWeb.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		routerWeb.GET("heartbeat", func(c *gin.Context) {
 			router.Response(c, "", true)
