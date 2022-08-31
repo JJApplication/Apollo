@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-exist=$(docker ps -a|grep redis)
+exist=$(docker ps -a|grep "${APP}")
 if [ -z "${exist}" ];then
-  docker run -d --name=redis -v "${APP_ROOT}/${APP}"/6379.conf:/etc/redis/redis.conf -p 127.0.0.1:6379:6379 redis
+  docker run -d --name="${APP}" -v "${APP_ROOT}/${APP}"/6379.conf:/etc/redis/redis.conf -p 127.0.0.1:6379:6379 redis
 else
-  docker start redis
+  docker start "${APP}"
 fi
 result=$?
 if [[ $result != 0 ]];then

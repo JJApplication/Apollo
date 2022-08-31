@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker stop mongo
+docker stop "${APP}"
 result=$?
 if [[ $result != 0 ]];then
     exit "${APP_STOP_ERR}"

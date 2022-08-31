@@ -5,7 +5,12 @@ if [[ ! -d "${APP_LOG}/${APP}" ]];then
   mkdir -p "${APP_LOG}/${APP}"
 fi
 
-"${APP_ROOT}/${APP}/sbin/noengine" -p "${APP_ROOT}/${APP}" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1
+exist=$(docker ps -a|grep "${APP}")
+if [ -z "${exist}" ];then
+  bash "${APP_ROOT}/${APP}/run.sh"
+else
+  docker start "${APP}"
+fi
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

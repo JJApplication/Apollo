@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-exist=$(docker ps -a|grep mongo)
+exist=$(docker ps -a|grep "${APP}")
 if [ -z "${exist}" ];then
-  docker run -d --name=mongo -p 127.0.0.1:27017:27017 mongo
+  docker run -d --name="${APP}" -p 127.0.0.1:27017:27017 mongo
 else
-  docker start mongo
+  docker start "${APP}"
 fi
 result=$?
 if [[ $result != 0 ]];then

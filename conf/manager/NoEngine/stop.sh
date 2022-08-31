@@ -1,12 +1,7 @@
-cd "${APP_ROOT}/${APP}" || exit "${APP_START_ERR}"
-if [[ ! -d "${APP_LOG}/${APP}" ]];then
-  mkdir -p "${APP_LOG}/${APP}"
-fi
-
-"${APP_ROOT}/${APP}"/sbin/noengine -p "${APP_ROOT}/${APP}" -s stop
+docker stop "${APP}"
 result=$?
 if [[ $result != 0 ]];then
-  exit "${APP_START_ERR}"
+    exit "${APP_STOP_ERR}"
 else
-  exit 0
+    exit 0
 fi

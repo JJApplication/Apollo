@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker stop redis
+docker stop "${APP}"
 result=$?
 if [[ $result != 0 ]];then
     exit "${APP_STOP_ERR}"
