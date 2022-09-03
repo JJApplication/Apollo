@@ -134,6 +134,7 @@ func SavePort(app string, port []int) {
 		return
 	}
 	data.Meta.RunData.Ports = port
+	data.Meta.Runtime.Ports = port
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
 		logger.LoggerSugar.Errorf("%s save [%s] runtime port to db failed: %s", APPManagerPrefix, app, err.Error())
@@ -152,7 +153,7 @@ func SaveRuntimeData(app App) {
 		logger.LoggerSugar.Errorf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error())
 		return
 	}
-	data.Meta.RunData = app.Meta.RunData
+	data.Meta.Runtime = app.Meta.Runtime
 	err = mgm.Coll(&DaoAPP{}).Update(&data)
 	if err != nil {
 		logger.LoggerSugar.Errorf("%s save [%s] runtime data to db failed: %s", APPManagerPrefix, app.Meta.Name, err.Error())

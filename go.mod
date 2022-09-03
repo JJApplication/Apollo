@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/JJApplication/fushin v1.1.3
-	github.com/JJApplication/octopus_meta v1.0.6
+	github.com/JJApplication/octopus_meta v1.0.7
 	github.com/containerd/containerd v1.6.6 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.3-0.20220208084023-a5c757555091+incompatible

@@ -129,6 +129,7 @@ func (app *App) Start() (bool, error) {
 			ret = toCode(err.Error())
 			return false, errors.New(errCode(ret))
 		}
+		app.startByApollo()
 		logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 		return true, err
 	}
@@ -139,6 +140,7 @@ func (app *App) Start() (bool, error) {
 		ret = toCode(err.Error())
 		return false, errors.New(errCode(ret))
 	}
+	app.startByApollo()
 	logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Start))
 	return true, nil
 }
@@ -162,12 +164,26 @@ func (app *App) Stop() (bool, error) {
 		app.ClearPorts()
 	}
 
+	app.stopByApollo()
 	logger.LoggerSugar.Infof("%s execute cmd (%s) success", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	return true, nil
 }
 
+func (app *App) stopByApollo() {
+	app.Meta.Runtime.StopOperation = true
+	app.Dump()
+}
+
+func (app *App) startByApollo() {
+	app.Meta.Runtime.StopOperation = false
+	app.Dump()
+}
+
 func (app *App) ReStart() (bool, error) {
 	if !app.CheckAppReleaseStatus() {
+		return true, nil
+	}
+	if app.Meta.Runtime.StopOperation {
 		return true, nil
 	}
 	ok, err := app.Stop()
@@ -216,6 +232,7 @@ func (app *App) Check() (bool, error) {
 // ClearPorts 删除运行时环境
 func (app *App) ClearPorts() {
 	app.Meta.RunData.Ports = []int{}
+	app.Meta.Runtime.Ports = []int{}
 }
 
 // ClonePorts 同步缓存中的随机端口组到mongo
