@@ -47,6 +47,8 @@ func ReloadManagerMap() error {
 	if err != nil {
 		return err
 	}
+	logger.LoggerSugar.Infof("%s reload %d apps", APPManagerPrefix, len(apps))
+	logger.LoggerSugar.Infof("%s reload map %+v", APPManagerPrefix, apps)
 	// 存在app时跳过
 	for k, v := range apps {
 		app, ok := APPManager.APPManagerMap.Load(k)

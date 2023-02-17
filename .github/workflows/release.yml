@@ -23,6 +23,9 @@ jobs:
       with:
         go-version: 1.18
 
+    - name: Get date
+      run: echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+
     - name: Start
       run: echo "start to build Apollo"
       
@@ -31,7 +34,21 @@ jobs:
 
     - name: Done
       run: echo "build success"
-      
+
+    - name: CreateMD
+      run: |
+        touch ./tmp.md
+        echo "" > ./tmp.md
+        echo "# 🚀 New Release" >> ./tmp.md
+        echo "## 🤖 Published by bot" >> ./tmp.md
+        echo "build at ${{ env.DATE }}" >> ./tmp.md
+        echo "## 📄 What‘s new" >> ./tmp.md
+        echo "" >> ./tmp.md
+        echo "${{ github.event.head_commit.message }}" >> ./tmp.md
+        echo "MD<<EOF" >> $GITHUB_ENV
+        cat ./tmp.md >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -40,11 +57,7 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: Apollo ${{ github.ref }}
-        body: 🚀New Release.
-              
-              🤖published by bot
-              
-              ${{ github.event.head_commit.message }}
+        body: ${{ env.MD }}
         draft: false
         prerelease: false
 
