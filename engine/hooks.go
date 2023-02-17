@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"plugin"
+	"strings"
 
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/fushin/utils/module"
@@ -23,6 +24,7 @@ const (
 	ModulePath   = "modules"
 	logPrefix    = "[Hot Module]"
 	ModuleLookup = "Module"
+	So           = ".so"
 )
 
 var ApolloModules = module.CreateModules()
@@ -34,7 +36,7 @@ func LoadModules() []string {
 
 	var files []string
 	_ = filepath.WalkDir(ModulePath, func(path string, d fs.DirEntry, err error) error {
-		if err == nil && !d.IsDir() && d.Name() != "" {
+		if err == nil && !d.IsDir() && d.Name() != "" && strings.HasSuffix(path, So) {
 			files = append(files, path)
 		}
 		return nil
