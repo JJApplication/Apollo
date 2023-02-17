@@ -3,7 +3,7 @@ module github.com/JJApplication/Apollo
 go 1.16
 
 require (
-	github.com/JJApplication/fushin v1.1.3
+	github.com/JJApplication/fushin v1.1.9
 	github.com/JJApplication/octopus_meta v1.0.7
 	github.com/containerd/containerd v1.6.6 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect

@@ -94,6 +94,9 @@ func initEngine() {
 	router_container.Init(apolloEngine.GetEngine())
 	router_alarm.Init(apolloEngine.GetEngine())
 
+	// hooks engine
+	engine.Hooks(apolloEngine)
+
 	err := apolloEngine.RunServer()
 	if err != nil && err != http.ErrServerClosed {
 		logger.LoggerSugar.Errorf("%s server start failed", APPName)
