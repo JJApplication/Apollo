@@ -109,7 +109,7 @@ func initEngine() {
 	}
 
 	if err == http.ErrServerClosed {
-		fmt.Println(APPName + " thanks for using ❤️️")
+		fmt.Println(APPName + " thanks for using 💕️")
 	}
 }
 

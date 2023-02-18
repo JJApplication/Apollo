@@ -13,8 +13,8 @@ import (
 )
 
 func Check() {
-	fmt.Printf("[Apollo] 🚀🚀🚀\n⌛ StartTime: %s\n🔥 Listening on %s\n📁 ServiceRoot: %s\n📁 AppRoot: %s\n📁 AppManger: %s\n📁 AppLog: %s\n📁 BackUpDir: %s\n📁 CacheDir: %s\n\n",
-		time.Now().String(),
+	fmt.Printf("[Apollo] booting 🚀🚀🚀\n\n⌛ StartTime: %s\n🔥 Listening on %s\n📁 ServiceRoot: %s\n📁 AppRoot: %s\n📁 AppManger: %s\n📁 AppLog: %s\n📁 BackUpDir: %s\n📁 CacheDir: %s\n\n",
+		time.Now().UTC().String(),
 		fmt.Sprintf("http://%s:%d", config.ApolloConf.Server.Host, config.ApolloConf.Server.Port),
 		config.ApolloConf.ServiceRoot,
 		config.ApolloConf.APPRoot,
