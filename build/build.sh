@@ -10,5 +10,8 @@ echo "build swagger docs"
 swag init -g ./apollo.go
 
 echo "start to build"
-go build -ldflags='-w -s' -trimpath -o apollo ./
+# deb mode with symbols
+go build -mod=mod -trimpath -o apollo ./
+# prod
+#go build -mod=mod -ldflags='-w -s' -trimpath -o apollo ./
 echo "done"

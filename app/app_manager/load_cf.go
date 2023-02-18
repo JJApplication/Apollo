@@ -11,6 +11,7 @@ import (
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/octopus_meta"
+	"github.com/gookit/goutil/reflects"
 )
 
 // LoadManagerCf 加载所有配置文件到全局的字典中
@@ -55,7 +56,8 @@ func ReloadManagerMap() error {
 		if ok && app.(App).Meta.Name == k {
 			continue
 		}
-		if !ok {
+		// 不存在且为空对象时跳过
+		if !ok && reflects.IsEqual(v, octopus_meta.App{}) {
 			continue
 		}
 
