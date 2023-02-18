@@ -21,6 +21,7 @@ import (
 	"github.com/JJApplication/Apollo/router/router_alarm"
 	"github.com/JJApplication/Apollo/router/router_app"
 	"github.com/JJApplication/Apollo/router/router_container"
+	"github.com/JJApplication/Apollo/router/router_modules"
 	"github.com/JJApplication/Apollo/router/router_tasks"
 	"github.com/JJApplication/Apollo/router/router_web"
 	"github.com/JJApplication/Apollo/uds"
@@ -93,6 +94,7 @@ func initEngine() {
 	router_tasks.Init(apolloEngine.GetEngine())
 	router_container.Init(apolloEngine.GetEngine())
 	router_alarm.Init(apolloEngine.GetEngine())
+	router_modules.Init(apolloEngine.GetEngine())
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

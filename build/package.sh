@@ -20,7 +20,7 @@ package()
   cp ./apollo ./opt
   cp -r ./conf ./opt
   cp -r ./web ./opt
-  tar -czvf dirichlet.tar.gz ./opt
+  tar -czvf apollo.tar.gz ./opt
 }
 
 clean()

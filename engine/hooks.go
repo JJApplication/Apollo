@@ -27,7 +27,23 @@ const (
 	So           = ".so"
 )
 
-var ApolloModules = module.CreateModules()
+type Module struct {
+	Name   string
+	Status bool
+	Path   string
+	Des    string
+}
+
+// ApolloModules 全局记录的动态路由模块信息
+var ApolloModules []Module
+
+func AddModule(m Module) {
+	ApolloModules = append(ApolloModules, m)
+}
+
+func GetModules() []Module {
+	return ApolloModules
+}
 
 func LoadModules() []string {
 	if _, e := os.Stat(ModulePath); os.IsExist(e) {
@@ -64,7 +80,7 @@ func Hooks(s *Engine) {
 		}
 		mod.Hooks(s.GetEngine())
 		mod.Enable()
-		module.AddModule(ApolloModules, module.Module{Name: mod.Name(), Status: true})
+		AddModule(Module{Name: mod.Name(), Status: true, Path: mod.Extra()["api"].(string), Des: mod.Extra()["des"].(string)})
 		logger.LoggerSugar.Infof("%s module: [%s] loaded", logPrefix, mod.Name())
 	}
 }

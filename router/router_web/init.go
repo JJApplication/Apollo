@@ -20,6 +20,7 @@ func Init(r *gin.Engine) {
 	routerWeb = r.Group("")
 	{
 		routerWeb.GET("/", engine.MiddleCache(Index))
+		routerWeb.GET("/advance", engine.MiddleCache(Index))
 		routerWeb.GET("/favicon.ico", engine.MiddleCache(Favicon))
 		routerWeb.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		routerWeb.GET("heartbeat", func(c *gin.Context) {
