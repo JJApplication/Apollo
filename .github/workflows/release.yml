@@ -35,6 +35,11 @@ jobs:
     - name: Done
       run: echo "build success"
 
+    - name: Release Name
+      run: |
+        echo "start to create release name from ${{ github.ref }}"
+        echo "RELEASE=$(echo ${{ github.ref }} | sed 's/refs\/tags\///')" >> $GITHUB_ENV
+
     - name: CreateMD
       run: |
         touch ${{ github.workspace }}-CHANGELOG.txt
@@ -53,6 +58,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
+        name: Apollo ${{ env.RELEASE }}
         body_path: ${{ github.workspace }}-CHANGELOG.txt
         draft: false
         prerelease: false
