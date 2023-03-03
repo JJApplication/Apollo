@@ -66,6 +66,7 @@ func Hooks(s *Engine) {
 	logger.LoggerSugar.Infof("%s load modules: %d", logPrefix, len(modules))
 
 	for _, m := range modules {
+		logger.LoggerSugar.Infof("%s start to load module [%s]", logPrefix, m)
 		p, err := plugin.Open(m)
 		if err != nil {
 			logger.LoggerSugar.Errorf("%s load error: %s", logPrefix, err.Error())
