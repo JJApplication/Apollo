@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
+	"github.com/JJApplication/Apollo/app/discover_manager"
 	"github.com/JJApplication/Apollo/app/docker_manager"
 	"github.com/JJApplication/Apollo/app/task_manager"
 	"github.com/JJApplication/Apollo/config"
@@ -64,6 +65,11 @@ func initAPPManager() {
 	app_manager.SaveToDB()
 	app_manager.FirstLoad()
 	logger.LoggerSugar.Infof("%s init APPManager done", APPName)
+}
+
+func initDiscoverManager() {
+	discover_manager.InitDiscoverManager()
+	logger.LoggerSugar.Infof("%s init APPDiscover done", APPName)
 }
 
 // 任务管理初始化

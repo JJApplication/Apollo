@@ -37,6 +37,8 @@ func main() {
 	initMongo()
 	// init app manager
 	initAPPManager()
+	// init app discover
+	initDiscoverManager()
 	// init task manager
 	initTaskManager()
 	// init background ticker
