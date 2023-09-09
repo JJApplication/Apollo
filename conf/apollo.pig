@@ -28,11 +28,20 @@
   "server": {
     "host": "0.0.0.0",
     "port": 9090,
-    "uds": "/tmp/Apollo.sock"
+    "uds": "/tmp/Apollo.sock",
+    "ui_router": [
+      "/panel",
+      "/panel/*route",
+      "/next",
+      "/next/*route"
+    ]
   },
   "ci": {
     "docker_host": "tcp://192.168.100.10:2375",
     "docker_timeout": 5,
     "docker_api_version": "1.41"
+  },
+  "module": {
+    "enable": false
   }
 }

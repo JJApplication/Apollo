@@ -182,3 +182,13 @@ func Rotate(appLog string) error {
 	gzName := fmt.Sprintf("%s-%s", appLog, TimeNowBetterSep())
 	return ArchiveFile(appLog, gzName, true)
 }
+
+// ReadFileSlice 分片读取
+func ReadFileSlice() {
+
+}
+
+// ModifyFile 修改内容
+func ModifyFile() {
+
+}

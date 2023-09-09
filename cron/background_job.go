@@ -56,8 +56,9 @@ func AddJobDBPersist() {
 	})
 }
 
-// AddJobAPPSync app配置文件同步
-// 同步配置文件到配置文件目录
+// AddJobAPPSync app模型文件同步
+// 从本地同步模型文件到Apollo
+// 粒度为App
 func AddJobAPPSync() {
 	logger.Logger.Info("job: app config sync start")
 	des := "同步微服务模型文件"
@@ -74,6 +75,7 @@ func AddJobAPPSync() {
 }
 
 // AddJobOctopusMetaSync 重载整个octopus目录
+// 粒度为octopus 同步会合并数据，新增微服务删除不存在的服务
 func AddJobOctopusMetaSync() {
 	logger.Logger.Info("job: octopus-meta sync start")
 	des := "重载octopus模型文件"

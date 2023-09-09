@@ -8,6 +8,7 @@ Copyright Renj
 package engine
 
 import (
+	"github.com/JJApplication/Apollo/config"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -46,6 +47,10 @@ func GetModules() []Module {
 }
 
 func LoadModules() []string {
+	if !config.ApolloConf.Module.Enable {
+		logger.LoggerSugar.Infof("%s feature not enable", logPrefix)
+		return nil
+	}
 	if _, e := os.Stat(ModulePath); os.IsExist(e) {
 		return nil
 	}

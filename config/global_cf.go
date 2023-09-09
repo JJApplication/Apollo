@@ -33,6 +33,7 @@ type DConfig struct {
 	APPTmpDir   string `json:"app_tmp_dir"`   // 服务临时文件目录
 	APPBackUp   string `json:"app_back_up"`   // 服务备份目录
 	APPPidDir   string `json:"app_pid_dir"`   // 服务运行时的pid
+
 	// logger
 	Log DLog `json:"log"`
 
@@ -44,6 +45,12 @@ type DConfig struct {
 
 	// CI
 	CI CI `json:"ci"`
+
+	// Module 动态注册模块
+	Module Module `json:"module"`
+
+	// 管理扩展
+	Manager Manager `json:"manager"`
 }
 
 // DLog log config
@@ -79,9 +86,10 @@ type Redis struct {
 
 // Server server Config
 type Server struct {
-	Host string `json:"host"`
-	Port int    `json:"port"`
-	Uds  string `json:"uds"`
+	Host     string   `json:"host"`
+	Port     int      `json:"port"`
+	Uds      string   `json:"uds"`
+	UIRouter []string `json:"ui_router"` // 决定哪些url由前端路由处理
 }
 
 // CI CI配置
@@ -89,6 +97,36 @@ type CI struct {
 	DockerHost       string `json:"docker_host"`
 	DockerTimeout    int    `json:"docker_timeout"`
 	DockerAPIVersion string `json:"docker_api_version"`
+}
+
+// Module 动态模块
+type Module struct {
+	Enable bool `json:"enable"`
+}
+
+// Manager 管理外部数据
+type Manager struct {
+	ManagerNginx struct {
+		NginxConf      string `json:"nginx_conf"`
+		NginxConfd     string `json:"nginx_confd"`
+		NginxMime      string `json:"nginx_mime"`
+		NginxAccessLog string `json:"nginx_access_log"`
+		NginxErrorLog  string `json:"nginx_error_log"`
+		NginxCache     string `json:"nginx_cache"`
+	} `json:"manager_nginx"`
+
+	ManagerDatabase struct {
+		DatabaseNode string `json:"database_node"`
+		ReadOnly     bool   `json:"read_only"`
+	} `json:"manager_database"`
+
+	ManagerUds struct {
+		UdsDir string `json:"uds_dir"`
+	} `json:"manager_uds"`
+
+	ManagerBackup struct {
+		// 与appBackupDir重复 暂不实现此配置
+	} `json:"manager_backup"`
 }
 
 // Sync 从配置文件中同步加载

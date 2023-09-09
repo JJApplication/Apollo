@@ -50,8 +50,21 @@ func ReloadManagerMap() error {
 	}
 	logger.LoggerSugar.Infof("%s reload %d apps", APPManagerPrefix, len(apps))
 	logger.LoggerSugar.Infof("%s reload map %+v", APPManagerPrefix, apps)
-	// 存在app时跳过
+
+	var oldKeys []string
+	// 先执行合并任务
+	APPManager.APPManagerMap.Range(func(key, value any) bool {
+		oldKeys = append(oldKeys, key.(string))
+		return true
+	})
+	for _, key := range oldKeys {
+		if _, ok := apps[key]; !ok {
+			APPManager.APPManagerMap.Delete(key)
+		}
+	}
+
 	for k, v := range apps {
+		// 存在app时跳过
 		app, ok := APPManager.APPManagerMap.Load(k)
 		if ok && app.(App).Meta.Name == k {
 			continue

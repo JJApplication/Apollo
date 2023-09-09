@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-APP=Gungnir
+
 cd "${APP_ROOT}/${APP}" || exit "${APP_START_ERR}"
+
 if [[ ! -d "${APP_LOG}/${APP}" ]];then
   mkdir -p "${APP_LOG}/${APP}"
 fi
 
-nohup "${APP_ROOT}/${APP}/gungnir" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+. env.sh
+nohup "${APP_ROOT}/${APP}/palace" >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
+result=$?
+if [[ $result != 0 ]];then
+  exit "${APP_START_ERR}"
+fi
+
+"${APP_ROOT}"/NoEngine/noengined -start "${APP}"
 result=$?
 if [[ $result != 0 ]];then
   exit "${APP_START_ERR}"

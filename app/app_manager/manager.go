@@ -165,7 +165,10 @@ func StatusAll() ([]string, error) {
 	var statusList []string
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 		app := value.(App)
-		if ok, err := app.Check(); !ok {
+		if !app.CheckAppReleaseStatus() {
+			statusList = append(statusList, fmt.Sprintf("[%s]: UNKNOWN", key))
+			logger.LoggerSugar.Errorf("%s %s check unpublished", APPManagerPrefix, key)
+		} else if ok, err := app.Check(); !ok {
 			e = err
 			statusList = append(statusList, fmt.Sprintf("[%s]: BAD", key))
 			logger.LoggerSugar.Errorf("%s %s check failed: %s", APPManagerPrefix, key, err.Error())

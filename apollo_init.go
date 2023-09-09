@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/router/router_status"
 	"net/http"
 	"time"
 
@@ -101,6 +102,7 @@ func initEngine() {
 	router_container.Init(apolloEngine.GetEngine())
 	router_alarm.Init(apolloEngine.GetEngine())
 	router_modules.Init(apolloEngine.GetEngine())
+	router_status.Init(apolloEngine.GetEngine())
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

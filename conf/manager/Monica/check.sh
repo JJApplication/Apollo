@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-APP=Gungnir
 
 status=$(ps ax|grep -w "${APP}"|grep -v zeus|grep -v grep|grep -v .sh)
 if [[ -n ${status} ]];then

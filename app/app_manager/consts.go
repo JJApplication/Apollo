@@ -69,9 +69,10 @@ const (
 
 // app的发布状态
 const (
-	Published = "published" // 已发布
-	Testing   = "testing"   // 测试中
-	Pending   = "pending"   // 待发布
+	Published  = "published"  // 已发布
+	Testing    = "testing"    // 测试中
+	Pending    = "pending"    // 待发布
+	Unreleased = "unreleased" // 待发布
 )
 
 // 配置文件类型

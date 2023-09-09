@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-APP=Gungnir
+
 for i in {1..10}
 do
   pid=$(ps ax|grep -w "${APP}"|grep -v grep|grep -v zeus|grep -v ".sh"|sed -n '1P'|awk '{print $1}')

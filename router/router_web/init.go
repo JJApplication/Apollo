@@ -6,6 +6,7 @@ Created: 2021/12/22 by Landers
 package router_web
 
 import (
+	"github.com/JJApplication/Apollo/config"
 	_ "github.com/JJApplication/Apollo/docs"
 	"github.com/JJApplication/Apollo/engine"
 	"github.com/JJApplication/Apollo/router"
@@ -20,12 +21,17 @@ func Init(r *gin.Engine) {
 	routerWeb = r.Group("")
 	{
 		routerWeb.GET("/", engine.MiddleCache(Index))
-		routerWeb.GET("/panel", engine.MiddleCache(Index))
-		routerWeb.GET("/panel/*route", engine.MiddleCache(Index))
 		routerWeb.GET("/favicon.ico", engine.MiddleCache(Favicon))
 		routerWeb.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		routerWeb.GET("heartbeat", func(c *gin.Context) {
 			router.Response(c, "", true)
 		})
+		handleUIRouter()
+	}
+}
+
+func handleUIRouter() {
+	for _, r := range config.ApolloConf.Server.UIRouter {
+		routerWeb.GET(r, engine.MiddleCache(Index))
 	}
 }
