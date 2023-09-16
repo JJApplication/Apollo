@@ -74,48 +74,30 @@ func configEncoding() string {
 }
 
 func configFunction() string {
-	switch config.ApolloConf.Log.EnableFunction {
-	case "yes", "YES", "Yes":
+	if config.ApolloConf.Log.EnableFunction {
 		return "Function"
-	case "no", "NO", "No":
-		return ""
-	default:
-		return ""
 	}
+	return ""
 }
 
 func configLog() []string {
-	switch config.ApolloConf.Log.EnableLog {
-	case "yes", "YES", "Yes":
+	if config.ApolloConf.Log.EnableLog {
 		if config.ApolloConf.Log.LogFile != "" {
 			return []string{"stdout", config.ApolloConf.Log.LogFile}
 		}
 		return []string{"stdout"}
-	case "no", "NO", "No":
-		return []string{}
-	default:
-		return []string{"stdout"}
 	}
+
+	return []string{}
 }
 
 func configStack() bool {
-	switch config.ApolloConf.Log.EnableStack {
-	case "yes", "YES", "Yes":
-		return false
-	case "no", "NO", "No":
-		return true
-	default:
-		return true
-	}
+	return !config.ApolloConf.Log.EnableStack
 }
 
 func configCaller() string {
-	switch config.ApolloConf.Log.EnableCaller {
-	case "yes", "YES", "Yes":
+	if config.ApolloConf.Log.EnableCaller {
 		return "Caller"
-	case "no", "NO", "No":
-		return ""
-	default:
-		return ""
 	}
+	return ""
 }

@@ -78,6 +78,8 @@ func SaveToDB() {
 }
 
 // FirstLoad 在异常情况下重启，先从mongo拿数据保存后续再刷新
+//
+// 可以从缓存中继承的数据runtime运行时数据
 func FirstLoad() {
 	if !database.MongoPing {
 		logger.Logger.Warn("failed to connect to mongo")
@@ -94,6 +96,15 @@ func FirstLoad() {
 				}
 				if app.Meta.RunData.Envs == nil || len(app.Meta.RunData.Envs) == 0 {
 					app.Meta.RunData.Envs = data.Meta.RunData.Envs
+				}
+				if app.Meta.Runtime.Pid == "" && data.Meta.Runtime.Pid != "" {
+					app.Meta.Runtime.Pid = data.Meta.Runtime.Pid
+				}
+				if app.Meta.Runtime.Ports == nil && len(data.Meta.Runtime.Ports) > 0 {
+					app.Meta.Runtime.Ports = data.Meta.Runtime.Ports
+				}
+				if app.Meta.Runtime.StopOperation != data.Meta.Runtime.StopOperation {
+					app.Meta.Runtime.StopOperation = data.Meta.Runtime.StopOperation
 				}
 				APPManager.APPManagerMap.Store(key, app)
 				logger.LoggerSugar.Infof("%s first load %s runtime data to appCache", APPManagerPrefix, key)

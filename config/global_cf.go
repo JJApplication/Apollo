@@ -55,10 +55,10 @@ type DConfig struct {
 
 // DLog log config
 type DLog struct {
-	EnableLog      string `json:"enable_log"`      // yes | no
-	EnableStack    string `json:"enable_stack"`    // default disabled
-	EnableFunction string `json:"enable_function"` // default disabled
-	EnableCaller   string `json:"enable_caller"`   // default enabled
+	EnableLog      bool   `json:"enable_log"`      // yes | no
+	EnableStack    bool   `json:"enable_stack"`    // default disabled
+	EnableFunction bool   `json:"enable_function"` // default disabled
+	EnableCaller   bool   `json:"enable_caller"`   // default enabled
 	LogFile        string `json:"log_file"`        // default stderr
 	Encoding       string `json:"encoding"`        // default encoding json/console
 }
@@ -86,10 +86,13 @@ type Redis struct {
 
 // Server server Config
 type Server struct {
-	Host     string   `json:"host"`
-	Port     int      `json:"port"`
-	Uds      string   `json:"uds"`
-	UIRouter []string `json:"ui_router"` // 决定哪些url由前端路由处理
+	Host        string   `json:"host"`
+	Port        int      `json:"port"`
+	Uds         string   `json:"uds"`
+	UICache     bool     `json:"ui_cache"`      // 是否开启缓存
+	UICacheTime int      `json:"ui_cache_time"` // 缓存的失效时间
+	UIRouter    []string `json:"ui_router"`     // 决定哪些url由前端路由处理
+	AuthExpire  int      `json:"auth_expire"`   // 认证的失效时间
 }
 
 // CI CI配置

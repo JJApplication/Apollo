@@ -17,6 +17,7 @@ func Init(r *gin.Engine) {
 		routerApp.GET("/info", InfoApp)
 		routerApp.GET("/status", StatusApp)
 		routerApp.GET("/tree", FileTree)
+		routerApp.GET("/proc", GetAppProc)
 	}
 	routerWithAuth := r.Group("/api/app", engine.MiddleWareAuth())
 	{

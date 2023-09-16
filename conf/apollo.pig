@@ -8,10 +8,10 @@
   "app_back_up": "/renj.io/backup",
   "app_pids": "/renj.io/pids",
   "log": {
-    "enable_log": "",
-    "enable_stack": "no",
-    "enable_function": "no",
-    "enable_caller": "no",
+    "enable_log": true,
+    "enable_stack": false,
+    "enable_function": false,
+    "enable_caller": false,
     "log_file": "",
     "encoding": ""
   },
@@ -29,6 +29,8 @@
     "host": "0.0.0.0",
     "port": 9090,
     "uds": "/tmp/Apollo.sock",
+    "ui_cache": false,
+    "ui_cache_time": 84600,
     "ui_router": [
       "/panel",
       "/panel/*route",

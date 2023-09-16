@@ -9,6 +9,7 @@ Copyright Renj
 package engine
 
 import (
+	"github.com/JJApplication/Apollo/config"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -25,6 +26,16 @@ const (
 
 var store = persistence.NewInMemoryStore(DefaultExpire)
 
+func GetStore() *persistence.InMemoryStore {
+	return store
+}
+
 func MiddleCache(handle gin.HandlerFunc) gin.HandlerFunc {
-	return cache.CachePage(store, PageExpire, handle)
+	if config.ApolloConf.Server.UICache {
+		if config.ApolloConf.Server.UICacheTime > 0 {
+			return cache.CachePage(store, time.Duration(config.ApolloConf.Server.UICacheTime), handle)
+		}
+		return cache.CachePage(store, PageExpire, handle)
+	}
+	return handle
 }

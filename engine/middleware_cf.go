@@ -42,7 +42,7 @@ func LoadMiddleWareConfig() []MiddleWareConfig {
 			utils.GetAppDir(),
 			MiddleConfigRoot,
 			MiddleConfigFile)); err != nil {
-		logger.LoggerSugar.Errorf("%s failed to parse middleware config.", MiddleWare)
+		logger.LoggerSugar.Errorf("%s failed to parse middleware config: %s", MiddleWare, err.Error())
 		logger.LoggerSugar.Warnf("%s using default middleware config.", MiddleWare)
 	} else {
 		logger.LoggerSugar.Infof("%s load middleware config in %dms.", MiddleWare, utils.TimeCalcUnix(t))

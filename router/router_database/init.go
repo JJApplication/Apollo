@@ -14,6 +14,6 @@ import (
 func Init(r *gin.Engine) {
 	routerDB := r.Group("/api/database")
 	{
-
+		routerDB.GET("")
 	}
 }
