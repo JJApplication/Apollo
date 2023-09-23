@@ -22,6 +22,10 @@ func GetAppProc(c *gin.Context) {
 	}
 
 	proc := utils.FilterProcess(app)
+	if proc == nil {
+		router.Response(c, utils.SysProc{}, false)
+		return
+	}
 	router.Response(c, utils.SysProc{
 		PID:            utils.GetProcessPID(proc),
 		CPUPercent:     utils.CalcProcessCpu(proc),

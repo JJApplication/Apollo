@@ -1,0 +1,38 @@
+[
+  {
+    "scriptName": "全局备份",
+    "scriptDes": "全局微服务和数据文件的备份",
+    "script": "backup.sh",
+    "args": [],
+    "envsAdd": ["APPBackUp"],
+    "envs": {},
+    "workdir": ""
+  },
+  {
+    "scriptName": "微服务备份",
+    "scriptDes": "备份单个微服务",
+    "script": "backup_app.sh",
+    "args": ["emptyApp"],
+    "envsAdd": ["APPBackUp"],
+    "envs": {},
+    "workdir": ""
+  },
+  {
+    "scriptName": "远程服务器同步",
+    "scriptDes": "进行服务器迁移时同步安装目录到远程服务器",
+    "script": "rsync.sh",
+    "args": [],
+    "envsAdd": [],
+    "envs": {},
+    "workdir": ""
+  },
+  {
+    "scriptName": "清理临时文件",
+    "scriptDes": "清理服务产生的临时文件",
+    "script": "clean.sh",
+    "args": [],
+    "envsAdd": ["APPBackUp", "APPLogDir"],
+    "envs": {},
+    "workdir": ""
+  }
+]
