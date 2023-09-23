@@ -18,6 +18,7 @@ var ApolloConf DConfig
 const (
 	GlobalConfigRoot = "conf"
 	GlobalConfigFile = "apollo.pig"
+	GlobalScriptRoot = "script"
 )
 
 // DConfig 全局配置
@@ -78,10 +79,18 @@ type Mongo struct {
 	Name   string `json:"name"`
 	URL    string `json:"url"`
 	User   string `json:"user"`
-	PassWd string `json:"pass_wd"`
+	PassWd string `json:"passwd"`
 }
 
 type Redis struct {
+}
+
+type TiDB struct {
+	DB     string `json:"db"`
+	Host   string `json:"host"`
+	Port   int    `json:"port"`
+	User   string `json:"user"`
+	PassWd string `json:"passwd"`
 }
 
 // Server server Config
@@ -93,6 +102,9 @@ type Server struct {
 	UICacheTime int      `json:"ui_cache_time"` // 缓存的失效时间
 	UIRouter    []string `json:"ui_router"`     // 决定哪些url由前端路由处理
 	AuthExpire  int      `json:"auth_expire"`   // 认证的失效时间
+	AuthCode    string   `json:"auth_code"`     // 认证码
+	Account     string   `json:"account"`       // 认证账户
+	PassWd      string   `json:"passwd"`        // 认证密码
 }
 
 // CI CI配置

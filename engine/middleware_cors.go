@@ -17,7 +17,7 @@ func MiddleWareCors() gin.HandlerFunc {
 	config.AllowBrowserExtensions = true
 	config.AllowCredentials = true
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTION"}
-	config.AllowHeaders = []string{"token", "Token", "auth", "Auth", "Mgek", "jjapp", "JJApp", "plnack"}
+	config.AllowHeaders = []string{"token", "Token", "auth", "Auth", "Mgek", "jjapp", "JJApp", "plnack", "content-type", "ContentType"}
 
 	return cors.New(config)
 }

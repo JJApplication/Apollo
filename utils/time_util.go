@@ -58,3 +58,12 @@ func TimeCalcString(last time.Time) string {
 func TimeToLocal(t time.Time) time.Time {
 	return t.Local()
 }
+
+// GetTimeString 获取标准格式的时间字符串 2006-1-2-15-04-05
+func GetTimeString(t int64) string {
+	return time.Unix(t, 0).Format(TimeBetterSep)
+}
+
+func GetTimeByFormat(format string, t int64) string {
+	return time.Unix(t, 0).Format(format)
+}

@@ -14,6 +14,7 @@ import (
 	"github.com/JJApplication/Apollo/utils"
 	"github.com/gin-gonic/gin"
 	"reflect"
+	"runtime"
 )
 
 // 配置文件处理
@@ -41,6 +42,8 @@ func GetConfig(c *gin.Context) {
 		Mongo:            fmt.Sprintf("%s@%s", config.ApolloConf.DB.Mongo.Name, config.ApolloConf.DB.Mongo.URL),
 		DockerApi:        config.ApolloConf.CI.DockerHost,
 		DockerApiVersion: config.ApolloConf.CI.DockerAPIVersion,
+		Goroutines:       runtime.NumGoroutine(),
+		MaxProcs:         runtime.NumCPU(),
 	}, true)
 }
 

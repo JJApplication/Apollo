@@ -32,4 +32,6 @@ type RuntimeConf struct {
 	Mongo            string `json:"mongo"`
 	DockerApi        string `json:"dockerApi"`
 	DockerApiVersion string `json:"dockerApiVersion"`
+	Goroutines       int    `json:"goroutines"`
+	MaxProcs         int    `json:"maxProcs"`
 }

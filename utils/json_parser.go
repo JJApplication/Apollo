@@ -51,3 +51,12 @@ func PrettyJson(v interface{}) string {
 
 	return string(s)
 }
+
+func JsonString(v interface{}) string {
+	s, err := json.Marshal(v)
+	if err != nil {
+		return ""
+	}
+
+	return string(s)
+}

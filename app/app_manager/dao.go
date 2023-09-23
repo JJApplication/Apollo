@@ -172,6 +172,33 @@ func SaveRuntimeData(app App) {
 	logger.LoggerSugar.Infof("%s save [%s] runtime data to db", APPManagerPrefix, app.Meta.Name)
 }
 
+// GetRuntimePortApp 从数据库中获取存在运行时动态端口的服务
+func GetRuntimePortApp() []App {
+	if !database.MongoPing {
+		logger.Logger.Warn("failed to connect to mongo")
+		return []App{}
+	}
+
+	var dynamicPortApp []App
+	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		if checkExist(bson.M{"app.meta.name": key}) {
+			var data DaoAPP
+			err := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), bson.M{"app.meta.name": key}).Decode(&data)
+			if err == nil {
+				app := value.(App)
+				if app.Meta.RunData.RandomPort {
+					if len(data.Meta.RunData.Ports) > 0 {
+						dynamicPortApp = append(dynamicPortApp, app)
+					}
+				}
+			}
+		}
+		return true
+	})
+
+	return dynamicPortApp
+}
+
 func checkExist(filter interface{}) bool {
 	if e := mgm.Coll(&DaoAPP{}).FindOne(context.Background(), filter).Err(); e != nil {
 		return false

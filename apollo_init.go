@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/router/router_auth"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
 	"net/http"
@@ -105,6 +106,7 @@ func initEngine() {
 	router_modules.Init(apolloEngine.GetEngine())
 	router_status.Init(apolloEngine.GetEngine())
 	router_system.Init(apolloEngine.GetEngine())
+	router_auth.Init(apolloEngine.GetEngine())
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

@@ -21,9 +21,16 @@
       "name": "ApolloMongo",
       "url": "192.168.100.10:27017",
       "user": "",
-      "pass_wd": ""
+      "passwd": ""
     },
-    "redis": {}
+    "redis": {},
+    "tidb": {
+      "db":  "",
+      "host": "",
+      "port": 0,
+      "user": "",
+      "passwd": ""
+    }
   },
   "server": {
     "host": "0.0.0.0",
@@ -36,7 +43,11 @@
       "/panel/*route",
       "/next",
       "/next/*route"
-    ]
+    ],
+    "auth_code": "",
+    "auth_expire": 600,
+    "account": "landers",
+    "passwd": "123456"
   },
   "ci": {
     "docker_host": "tcp://192.168.100.10:2375",
