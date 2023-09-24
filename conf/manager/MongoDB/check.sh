@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+APP=mongo
 exist=$(docker ps|grep "${APP}")
 if [ -n "${exist}" ];then
   exit 0
