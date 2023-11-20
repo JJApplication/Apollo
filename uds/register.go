@@ -6,7 +6,7 @@ Created: 2021/12/8 by Landers
 package uds
 
 const (
-	socketAddr = "/tmp/Apollo.sock"
+	socketAddr = "/var/run/Apollo.sock"
 )
 
 // Register 注册一个Unix domain socket通信

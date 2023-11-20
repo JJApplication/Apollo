@@ -41,7 +41,7 @@ func Login(c *gin.Context) {
 		router.Response(c, false, false)
 		return
 	}
-	ip = utils.RemoveAddrPort(c.Request.RemoteAddr)
+	ip = utils.GetRemoteIP(c.Request)
 	loginTime := time.Now().Unix()
 	token := token_manager.GenerateToken(ip, loginTime)
 	token_manager.SetToken(token)

@@ -7,7 +7,10 @@
 
 package utils
 
-import "strings"
+import (
+	"net/http"
+	"strings"
+)
 
 func RemoveAddrPort(addr string) string {
 	if strings.Contains(addr, ":") {
@@ -19,4 +22,15 @@ func RemoveAddrPort(addr string) string {
 	}
 
 	return addr
+}
+
+func GetRemoteIP(r *http.Request) string {
+	remoteAddr := r.RemoteAddr
+	realIP := r.Header.Get("X-Real-IP")
+
+	if realIP != "" {
+		return RemoveAddrPort(realIP)
+	}
+
+	return RemoveAddrPort(remoteAddr)
 }

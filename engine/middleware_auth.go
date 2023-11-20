@@ -41,7 +41,7 @@ func MiddleWareAuth() gin.HandlerFunc {
 
 		// 从headers中取token校验
 		headerToken := c.GetHeader("token")
-		validate := token_manager.ValidateToken(utils.RemoveAddrPort(c.Request.RemoteAddr), headerToken)
+		validate := token_manager.ValidateToken(utils.GetRemoteIP(c.Request), headerToken)
 		if headerToken != "" && validate {
 			// header校验成功直接返回
 			c.Next()
@@ -54,7 +54,7 @@ func MiddleWareAuth() gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
-		if !token_manager.ValidateToken(utils.RemoveAddrPort(c.Request.RemoteAddr), cookieToken) {
+		if !token_manager.ValidateToken(utils.GetRemoteIP(c.Request), cookieToken) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}

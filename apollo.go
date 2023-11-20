@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/JJApplication/Apollo/cmd"
 	"runtime"
 
 	"github.com/JJApplication/Apollo/logger"
@@ -14,6 +15,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @BasePath http://service.renj.io/api
 func main() {
+	cmd.ApolloCmd()
 	initGlobalConfig()
 	logger.Check()
 	err := logger.InitLogger()

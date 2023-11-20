@@ -9,3 +9,8 @@ package script_manager
 
 // 脚本的执行全部为异步任务
 // 脚本执行的结果会记录到数据库中
+
+// RunWithTimeout 带上下文超时的运行回调
+func RunWithTimeout() {
+
+}
