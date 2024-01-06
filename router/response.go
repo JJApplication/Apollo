@@ -55,4 +55,9 @@ func Res5xx(c *gin.Context, data interface{}) {
 	return
 }
 
+func ResponseFile(c *gin.Context, file string) {
+	c.File(file)
+	return
+}
+
 // todo 限流时的429状态返回

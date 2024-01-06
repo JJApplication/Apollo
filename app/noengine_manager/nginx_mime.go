@@ -5,6 +5,6 @@
    Copyright Renj
 */
 
-package nginx_manager
+package noengine_manager
 
 // mime

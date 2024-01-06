@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-APP=mongo
 docker stop "${APP}"
 result=$?
 if [[ $result != 0 ]];then

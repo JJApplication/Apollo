@@ -7,7 +7,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/app/log_manager"
 	"github.com/JJApplication/Apollo/router/router_auth"
+	"github.com/JJApplication/Apollo/router/router_log"
 	"github.com/JJApplication/Apollo/router/router_script"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
@@ -110,6 +112,7 @@ func initEngine() {
 	router_system.Init(r)
 	router_auth.Init(r)
 	router_script.Init(r)
+	router_log.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -134,4 +137,8 @@ func initUDS() {
 
 func initDockerClient() {
 	docker_manager.InitDockerClient()
+}
+
+func initLogManager() {
+	log_manager.InitLogManager()
 }

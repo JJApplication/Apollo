@@ -41,6 +41,8 @@ func main() {
 	initAPPManager()
 	// init app discover
 	initDiscoverManager()
+	// init log manager
+	initLogManager()
 	// init task manager
 	initTaskManager()
 	// init background ticker

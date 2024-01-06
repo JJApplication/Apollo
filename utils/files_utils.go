@@ -184,11 +184,68 @@ func Rotate(appLog string) error {
 }
 
 // ReadFileSlice 分片读取
-func ReadFileSlice() {
+//
+// size 读取的文件大小byte
+// last 是否从尾部开始读取
+// 读取size超过文件总大小时，直接返回文件内容
+func ReadFileSlice(file string, size int, last bool) string {
+	data, _ := os.ReadFile(file)
+	totalSize := len(data)
+	if totalSize <= size {
+		return string(data)
+	}
+	fmt.Println("测试", size, totalSize)
+	if last {
+		index := totalSize - size
+		fmt.Println("测试", size, totalSize, string(data[index:totalSize-1]))
+		return string(data[index : totalSize-1])
+	}
 
+	return string(data[:size])
+}
+
+// ReadFileString 读取文件内容
+func ReadFileString(file string) string {
+	data, _ := os.ReadFile(file)
+	return string(data)
 }
 
 // ModifyFile 修改内容
 func ModifyFile() {
 
+}
+
+// ReadDir 返回一级目录下的全部文件
+func ReadDir(dir string) []string {
+	entry, _ := os.ReadDir(dir)
+	var files []string
+	for _, file := range entry {
+		files = append(files, file.Name())
+	}
+
+	return files
+}
+
+type FileDetail struct {
+	Name       string
+	Dir        bool
+	FileSize   int64
+	ModifyTime int64
+}
+
+// ReadDirDetail 返回目录下文件和详细信息
+func ReadDirDetail(dir string) []FileDetail {
+	entry, _ := os.ReadDir(dir)
+	var files []FileDetail
+	for _, file := range entry {
+		info, _ := file.Info()
+		files = append(files, FileDetail{
+			Name:       file.Name(),
+			Dir:        file.IsDir(),
+			FileSize:   info.Size(),
+			ModifyTime: info.ModTime().Unix(),
+		})
+	}
+
+	return files
 }

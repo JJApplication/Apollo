@@ -5,7 +5,7 @@
    Copyright Renj
 */
 
-package nginx_manager
+package noengine_manager
 
 // 配置文件操作
 // 基于配置文件模板生成运行时容器使用的配置
