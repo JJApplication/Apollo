@@ -51,6 +51,8 @@ func main() {
 	initCronJobs()
 	// init docker
 	initDockerClient()
+	// init NoEngine
+	initNoEngineApps()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

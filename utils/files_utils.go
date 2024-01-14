@@ -194,10 +194,8 @@ func ReadFileSlice(file string, size int, last bool) string {
 	if totalSize <= size {
 		return string(data)
 	}
-	fmt.Println("测试", size, totalSize)
 	if last {
 		index := totalSize - size
-		fmt.Println("测试", size, totalSize, string(data[index:totalSize-1]))
 		return string(data[index : totalSize-1])
 	}
 

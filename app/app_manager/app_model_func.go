@@ -8,6 +8,7 @@ package app_manager
 import (
 	"errors"
 	"fmt"
+	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -108,6 +109,10 @@ func (app *App) Start() (bool, error) {
 		return true, nil
 	}
 
+	if app.NoEngineCheck() {
+		return app.NoEngineStart()
+	}
+
 	var ret int
 	if ok, _ := app.Check(); ok {
 		return true, nil
@@ -149,6 +154,9 @@ func (app *App) Stop() (bool, error) {
 	if !app.CheckAppReleaseStatus() {
 		return true, nil
 	}
+	if app.NoEngineCheck() {
+		return app.NoEngineStop()
+	}
 	var ret int
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
@@ -182,6 +190,9 @@ func (app *App) startByApollo() {
 func (app *App) ReStart() (bool, error) {
 	if !app.CheckAppReleaseStatus() {
 		return true, nil
+	}
+	if app.NoEngineCheck() {
+		return app.NoEngineReStart()
 	}
 	if app.Meta.Runtime.StopOperation {
 		return true, nil
@@ -217,8 +228,11 @@ func (app *App) Check() (bool, error) {
 	if !app.CheckAppReleaseStatus() {
 		return true, nil
 	}
-	var ret int
+	if app.NoEngineCheck() {
+		return app.NoEngineStatus()
+	}
 
+	var ret int
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check))
 	if err != nil {
 		logger.LoggerSugar.Errorf("%s execute cmd (%s) failed: %s", APPManagerPrefix, appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Check), err.Error())
@@ -350,4 +364,68 @@ func (app *App) DepCheck() bool {
 		}
 	}
 	return true
+}
+
+// NoEngineCheck 检查是否为NoEngine服务
+// NoEngine服务走单独的操作流程
+func (app *App) NoEngineCheck() bool {
+	return app.Meta.Type == noengine_manager.NoEngine
+}
+
+func (app *App) NoEngineStatus() (bool, error) {
+	// 未创建容器时先创建
+	if noengine_manager.NoEngineAPPID(app.Meta.Name) == "" {
+		logger.LoggerSugar.Errorf("%s [%s] status failed, error: container not exist", APPManagerPrefix, app.Meta.Name)
+		return false, errors.New("container not exist")
+	}
+	return true, nil
+}
+
+func (app *App) NoEngineStart() (bool, error) {
+	// 未创建容器时先创建
+	if noengine_manager.NoEngineAPPID(app.Meta.Name) == "" {
+		if err := noengine_manager.StartNoEngineApp(app.Meta.Name); err != nil {
+			logger.LoggerSugar.Errorf("%s [%s] start failed, error: %s", APPManagerPrefix, app.Meta.Name, err.Error())
+			return false, err
+		}
+		return true, nil
+	}
+	if err := noengine_manager.ResumeNoEngineApp(app.Meta.Name); err != nil {
+		logger.LoggerSugar.Errorf("%s [%s] start failed, error: %s", APPManagerPrefix, app.Meta.Name, err.Error())
+		return false, err
+	}
+	logger.LoggerSugar.Infof("%s [%s] start success", APPManagerPrefix, app.Meta.Name)
+	return true, nil
+}
+
+func (app *App) NoEngineStop() (bool, error) {
+	// 未创建 警告但不创建
+	if noengine_manager.NoEngineAPPID(app.Meta.Name) == "" {
+		logger.LoggerSugar.Warnf("%s [%s] stop failed, container not exist", APPManagerPrefix, app.Meta.Name)
+		return false, errors.New("container not exist")
+	}
+	if err := noengine_manager.StopNoEngineApp(app.Meta.Name); err != nil {
+		logger.LoggerSugar.Errorf("%s [%s] stop failed, error: %s", APPManagerPrefix, app.Meta.Name, err.Error())
+		return false, err
+	}
+	logger.LoggerSugar.Infof("%s [%s] stop success", APPManagerPrefix, app.Meta.Name)
+	return true, nil
+}
+
+func (app *App) NoEngineReStart() (bool, error) {
+	// 未创建 警告但不创建
+	if noengine_manager.NoEngineAPPID(app.Meta.Name) == "" {
+		logger.LoggerSugar.Warnf("%s [%s] restart failed, container not exist", APPManagerPrefix, app.Meta.Name)
+		return false, errors.New("container not exist")
+	}
+	if err := noengine_manager.StopNoEngineApp(app.Meta.Name); err != nil {
+		logger.LoggerSugar.Errorf("%s [%s] stop failed, error: %s", APPManagerPrefix, app.Meta.Name, err.Error())
+		return false, err
+	}
+	if err := noengine_manager.ResumeNoEngineApp(app.Meta.Name); err != nil {
+		logger.LoggerSugar.Errorf("%s [%s] start failed, error: %s", APPManagerPrefix, app.Meta.Name, err.Error())
+		return false, err
+	}
+	logger.LoggerSugar.Infof("%s [%s] restart success", APPManagerPrefix, app.Meta.Name)
+	return true, nil
 }

@@ -8,8 +8,10 @@ package main
 import (
 	"fmt"
 	"github.com/JJApplication/Apollo/app/log_manager"
+	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"github.com/JJApplication/Apollo/router/router_auth"
 	"github.com/JJApplication/Apollo/router/router_log"
+	"github.com/JJApplication/Apollo/router/router_noengine"
 	"github.com/JJApplication/Apollo/router/router_script"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
@@ -93,6 +95,10 @@ func initCronJobs() {
 	logger.LoggerSugar.Infof("%s init CronJobs done", APPName)
 }
 
+func initNoEngineApps() {
+	noengine_manager.InitNoEngineManager()
+}
+
 func initEngine() {
 	apolloEngine := engine.NewEngine(&engine.EngineConfig{
 		Host: config.ApolloConf.Server.Host,
@@ -113,6 +119,7 @@ func initEngine() {
 	router_auth.Init(r)
 	router_script.Init(r)
 	router_log.Init(r)
+	router_noengine.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

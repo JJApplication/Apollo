@@ -5,7 +5,9 @@ go 1.20
 require (
 	github.com/JJApplication/fushin v1.1.9
 	github.com/JJApplication/octopus_meta v1.0.7
+	github.com/containerd/containerd v1.6.6
 	github.com/docker/docker v20.10.3-0.20220208084023-a5c757555091+incompatible
+	github.com/docker/go-connections v0.4.0
 	github.com/fatih/set v0.2.1
 	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-contrib/cors v1.4.0
@@ -18,6 +20,7 @@ require (
 	github.com/kamva/mgm/v3 v3.4.1
 	github.com/landers1037/configen v1.0.6
 	github.com/landers1037/plnack-proto v1.0.5
+	github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799
 	github.com/otiai10/copy v1.7.0
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/shirou/gopsutil v2.21.11+incompatible
@@ -32,10 +35,9 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d // indirect
-	github.com/containerd/containerd v1.6.6 // indirect
+	github.com/containerd/ttrpc v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
-	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/emmansun/gmsm v0.21.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -66,7 +68,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

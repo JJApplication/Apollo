@@ -34,6 +34,7 @@ type DConfig struct {
 	APPTmpDir   string `json:"app_tmp_dir"`   // 服务临时文件目录
 	APPBackUp   string `json:"app_back_up"`   // 服务备份目录
 	APPPidDir   string `json:"app_pid_dir"`   // 服务运行时的pid
+	APPBridge   string `json:"app_bridge"`    // JJAPP服务的全局自定义网卡地址
 
 	// logger
 	Log DLog `json:"log"`

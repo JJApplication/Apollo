@@ -6,6 +6,7 @@ Created: 2021/11/30 by Landers
 package cron
 
 import (
+	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"path/filepath"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
@@ -17,14 +18,15 @@ import (
 // 启动时执行的轮询任务 用于随时刷新持久化数据
 // 持久化数据用于恢复
 const (
-	DurationDbSaver     = 60 * 60
-	DurationDbPersist   = 60 * 60 * 24
-	DurationAppsync     = 60 * 60
-	DurationOctopusSync = 60 * 60
-	DurationAppSyncDB   = 60
-	DurationAppCheck    = 60 * 60
-	DurationLogRotate   = 1 * 60 * 60 * 24
-	DurationAppBackup   = 1 * 60 * 60 * 24
+	DurationDbSaver      = 60 * 60
+	DurationDbPersist    = 60 * 60 * 24
+	DurationAppsync      = 60 * 60
+	DurationOctopusSync  = 60 * 60
+	DurationAppSyncDB    = 60
+	DurationAppCheck     = 60 * 60
+	DurationLogRotate    = 1 * 60 * 60 * 24
+	DurationAppBackup    = 1 * 60 * 60 * 24
+	DurationNoEngineSync = 1 * 60 * 60
 )
 
 func InitBackgroundJobs() {
@@ -36,6 +38,7 @@ func InitBackgroundJobs() {
 	AddJobAPPCheck()
 	AddJobLogRotate()
 	AddJobBackup()
+	AddNoEngineSync()
 }
 
 // AddJobDBSaver 数据库刷新
@@ -154,6 +157,19 @@ func AddJobBackup() {
 			logger.LoggerSugar.Errorf("job app backup: failed: %s", err.Error())
 		} else {
 			logger.LoggerSugar.Info("job app backup: success")
+		}
+	})
+}
+
+func AddNoEngineSync() {
+	logger.Logger.Info("job: NoEngine sync start")
+	des := "NoEngine服务同步"
+	AddTicker(DurationNoEngineSync, "NoEngineSync", des, func() {
+		_, err := noengine_manager.RefreshNoEngineMap()
+		if err != nil {
+			logger.LoggerSugar.Errorf("job NoEngine sync: failed: %s", err.Error())
+		} else {
+			logger.LoggerSugar.Info("job NoEngine sync: success")
 		}
 	})
 }

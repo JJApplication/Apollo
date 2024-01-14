@@ -8,7 +8,6 @@
 package log_manager
 
 import (
-	"fmt"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/utils"
 	"path/filepath"
@@ -39,16 +38,13 @@ func (c *Collector) readLog() string {
 	if !c.checkDir() {
 		return ""
 	}
-	fmt.Println("初始化完毕")
 	c.readLock.Lock()
 	defer c.readLock.Unlock()
 	logFile := filepath.Join(c.AppLogDir, c.AppName+".log")
-	fmt.Println("日志路径", logFile)
 	if !utils.FileExist(logFile) {
 		return ""
 	}
 	size := utils.GetFileSize(logFile)
-	fmt.Println("大小", size)
 	// 小于等于2mb时 直接读取
 	if size <= MaxLogSize {
 		return utils.ReadFileString(logFile)

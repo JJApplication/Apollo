@@ -8,7 +8,6 @@
 package router_auth
 
 import (
-	"fmt"
 	"github.com/JJApplication/Apollo/app/token_manager"
 	"github.com/JJApplication/Apollo/router"
 	"github.com/JJApplication/Apollo/utils"
@@ -22,8 +21,6 @@ type history struct {
 
 func History(c *gin.Context) {
 	var res []history
-	t, _ := c.Cookie("token")
-	fmt.Println("cookie", t)
 	data := token_manager.GetTokenMap()
 	for _, d := range data {
 		res = append(res, history{

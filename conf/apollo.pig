@@ -7,6 +7,7 @@
   "app_tmp_dir": "/renj.io/tmp",
   "app_back_up": "/renj.io/backup",
   "app_pids": "/renj.io/pids",
+  "app_bridge": "rainbow_bridge",
   "log": {
     "enable_log": true,
     "enable_stack": false,
