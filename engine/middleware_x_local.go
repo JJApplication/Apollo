@@ -15,6 +15,8 @@ import (
 
 const (
 	XLocal = "X-Gateway-Local"
+	YES    = "yes"
+	No     = "no"
 )
 
 func MiddleWareXLocal() gin.HandlerFunc {
@@ -23,7 +25,7 @@ func MiddleWareXLocal() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if c.Request.Header.Get(XLocal) != "yes" {
+		if c.Request.Header.Get(XLocal) != YES {
 			c.Abort()
 			return
 		}

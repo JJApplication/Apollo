@@ -24,6 +24,7 @@ func Init(r *gin.Engine) {
 	{
 		routerNoEngineWithAuth.POST("/start", StartNoEngineApp)
 		routerNoEngineWithAuth.POST("/stop", StopNoEngineApp)
+		routerNoEngineWithAuth.POST("/restart", RestartNoEngineApp)
 		routerNoEngineWithAuth.POST("/resume", ResumeNoEngineApp)
 		routerNoEngineWithAuth.POST("/pause", PauseNoEngineApp)
 		routerNoEngineWithAuth.POST("/remove", RemoveNoEngineApp)
@@ -34,6 +35,7 @@ func Init(r *gin.Engine) {
 	{
 		routerNoEngineInner.POST("/start", StartNoEngineApp)
 		routerNoEngineInner.POST("/stop", StopNoEngineApp)
+		routerNoEngineInner.POST("/restart", RestartNoEngineApp)
 		routerNoEngineInner.POST("/resume", ResumeNoEngineApp)
 		routerNoEngineInner.POST("/pause", PauseNoEngineApp)
 		routerNoEngineInner.POST("/remove", RemoveNoEngineApp)

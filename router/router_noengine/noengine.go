@@ -52,6 +52,27 @@ func StopNoEngineApp(c *gin.Context) {
 	router.Response(c, "", true)
 }
 
+// RestartNoEngineApp remove and start
+func RestartNoEngineApp(c *gin.Context) {
+	app := c.Query("app")
+	err := noengine_manager.StopNoEngineApp(app)
+	if err != nil {
+		router.Response(c, "", false)
+		return
+	}
+	err = noengine_manager.RemoveNoEngineApp(app)
+	if err != nil {
+		router.Response(c, "", false)
+		return
+	}
+	err = noengine_manager.StartNoEngineApp(app)
+	if err != nil {
+		router.Response(c, "", false)
+		return
+	}
+	router.Response(c, "", true)
+}
+
 func PauseNoEngineApp(c *gin.Context) {
 	app := c.Query("app")
 	err := noengine_manager.PauseNoEngineApp(app)
