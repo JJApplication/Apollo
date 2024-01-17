@@ -6,6 +6,7 @@ Created: 2021/11/30 by Landers
 package cron
 
 import (
+	"github.com/JJApplication/Apollo/app/discover_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"path/filepath"
 
@@ -39,6 +40,7 @@ func InitBackgroundJobs() {
 	AddJobLogRotate()
 	AddJobBackup()
 	AddNoEngineSync()
+	AddNoEngineReload()
 }
 
 // AddJobDBSaver 数据库刷新
@@ -83,10 +85,13 @@ func AddJobOctopusMetaSync() {
 	logger.Logger.Info("job: octopus-meta sync start")
 	des := "重载octopus模型文件"
 	AddTicker(DurationOctopusSync, "OctopusMetaSync", des, func() {
-		err := app_manager.ReloadManagerMap()
-		if err != nil {
-			logger.LoggerSugar.Errorf("job octopus-meta sync failed: %s", err.Error())
+		if discover_manager.GetAppDiscover().NeedDiscover() {
+			err := app_manager.ReloadManagerMap()
+			if err != nil {
+				logger.LoggerSugar.Errorf("job octopus-meta sync failed: %s", err.Error())
+			}
 		}
+		logger.LoggerSugar.Info("AutoDiscovery task run")
 	})
 }
 
@@ -171,5 +176,17 @@ func AddNoEngineSync() {
 		} else {
 			logger.LoggerSugar.Info("job NoEngine sync: success")
 		}
+	})
+}
+
+func AddNoEngineReload() {
+	logger.Logger.Info("job: NoEngine reload start")
+	des := "NoEngine服务自动发现"
+	AddTicker(DurationNoEngineSync, "NoEngineAutoDiscovery", des, func() {
+		if discover_manager.GetNoEngineDiscover().NeedDiscover() {
+			noengine_manager.LoadAllNoEngineAPPs()
+			logger.LoggerSugar.Info("job NoEngine reload: success")
+		}
+		logger.LoggerSugar.Info("AutoDiscovery task run")
 	})
 }

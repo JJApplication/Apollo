@@ -10,6 +10,7 @@ package discover_manager
 import (
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
+	"path/filepath"
 )
 
 const DiscoverManagerPrefix = "[APPDiscover Manager]"
@@ -22,4 +23,37 @@ const DiscoverManagerPrefix = "[APPDiscover Manager]"
 func InitDiscoverManager() {
 	logger.LoggerSugar.Infof("%s start", DiscoverManagerPrefix)
 	logger.LoggerSugar.Infof("%s find APP_ROOT: %s", DiscoverManagerPrefix, config.ApolloConf.APPRoot)
+	createAppDiscover()
+	createNoEngineDiscover()
+}
+
+var (
+	appDiscover      *DiscoverRule
+	noEngineDiscover *DiscoverRule
+)
+
+func createAppDiscover() {
+	appDiscover = NewDiscoverRule(DiscoverRule{
+		WatchRoot:   filepath.Join(config.ApolloConf.APPRoot, ".octopus"),
+		Include:     nil,
+		Exclude:     nil,
+		CompareFlag: FlagAll,
+	})
+}
+
+func createNoEngineDiscover() {
+	noEngineDiscover = NewDiscoverRule(DiscoverRule{
+		WatchRoot:   filepath.Join(config.ApolloConf.APPRoot, "NoEngine"),
+		Include:     nil,
+		Exclude:     []string{"nginx.conf", "conf", "conf.d", "cache", "apps.json", "noengine.app.json", "noengine.domain.json"},
+		CompareFlag: FlagAll,
+	})
+}
+
+func GetAppDiscover() *DiscoverRule {
+	return appDiscover
+}
+
+func GetNoEngineDiscover() *DiscoverRule {
+	return noEngineDiscover
 }
