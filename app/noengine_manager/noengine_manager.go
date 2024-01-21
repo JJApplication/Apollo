@@ -130,9 +130,12 @@ func HasNoEngineApp(app string) bool {
 
 // StartNoEngineApp 每次启动都是全新启动，会清除容器内置的缓存 重置随机端口
 func StartNoEngineApp(app string) error {
+	if app == "" {
+		return nil
+	}
 	// 已经启动的容器跳过
 	if NoEngineAPPID(app) != "" {
-		return nil
+		return docker_manager.ContainerStart(NoEngineAPPID(app))
 	}
 	temp := GetNoEngineAPP(app)
 	if temp.ServerName == "" {
