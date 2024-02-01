@@ -106,6 +106,7 @@ type Server struct {
 	AuthCode    string   `json:"auth_code"`     // 认证码
 	Account     string   `json:"account"`       // 认证账户
 	PassWd      string   `json:"passwd"`        // 认证密码
+	OAuth       OAuth    `json:"oauth"`
 }
 
 // CI CI配置
@@ -143,6 +144,13 @@ type Manager struct {
 	ManagerBackup struct {
 		// 与appBackupDir重复 暂不实现此配置
 	} `json:"manager_backup"`
+}
+
+// OAuth Oauth2.0
+type OAuth struct {
+	ClientID      string   `json:"client_id"`
+	ClientSecret  string   `json:"client_secret"`
+	AuthorizeList []string `json:"authorize_list"`
 }
 
 // Sync 从配置文件中同步加载

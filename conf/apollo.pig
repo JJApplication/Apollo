@@ -48,7 +48,12 @@
     "auth_code": "",
     "auth_expire": 600,
     "account": "landers",
-    "passwd": "123456"
+    "passwd": "123456",
+    "oauth": {
+      "client_id": "04e0adacfbd6f1e39143",
+      "client_secret": "",
+      "authorize_list": []
+    }
   },
   "ci": {
     "docker_host": "tcp://192.168.100.10:2375",

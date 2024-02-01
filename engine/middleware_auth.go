@@ -9,6 +9,7 @@ Copyright Renj
 package engine
 
 import (
+	"github.com/JJApplication/Apollo/app/oauth_manager"
 	"github.com/JJApplication/Apollo/app/token_manager"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/utils"
@@ -20,13 +21,27 @@ import (
 
 const (
 	ApolloAuthCode = "ApolloAuthCode"
+	OAuthKey       = "oauth"
+	OAuthToken     = "access-token"
 )
 
 // MiddleWareAuth 前置用户校验
 // 只有部分API需要校验 需要校验的接口组，单独使用此中间件
 // 优先级认证码 > 传入的headers > cookie
+//
+// OAuth检查成功后跳过内部认证
 func MiddleWareAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		oauth := c.Request.Header.Get(OAuthKey)
+		if oauth != "" {
+			accessToken := c.Request.Header.Get(OAuthToken)
+			if user := oauth_manager.ValidateOAuth(accessToken); oauth_manager.ValidateOAuthAdmin(user.Username) {
+				c.Next()
+				return
+			}
+		}
+
+		// 内部认证
 		authCode := c.Query("auth")
 		if authCode != "" {
 			// 存在认证码 但是认证码校验失败时不会继续校验

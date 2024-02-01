@@ -12,6 +12,7 @@ import (
 	"github.com/JJApplication/Apollo/router/router_auth"
 	"github.com/JJApplication/Apollo/router/router_log"
 	"github.com/JJApplication/Apollo/router/router_noengine"
+	"github.com/JJApplication/Apollo/router/router_oauth"
 	"github.com/JJApplication/Apollo/router/router_script"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
@@ -120,6 +121,7 @@ func initEngine() {
 	router_script.Init(r)
 	router_log.Init(r)
 	router_noengine.Init(r)
+	router_oauth.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

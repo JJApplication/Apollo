@@ -8,6 +8,7 @@ fi
 nohup "${APP_ROOT}/${APP}/sandwich" \
   -ngd "${APP_ROOT}/NoEngine/noengine.domain.json" \
   -nga "${APP_ROOT}/NoEngine/noengine.app.json" \
+  -dl "${APP_ROOT}/NoEngine/domain.json" \
 >> "${APP_LOG}/${APP}/${APP}.log" 2>&1 &
 
 result=$?
