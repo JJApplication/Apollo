@@ -150,7 +150,8 @@ type Manager struct {
 type OAuth struct {
 	ClientID      string   `json:"client_id"`
 	ClientSecret  string   `json:"client_secret"`
-	AuthorizeList []string `json:"authorize_list"`
+	AuthorizeList []string `json:"authorize_list"` // 允许的最高管理员github账户
+	AllowApiList  []string `json:"allow_api_list"` // 允许操作的api列表采用前缀匹配
 }
 
 // Sync 从配置文件中同步加载

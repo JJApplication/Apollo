@@ -52,7 +52,8 @@
     "oauth": {
       "client_id": "04e0adacfbd6f1e39143",
       "client_secret": "",
-      "authorize_list": []
+      "authorize_list": [],
+      "allow_api_list": []
     }
   },
   "ci": {

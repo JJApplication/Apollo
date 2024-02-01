@@ -21,7 +21,6 @@ import (
 
 const (
 	ApolloAuthCode = "ApolloAuthCode"
-	OAuthKey       = "oauth"
 	OAuthToken     = "access-token"
 )
 
@@ -32,10 +31,13 @@ const (
 // OAuth检查成功后跳过内部认证
 func MiddleWareAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		oauth := c.Request.Header.Get(OAuthKey)
-		if oauth != "" {
-			accessToken := c.Request.Header.Get(OAuthToken)
-			if user := oauth_manager.ValidateOAuth(accessToken); oauth_manager.ValidateOAuthAdmin(user.Username) {
+		accessToken := c.Request.Header.Get(OAuthToken)
+		if user := oauth_manager.ValidateOAuth(accessToken); user.Username != "" {
+			if oauth_manager.ValidateOAuthAdmin(user.Username) {
+				c.Next()
+				return
+			}
+			if isAllowAPI(c.Request.URL.Path) {
 				c.Next()
 				return
 			}
@@ -90,4 +92,17 @@ func isAuthVerify(code string) bool {
 	}
 
 	return code != "" && code == envCode
+}
+
+func isAllowAPI(url string) bool {
+	if len(config.ApolloConf.Server.OAuth.AllowApiList) <= 0 {
+		return false
+	}
+	for _, api := range config.ApolloConf.Server.OAuth.AllowApiList {
+		if url == api {
+			return true
+		}
+	}
+
+	return false
 }
