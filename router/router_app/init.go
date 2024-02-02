@@ -6,7 +6,7 @@ Created: 2021/11/30 by Landers
 package router_app
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ func Init(r *gin.Engine) {
 		routerApp.GET("/proc", GetAppProc)
 		routerApp.GET("/ports", GetDynamicPortApp)
 	}
-	routerWithAuth := r.Group("/api/app", engine.MiddleWareAuth())
+	routerWithAuth := r.Group("/api/app", middleware.MiddleWareAuth())
 	{
 		routerWithAuth.POST("/start", StartApp)
 		routerWithAuth.POST("/startall", StartAll)

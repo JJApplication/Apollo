@@ -8,7 +8,7 @@
 package router_log
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +18,7 @@ func Init(r *gin.Engine) {
 		routerLog.GET("/list", GetAPPLogDir)
 		routerLog.GET("", GetAPPLog)
 	}
-	routerLogWithAuth := r.Group("/api/log", engine.MiddleWareAuth())
+	routerLogWithAuth := r.Group("/api/log", middleware.MiddleWareAuth())
 	{
 		routerLogWithAuth.GET("/download", GetAPPLogDownload)
 	}

@@ -9,7 +9,7 @@ Copyright Renj
 package router_noengine
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ func Init(r *gin.Engine) {
 		routerNoEngine.GET("/all", GetAllNoEngineApp)
 		routerNoEngine.GET("/status", GetNoEngineStatus)
 	}
-	routerNoEngineWithAuth := r.Group("/api/noengine", engine.MiddleWareAuth())
+	routerNoEngineWithAuth := r.Group("/api/noengine", middleware.MiddleWareAuth())
 	{
 		routerNoEngineWithAuth.POST("/start", StartNoEngineApp)
 		routerNoEngineWithAuth.POST("/stop", StopNoEngineApp)
@@ -31,7 +31,7 @@ func Init(r *gin.Engine) {
 		routerNoEngineWithAuth.POST("/status", GetNoEngineStatus)
 		routerNoEngineWithAuth.POST("/refresh", RefreshNoEngineApp)
 	}
-	routerNoEngineInner := r.Group("/api/noengine/x", engine.MiddleWareXLocal())
+	routerNoEngineInner := r.Group("/api/noengine/x", middleware.MiddleWareXLocal())
 	{
 		routerNoEngineInner.POST("/start", StartNoEngineApp)
 		routerNoEngineInner.POST("/stop", StopNoEngineApp)

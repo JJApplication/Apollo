@@ -8,7 +8,7 @@
 package router_auth
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +19,7 @@ func Init(r *gin.Engine) {
 		routerAuth.GET("/current", Current)
 		routerAuth.POST("/login", Login)
 
-		routerAuth.POST("/check", engine.MiddleWareAuth(), Check)
-		routerAuth.POST("/logout", engine.MiddleWareAuth(), Logout)
+		routerAuth.POST("/check", middleware.MiddleWareAuth(), Check)
+		routerAuth.POST("/logout", middleware.MiddleWareAuth(), Logout)
 	}
 }

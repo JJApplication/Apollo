@@ -128,5 +128,15 @@ func SyncFromGithub(name string) bool {
 		return true
 	}
 
+	u := user.(OAuthUser)
+	// 更新有效期
+	OAuthManagerMap.Store(u.Username, OAuthUser{
+		Username:  u.Username,
+		Token:     u.Token,
+		HomeUrl:   u.HomeUrl,
+		Avatar:    u.Avatar,
+		LoginTime: time.Now().Unix(),
+	})
+
 	return false
 }

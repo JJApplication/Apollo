@@ -8,13 +8,13 @@
 package router_system
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/JJApplication/Apollo/router"
 	"github.com/gin-gonic/gin"
 )
 
 func ClearCache(c *gin.Context) {
-	store := engine.GetStore()
+	store := middleware.GetStore()
 	if err := store.Flush(); err != nil {
 		router.Response(c, false, false)
 		return

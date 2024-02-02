@@ -5,8 +5,8 @@ Github: https://github.com/landers1037
 Copyright Renj
 */
 
-// Package engine
-package engine
+// Package middleware
+package middleware
 
 import (
 	"github.com/JJApplication/Apollo/app/oauth_manager"
@@ -22,6 +22,7 @@ import (
 const (
 	ApolloAuthCode = "ApolloAuthCode"
 	OAuthToken     = "access-token"
+	OAuthCode      = "code"
 )
 
 // MiddleWareAuth 前置用户校验

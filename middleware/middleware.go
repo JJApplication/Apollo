@@ -3,7 +3,7 @@ Project: Apollo middleware.go
 Created: 2021/11/26 by Landers
 */
 
-package engine
+package middleware
 
 import (
 	"fmt"
@@ -79,8 +79,8 @@ var MiddleWareMap = map[string]gin.HandlerFunc{
 	"gzip":     gzip.Gzip(gzip.BestCompression, gzip.WithExcludedPaths([]string{"/api/"})),
 }
 
-// 中间件加载
-func loadMiddleWare(g *gin.Engine) {
+// LoadMiddleWare 中间件加载
+func LoadMiddleWare(g *gin.Engine) {
 	PreInjectMiddle = LoadMiddleWareConfig()
 	if len(PreInjectMiddle) == 0 {
 		PreInjectMiddle = DefaultMiddleWare
@@ -96,8 +96,8 @@ func loadMiddleWare(g *gin.Engine) {
 	}
 }
 
-// load from ./lib/*.so
-func loadMiddlePlugins(g *gin.Engine) {
+// LoadMiddlePlugins load from ./lib/*.so
+func LoadMiddlePlugins(g *gin.Engine) {
 	plugins := findAllPlugins()
 	for i, p := range plugins {
 		pl, err := plugin.Open(p)

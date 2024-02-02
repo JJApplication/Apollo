@@ -9,7 +9,7 @@ Copyright Renj
 package router_alarm
 
 import (
-	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ func Init(r *gin.Engine) {
 		routerAlarm.GET("/top", GetTopNAlarm)
 		routerAlarm.GET("/info", GetAlarmInfo)
 	}
-	routerAlarmWithAuth := r.Group("/api/alarm", engine.MiddleWareAuth())
+	routerAlarmWithAuth := r.Group("/api/alarm", middleware.MiddleWareAuth())
 	{
 		routerAlarmWithAuth.POST("/del", DeleteAlarm)
 	}

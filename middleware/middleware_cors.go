@@ -3,7 +3,7 @@ Project: Apollo middleware_cors.go
 Created: 2022/2/18 by Landers
 */
 
-package engine
+package middleware
 
 import (
 	"github.com/gin-contrib/cors"
