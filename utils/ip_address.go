@@ -24,6 +24,7 @@ func RemoveAddrPort(addr string) string {
 	return addr
 }
 
+// GetRemoteIP 获取远程客户端IP 在容器场景下不能使用RemoteAddr
 func GetRemoteIP(r *http.Request) string {
 	remoteAddr := r.RemoteAddr
 	realIP := r.Header.Get("X-Real-IP")

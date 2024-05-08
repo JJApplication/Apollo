@@ -62,11 +62,7 @@ func attachEnvs(app *App) []string {
 
 // 加载固定端口时使用
 func attachEnvsSp(app *App) []string {
-	var envs []string
-	if app.Meta.Name != "" {
-		envs = append(app.Meta.RunData.Envs, fmt.Sprintf("APP=%s", app.Meta.Name))
-	}
-
+	var envs = attachEnvs(app)
 	if len(app.Meta.RunData.Ports) > 0 {
 		var ports []string
 		for _, p := range app.Meta.RunData.Ports {
@@ -75,7 +71,7 @@ func attachEnvsSp(app *App) []string {
 		envs = append(envs, fmt.Sprintf("PORTS=%s", strings.Join(ports, " ")))
 	}
 
-	return wrapWithCode(envs)
+	return envs
 }
 
 // 生成运行时所需的端口
