@@ -1,3 +1,5 @@
+//go:build linux || darwin
+
 /*
 Project: Apollo cmd_runner.go
 Created: 2021/11/27 by Landers

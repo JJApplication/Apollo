@@ -28,5 +28,7 @@ func Init(r *gin.Engine) {
 		routerSystem.POST("/reload", middleware.MiddleWareAuth(), ReloadConfig)
 		// 清除web缓存
 		routerSystem.POST("/clear", middleware.MiddleWareAuth(), ClearCache)
+		// SSL证书信息
+		routerSystem.GET("/cert", SystemCert)
 	}
 }

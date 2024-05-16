@@ -24,7 +24,7 @@ const (
 // DConfig 全局配置
 type DConfig struct {
 	// lock
-	lock *sync.Mutex `json:"lock,omitempty"`
+	lock *sync.Mutex
 
 	ServiceRoot string `json:"service_root"`  // 服务架构的根目录
 	APPRoot     string `json:"app_root"`      // 整个服务的根目录
@@ -35,6 +35,8 @@ type DConfig struct {
 	APPBackUp   string `json:"app_back_up"`   // 服务备份目录
 	APPPidDir   string `json:"app_pid_dir"`   // 服务运行时的pid
 	APPBridge   string `json:"app_bridge"`    // JJAPP服务的全局自定义网卡地址
+	SSLRoot     string `json:"ssl_root"`      // SSL证书目录
+	SSLCert     string `json:"ssl_cert"`      // SSL的证书名称
 
 	// logger
 	Log DLog `json:"log"`
