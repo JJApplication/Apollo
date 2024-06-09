@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	CertManager = "[Alarm Manager]"
+	CertManager = "[Cert Manager]"
 )
 
 type Cert struct {
@@ -32,18 +32,18 @@ type Cert struct {
 func CertInfo() Cert {
 	certCerFile, err := os.ReadFile(filepath.Join(config.ApolloConf.SSLRoot, config.ApolloConf.SSLCert))
 	if err != nil {
-		logger.LoggerSugar.Errorf("read certificate error: %s", err.Error())
+		logger.G.Error(CertManager, "read certificate error: %s", err.Error())
 	}
 
 	certBlock, _ := pem.Decode(certCerFile)
 	if certBlock == nil {
-		logger.LoggerSugar.Error("decode certificate error")
+		logger.G.Error(CertManager, "decode certificate error")
 	}
 
 	// 裁剪字节到实际长度
 	cert, err := x509.ParseCertificate(certBlock.Bytes)
 	if err != nil {
-		logger.LoggerSugar.Errorf("parse certificate error: %s", err.Error())
+		logger.G.Error(CertManager, "parse certificate error: %s", err.Error())
 		return Cert{}
 	}
 

@@ -15,7 +15,7 @@ import (
 )
 
 func GetAllNoEngineApp(c *gin.Context) {
-	router.Response(c, noengine_manager.GetAllNoEngineAPPs(), true)
+	router.Response(c, noengine_manager.GetAllNoEngineAPPsRt(), true)
 }
 
 func GetNoEngineApp(c *gin.Context) {
@@ -24,7 +24,7 @@ func GetNoEngineApp(c *gin.Context) {
 		router.Response(c, "", false)
 		return
 	}
-	router.Response(c, noengine_manager.GetNoEngineAPP(app), true)
+	router.Response(c, noengine_manager.GetNoEngineAPPRt(app), true)
 }
 
 func GetNoEngineStatus(c *gin.Context) {

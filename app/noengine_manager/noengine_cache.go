@@ -37,7 +37,7 @@ func LoadNoEngineMap() (map[string]NoEngineTemplate, error) {
 func RefreshNoEngineMap() (map[string]NoEngineTemplate, error) {
 	loadLock.Lock()
 	defer loadLock.Unlock()
-	data := GetAllNoEngineAPPs()
+	data := GetAllNoEngineAPPsRt()
 	if err := utils.Save2JsonFile(data, localCache); err != nil {
 		return data, err
 	}

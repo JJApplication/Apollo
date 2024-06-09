@@ -24,17 +24,22 @@ var (
 	NoEngineAPPConf      = "noengine.conf" // 通用的NoNngine http模板
 	NoEngineTemplateConf = "noengine.cf.json"
 	NoEngineAPPMap       = "noengine.app.json" // 存储服务端口映射的文件
+	NoEngineInitFlag     bool                  // 是否为初次加载
 )
 
 var (
-	NoEngineMap = sync.Map{}
+	NoEngineMap   *sync.Map // 基于配置文件加载的初始配置（用于操作容器|只读）
+	NoEngineMapRt *sync.Map // 运行过程中产生的配置（在每次操作容器时被重新赋值）
 )
 
 func InitNoEngineManager() {
+	NoEngineMap = new(sync.Map)
+	NoEngineMapRt = new(sync.Map)
 	NoEngineAPP = filepath.Join(config.ApolloConf.APPRoot, NoEngine)                         // NoEngine根目录
 	NoEngineAPPConf = filepath.Join(config.ApolloConf.APPRoot, NoEngine, "noengine.conf")    // 通用的NoNngine http模板
 	NoEngineAPPMap = filepath.Join(config.ApolloConf.APPRoot, NoEngine, "noengine.app.json") // 存储服务端口映射的文件
 	LoadAllNoEngineAPPs()
+	NoEngineInitFlag = true
 }
 
 // GetNoEngineAPPDir 获取微服务NoEngine根目录
@@ -48,10 +53,10 @@ func GetNoEngineAPPTempCf(app string) string {
 }
 
 // LoadAllNoEngineAPPs 加载所有NoEngine服务到缓存中
+// 需要实时刷新的是RT缓存，初始配置仅在首次加载时加载
 func LoadAllNoEngineAPPs() {
-	engineMap, err := ReloadNoEngineMap()
-	if err != nil {
-		logger.LoggerSugar.Warnf("%s reload NoEngineAPPs from cache error: %s", NoEngineManager, err.Error())
+	engineMap, rterr := ReloadNoEngineMap()
+	if !NoEngineInitFlag {
 		// 从$NoEngineAPP下的全部目录寻找$NoEngineTemplateConf文件解析
 		if err := filepath.Walk(NoEngineAPP, func(path string, info fs.FileInfo, err error) error {
 			if err != nil {
@@ -71,35 +76,41 @@ func LoadAllNoEngineAPPs() {
 		}); err != nil {
 			logger.LoggerSugar.Errorf("%s init NoEngineAPPs error: %s", NoEngineManager, err.Error())
 		}
+	}
+	// 不存在缓存即为初始加载
+	if rterr != nil {
+		logger.LoggerSugar.Warnf("%s reload NoEngineAPPs from cache error: %s", NoEngineManager, rterr.Error())
 	} else {
+		// 更新运行时配置
 		for app, val := range engineMap {
-			NoEngineMap.Store(app, val)
-		}
-		// 从本地目录下更新
-		if err := filepath.Walk(NoEngineAPP, func(path string, info fs.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.Name() == NoEngineTemplateConf {
-				var data NoEngineTemplate
-				if err = utils.ParseJsonFile(path, &data); err != nil {
-					logger.LoggerSugar.Errorf("%s load NoEngineAPP -> %s error: %s", NoEngineManager, path, err.Error())
-				} else {
-					if _, ok := NoEngineMap.Load(data.ServerName); !ok {
-						NoEngineMap.Store(data.ServerName, data)
-					}
-				}
-			}
-			return err
-		}); err != nil {
-			logger.LoggerSugar.Errorf("%s init NoEngineAPPs error: %s", NoEngineManager, err.Error())
+			NoEngineMapRt.Store(app, val)
 		}
 		logger.LoggerSugar.Infof("%s reload NoEngineAPPs from cache success", NoEngineManager)
+	}
+
+	// 从本地目录下更新初始配置（自动发现场景)
+	if err := filepath.Walk(NoEngineAPP, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.Name() == NoEngineTemplateConf {
+			var data NoEngineTemplate
+			if err = utils.ParseJsonFile(path, &data); err != nil {
+				logger.LoggerSugar.Errorf("%s load NoEngineAPP -> %s error: %s", NoEngineManager, path, err.Error())
+			} else {
+				if _, ok := NoEngineMap.Load(data.ServerName); !ok {
+					NoEngineMap.Store(data.ServerName, data)
+				}
+			}
+		}
+		return err
+	}); err != nil {
+		logger.LoggerSugar.Errorf("%s init NoEngineAPPs error: %s", NoEngineManager, err.Error())
 	}
 	logger.LoggerSugar.Infof("%s init NoEngineAPPs success", NoEngineManager)
 }
 
-// GetAllNoEngineAPPs 获取全部NoEngineApp
+// GetAllNoEngineAPPs 获取全部NoEngineApp(初始配置)
 func GetAllNoEngineAPPs() map[string]NoEngineTemplate {
 	var res = make(map[string]NoEngineTemplate)
 	NoEngineMap.Range(func(key, value any) bool {
@@ -113,7 +124,21 @@ func GetAllNoEngineAPPs() map[string]NoEngineTemplate {
 	return res
 }
 
-// GetNoEngineAPP 获取指定NoEngineApp
+// GetAllNoEngineAPPsRt 获取当前运行时配置文件(运行时配置)
+func GetAllNoEngineAPPsRt() map[string]NoEngineTemplate {
+	var res = make(map[string]NoEngineTemplate)
+	NoEngineMapRt.Range(func(key, value any) bool {
+		if key.(string) == "" {
+			return false
+		}
+		res[key.(string)] = value.(NoEngineTemplate)
+		return true
+	})
+
+	return res
+}
+
+// GetNoEngineAPP 获取指定NoEngineApp(初始配置)
 func GetNoEngineAPP(app string) NoEngineTemplate {
 	if !HasNoEngineApp(app) {
 		return NoEngineTemplate{}
@@ -122,9 +147,24 @@ func GetNoEngineAPP(app string) NoEngineTemplate {
 	return val.(NoEngineTemplate)
 }
 
+// GetNoEngineAPPRt 获取指定NoEngineApp(运行时)
+func GetNoEngineAPPRt(app string) NoEngineTemplate {
+	if !HasNoEngineAppRt(app) {
+		return NoEngineTemplate{}
+	}
+	val, _ := NoEngineMapRt.Load(app)
+	return val.(NoEngineTemplate)
+}
+
 // HasNoEngineApp 是否存在此APP
 func HasNoEngineApp(app string) bool {
 	_, ok := NoEngineMap.Load(app)
+	return ok
+}
+
+// HasNoEngineAppRt 是否存在此APP(运行时)
+func HasNoEngineAppRt(app string) bool {
+	_, ok := NoEngineMapRt.Load(app)
 	return ok
 }
 
@@ -142,8 +182,11 @@ func StartNoEngineApp(app string) error {
 		return nil
 	}
 	err, tempInit := createContainer(temp)
-	// 更新temp
-	NoEngineMap.Store(app, tempInit)
+	if err != nil {
+		logger.LoggerSugar.Errorf("%s start NoEngineAPP -> %s error: %s", NoEngineManager, app, err.Error())
+	}
+	// 更新运行时配置
+	NoEngineMapRt.Store(app, tempInit)
 	syncMap()
 	go RefreshNoEngineMap()
 	return err
@@ -161,6 +204,10 @@ func StopNoEngineApp(app string) error {
 
 // RemoveNoEngineApp 删除容器 同时清理Map
 func RemoveNoEngineApp(app string) error {
+	// 优先清理Map
+	// 初始配置为模板 无需删除
+	NoEngineMapRt.Delete(app)
+	syncMap()
 	// 不存在的容器跳过
 	if NoEngineAPPID(app) == "" {
 		return nil
@@ -168,9 +215,6 @@ func RemoveNoEngineApp(app string) error {
 	if err := docker_manager.ContainerRemove(NoEngineAPPID(app)); err != nil {
 		return err
 	}
-	// 更新temp
-	NoEngineMap.Delete(app)
-	syncMap()
 	go RefreshNoEngineMap()
 	return nil
 }

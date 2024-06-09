@@ -24,7 +24,7 @@ func syncMap() {
 	syncMapLock.Lock()
 	defer syncMapLock.Unlock()
 	var temp = make(map[string]string)
-	NoEngineMap.Range(func(key, value any) bool {
+	NoEngineMapRt.Range(func(key, value any) bool {
 		if key.(string) == "" {
 			return false
 		}

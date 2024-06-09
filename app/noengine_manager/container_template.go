@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"github.com/JJApplication/Apollo/app/docker_manager"
 	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/logger"
 	"github.com/containerd/containerd/pkg/cri/util"
 	"path/filepath"
 	"strconv"
@@ -44,7 +45,8 @@ var (
 
 // 创建微服务的NoEngine容器 出错时返回错误，否则会创建名为name的容器用于查询
 func createContainer(template NoEngineTemplate) (error, NoEngineTemplate) {
-	var temp = template
+	var temp *NoEngineTemplate
+	_ = util.DeepCopy(&temp, template)
 	preInitVolume = []NoEngineVolume{
 		{HostPath: NoEngineAPPConf, InnerPath: OpenrestyConf},
 	}
@@ -95,15 +97,16 @@ func createContainer(template NoEngineTemplate) (error, NoEngineTemplate) {
 	}
 
 	// 使用配置完毕的模板启动容器
-	cf := buildContainerConfig(temp)
+	cf := buildContainerConfig(*temp)
 	resp, err := docker_manager.ContainerCreate(cf)
 	if err != nil {
-		return err, temp
+		return err, *temp
 	}
-	return docker_manager.ContainerStart(resp.ID), temp
+	return docker_manager.ContainerStart(resp.ID), *temp
 }
 
 func buildContainerConfig(t NoEngineTemplate) docker_manager.ContainerConfig {
+	logger.LoggerSugar.Infof("%s build NoEngineAPP -> %s with cf: %+v", NoEngineManager, t.ServerName, t)
 	var cf docker_manager.ContainerConfig
 	cf.ContainerName = t.ServerName
 	cf.ImageName = NoEngineImage
