@@ -22,7 +22,7 @@ import (
 )
 
 func appScriptPath(app, c string) string {
-	return filepath.Join(APPScriptsRoot, app, c)
+	return filepath.Join(config.ApolloConf.APPManager, app, c)
 }
 
 func wrapWithCode(envs []string) []string {
@@ -369,10 +369,15 @@ func (app *App) NoEngineCheck() bool {
 }
 
 func (app *App) NoEngineStatus() (bool, error) {
-	// 未创建容器时先创建
+	// 未创建容器时返回错误
 	if noengine_manager.NoEngineAPPID(app.Meta.Name) == "" {
 		logger.LoggerSugar.Errorf("%s [%s] status failed, error: container not exist", APPManagerPrefix, app.Meta.Name)
 		return false, errors.New("container not exist")
+	}
+	// 判断容器状态
+	status := noengine_manager.StatusNoEngineApp(app.Meta.Name)
+	if status != "running" {
+		return false, nil
 	}
 	return true, nil
 }

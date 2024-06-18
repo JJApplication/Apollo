@@ -14,6 +14,7 @@ func Init(r *gin.Engine) {
 	routerApp := r.Group("/api/app")
 	{
 		routerApp.GET("/all", StatusApp)
+		routerApp.GET("/count", CountApp)
 		routerApp.GET("/info", InfoApp)
 		routerApp.GET("/status", StatusApp)
 		routerApp.GET("/tree", FileTree)

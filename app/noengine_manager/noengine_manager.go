@@ -229,12 +229,20 @@ func PauseNoEngineApp(app string) error {
 }
 
 // ResumeNoEngineApp 恢复NoEngine服务
+//
+// 分为两种启动方式1.恢复被暂停 2.启动被暂停
 func ResumeNoEngineApp(app string) error {
 	// 不存在的容器跳过
 	if NoEngineAPPID(app) == "" {
 		return nil
 	}
-	return docker_manager.ContainerResume(NoEngineAPPID(app))
+	var err error
+	err = docker_manager.ContainerResume(NoEngineAPPID(app))
+	if err != nil {
+		err = docker_manager.ContainerStart(NoEngineAPPID(app))
+	}
+
+	return err
 }
 
 // StatusNoEngineApp 查看NoEngine服务状态

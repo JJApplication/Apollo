@@ -24,6 +24,28 @@ type status struct {
 	Status string
 }
 
+type count struct {
+	App  string
+	Type string
+}
+
+func CountApp(c *gin.Context) {
+	var res []count
+	apps, err := app_manager.GetAllApp()
+	if err != nil {
+		router.Response(c, res, false)
+		return
+	}
+	for _, app := range apps {
+		res = append(res, count{
+			App:  app.Meta.Name,
+			Type: app.Meta.Type,
+		})
+	}
+	router.Response(c, res, true)
+	return
+}
+
 func StatusApp(c *gin.Context) {
 	app := c.Query("name")
 	if app != "" {

@@ -7,6 +7,7 @@ package app_manager
 
 import (
 	"errors"
+	"github.com/JJApplication/Apollo/config"
 
 	"github.com/JJApplication/Apollo/utils"
 	"github.com/JJApplication/octopus_meta"
@@ -50,8 +51,7 @@ func NewApp(appName string) error {
 func NewAppScript(appName string) error {
 	for _, sh := range []string{"start.sh", "stop.sh", "check.sh"} {
 		err := utils.CreateFileX(utils.CalDir(
-			utils.GetAppDir(),
-			APPScriptsRoot,
+			config.ApolloConf.APPManager,
 			appName,
 			sh))
 		if err != nil {
