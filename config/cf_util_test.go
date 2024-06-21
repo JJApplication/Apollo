@@ -6,8 +6,10 @@ Created: 2021/11/22 by Landers
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 	"testing"
 )
 
@@ -32,6 +34,15 @@ func TestSaveGlobalConfig(t *testing.T) {
 	}
 
 	err := SaveGlobalConfig()
+	if err != nil {
+		t.Log(err)
+	}
+}
+
+func TestGenerateConfig(t *testing.T) {
+	cf := DConfig{}
+	data, _ := json.MarshalIndent(cf, "", "  ")
+	err := os.WriteFile("test_gen.pig", data, 0644)
 	if err != nil {
 		t.Log(err)
 	}
@@ -66,7 +77,7 @@ func TestUpdate(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		go func(i int) {
 			str := fmt.Sprintf("%d", rand.Int())
-			ApolloConf.Update(&DConfig{APPRoot: str, Log: DLog{EnableLog: "ok"}})
+			ApolloConf.Update(&DConfig{APPRoot: str, Log: DLog{EnableLog: true}})
 			ch <- i
 		}(i)
 	}

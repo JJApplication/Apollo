@@ -1,0 +1,8 @@
+[Unit]
+Description=Apollo manager by renj.io
+
+[Service]
+User=root
+ExecStart=/renj.io/app/Apollo/exec.sh
+WorkingDirectory=/renj.io/app/Apollo
+Restart=on-failure

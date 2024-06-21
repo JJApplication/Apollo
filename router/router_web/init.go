@@ -9,7 +9,6 @@ import (
 	"github.com/JJApplication/Apollo/config"
 	_ "github.com/JJApplication/Apollo/docs"
 	"github.com/JJApplication/Apollo/middleware"
-	"github.com/JJApplication/Apollo/router"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -23,9 +22,7 @@ func Init(r *gin.Engine) {
 		routerWeb.GET("/", middleware.MiddleCache(Index))
 		routerWeb.GET("/favicon.ico", middleware.MiddleCache(Favicon))
 		routerWeb.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-		routerWeb.GET("heartbeat", func(c *gin.Context) {
-			router.Response(c, "", true)
-		})
+		routerWeb.GET("heartbeat", Healthcheck)
 		handleUIRouter()
 	}
 }

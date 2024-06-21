@@ -6,6 +6,7 @@ Created: 2021/12/22 by Landers
 package router_web
 
 import (
+	"github.com/JJApplication/Apollo/router"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,8 +25,15 @@ type status struct {
 // @Router / [get]
 func Index(c *gin.Context) {
 	c.File("./web/index.html")
+	return
 }
 
 func Favicon(c *gin.Context) {
 	c.File("./web/favicon.ico")
+	return
+}
+
+func Healthcheck(c *gin.Context) {
+	router.Response(c, "", true)
+	return
 }

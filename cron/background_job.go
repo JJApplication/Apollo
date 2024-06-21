@@ -19,15 +19,15 @@ import (
 // 启动时执行的轮询任务 用于随时刷新持久化数据
 // 持久化数据用于恢复
 const (
-	DurationDbSaver      = 60 * 60
-	DurationDbPersist    = 60 * 60 * 24
-	DurationAppsync      = 60 * 60
-	DurationOctopusSync  = 60 * 60
-	DurationAppSyncDB    = 60
-	DurationAppCheck     = 60 * 60
-	DurationLogRotate    = 1 * 60 * 60 * 24
-	DurationAppBackup    = 1 * 60 * 60 * 24
-	DurationNoEngineSync = 1 * 60 * 60
+	DurationDbSaver             = 60 * 60
+	DurationDbPersist           = 60 * 60 * 24
+	DurationAppSync             = 60 * 60
+	DurationAppRuntimeSyncDB    = 60
+	DurationAppCheck            = 60 * 60
+	DurationLogRotate           = 1 * 60 * 60 * 24
+	DurationNoEngineRuntimeSync = 1 * 60 * 60
+	DurationAppDiscover         = 60 * 10
+	DurationNoEngineDiscover    = 60 * 10
 )
 
 func InitBackgroundJobs() {
@@ -38,7 +38,6 @@ func InitBackgroundJobs() {
 	AddJobAPPDumps()
 	AddJobAPPCheck()
 	AddJobLogRotate()
-	AddJobBackup()
 	AddNoEngineSync()
 	AddNoEngineReload()
 }
@@ -47,7 +46,7 @@ func InitBackgroundJobs() {
 func AddJobDBSaver() {
 	logger.Logger.Info("job: database sync start")
 	des := "同步刷新微服务信息到数据库"
-	AddTicker(DurationDbSaver, "DBSaver", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.DBSave, DurationDbSaver, "DBSaver", des, func() {
 		app_manager.SaveToDB()
 	})
 }
@@ -56,7 +55,7 @@ func AddJobDBSaver() {
 func AddJobDBPersist() {
 	logger.Logger.Info("job: database persist start")
 	des := "数据库信息持久化存储"
-	AddTicker(DurationDbPersist, "DBPersist", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.DBPersist, DurationDbPersist, "DBPersist", des, func() {
 		app_manager.Persist()
 	})
 }
@@ -67,7 +66,7 @@ func AddJobDBPersist() {
 func AddJobAPPSync() {
 	logger.Logger.Info("job: app config sync start")
 	des := "同步微服务模型文件"
-	AddTicker(DurationAppsync, "AppConfigSync", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.AppSync, DurationAppSync, "AppConfigSync", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)
 			_, err := app.Sync()
@@ -83,15 +82,15 @@ func AddJobAPPSync() {
 // 粒度为octopus 同步会合并数据，新增微服务删除不存在的服务
 func AddJobOctopusMetaSync() {
 	logger.Logger.Info("job: octopus-meta sync start")
-	des := "重载octopus模型文件"
-	AddTicker(DurationOctopusSync, "OctopusMetaSync", des, func() {
+	des := "App自动发现重载octopus模型文件"
+	AddTicker(config.ApolloConf.Task.AutoDiscover.App, DurationAppDiscover, "OctopusMetaSync", des, func() {
 		if discover_manager.GetAppDiscover().NeedDiscover() {
 			err := app_manager.ReloadManagerMap()
 			if err != nil {
 				logger.LoggerSugar.Errorf("job octopus-meta sync failed: %s", err.Error())
 			}
 		}
-		logger.LoggerSugar.Info("AutoDiscovery task run")
+		logger.LoggerSugar.Info("AutoDiscover task run")
 	})
 }
 
@@ -100,7 +99,7 @@ func AddJobOctopusMetaSync() {
 func AddJobAPPDumps() {
 	logger.Logger.Info("job: app runtime sync start")
 	des := "同步存储缓存数据到数据库"
-	AddTicker(DurationAppSyncDB, "AppRuntimeSync", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.AppRuntimeSync, DurationAppRuntimeSyncDB, "AppRuntimeSync", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)
 			_, err := app.SyncDB()
@@ -116,7 +115,7 @@ func AddJobAPPDumps() {
 func AddJobAPPCheck() {
 	logger.Logger.Info("job: app check start")
 	des := "微服务状态定时检查"
-	AddTicker(DurationAppCheck, "AppChecker", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.AppCheck, DurationAppCheck, "AppChecker", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			app := value.(app_manager.App)
 			_, err := app.Check()
@@ -135,7 +134,7 @@ func AddJobAPPCheck() {
 func AddJobLogRotate() {
 	logger.Logger.Info("job: log rotate start")
 	des := "日志定时绕接"
-	AddTicker(DurationLogRotate, "LogRotate", des, func() {
+	AddTicker(config.ApolloConf.Task.BackgroundJob.LogRotate, DurationLogRotate, "LogRotate", des, func() {
 		app_manager.APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
 			go func() {
 				app := value.(app_manager.App)
@@ -151,25 +150,10 @@ func AddJobLogRotate() {
 	})
 }
 
-// AddJobBackup 定时备份App
-// 使用cron任务代替 此任务仅作删除old备份使用
-func AddJobBackup() {
-	logger.Logger.Info("job: app backup start")
-	des := "微服务定时备份"
-	AddTicker(DurationAppBackup, "AppBackup", des, func() {
-		err := utils.Backup(config.ApolloConf.APPRoot, config.ApolloConf.APPBackUp)
-		if err != nil {
-			logger.LoggerSugar.Errorf("job app backup: failed: %s", err.Error())
-		} else {
-			logger.LoggerSugar.Info("job app backup: success")
-		}
-	})
-}
-
 func AddNoEngineSync() {
 	logger.Logger.Info("job: NoEngine sync start")
-	des := "NoEngine服务同步"
-	AddTicker(DurationNoEngineSync, "NoEngineSync", des, func() {
+	des := "NoEngine服务信息同步"
+	AddTicker(config.ApolloConf.Task.BackgroundJob.NoEngineRuntimeSync, DurationNoEngineRuntimeSync, "NoEngineSync", des, func() {
 		_, err := noengine_manager.RefreshNoEngineMap()
 		if err != nil {
 			logger.LoggerSugar.Errorf("job NoEngine sync: failed: %s", err.Error())
@@ -182,11 +166,11 @@ func AddNoEngineSync() {
 func AddNoEngineReload() {
 	logger.Logger.Info("job: NoEngine reload start")
 	des := "NoEngine服务自动发现"
-	AddTicker(DurationNoEngineSync, "NoEngineAutoDiscovery", des, func() {
+	AddTicker(config.ApolloConf.Task.AutoDiscover.NoEngine, DurationNoEngineDiscover, "NoEngineAutoDiscover", des, func() {
 		if discover_manager.GetNoEngineDiscover().NeedDiscover() {
 			noengine_manager.LoadAllNoEngineAPPs()
 			logger.LoggerSugar.Info("job NoEngine reload: success")
 		}
-		logger.LoggerSugar.Info("AutoDiscovery task run")
+		logger.LoggerSugar.Info("AutoDiscover task run")
 	})
 }

@@ -26,6 +26,7 @@ type DConfig struct {
 	// lock
 	lock *sync.Mutex
 
+	Debug       bool   `json:"debug"`         // 开启gin debug
 	ServiceRoot string `json:"service_root"`  // 服务架构的根目录
 	APPRoot     string `json:"app_root"`      // 整个服务的根目录
 	APPManager  string `json:"app_manager"`   // 管理服务所在目录
@@ -55,6 +56,9 @@ type DConfig struct {
 
 	// 管理扩展
 	Manager Manager `json:"manager"`
+
+	// 定时任务
+	Task Task `json:"task"`
 }
 
 // DLog log config
@@ -154,6 +158,29 @@ type OAuth struct {
 	ClientSecret  string   `json:"client_secret"`
 	AuthorizeList []string `json:"authorize_list"` // 允许的最高管理员github账户
 	AllowApiList  []string `json:"allow_api_list"` // 允许操作的api列表采用前缀匹配
+}
+
+// Task 定时任务
+// 单位s
+type Task struct {
+	CronJob struct {
+		APPBackup string // 全局微服务备份
+	} `json:"cron_job"`
+
+	BackgroundJob struct {
+		DBSave              int // 刷新运行时数据到数据库中
+		DBPersist           int // 持久化数据库数据到bson格式的备份文件
+		AppSync             int // 根据注册的服务名同步模型文件的更新数据到Apollo
+		AppRuntimeSync      int // 运行时端口等数据同步到数据库
+		AppCheck            int // 状态检查
+		LogRotate           int // 日志转储
+		NoEngineRuntimeSync int // 运行时生成的noengine端口信息同步到noengine.map
+	} `json:"background_job"`
+
+	AutoDiscover struct {
+		App      int // 从模型文件中全量同步微服务
+		NoEngine int // 从NoEngine模型中加载NoEngine服务
+	} `json:"auto_discover"`
 }
 
 // Sync 从配置文件中同步加载

@@ -32,7 +32,12 @@ func recoverTask(f func()) {
 }
 
 // AddTicker 以s为维度的执行轮询任务
-func AddTicker(t int, taskName, des string, f func()) {
+func AddTicker(cf, def int, taskName, des string, f func()) {
+	var t int
+	t = cf
+	if cf <= 0 {
+		t = def
+	}
 	ticker := time.NewTicker(time.Second * time.Duration(t))
 	ch := make(chan bool)
 	uuidStr := uuid.NewString()

@@ -29,15 +29,20 @@ func (app *DaoAPP) CollectionName() string {
 	return CollectName
 }
 
-// SaveToDB 批量插入
+// SaveToDB 批量插入数据到数据库中
+// 每次插入都视为全量更新
 func SaveToDB() {
 	if !database.MongoPing {
 		logger.Logger.Warn("failed to connect to mongo")
 		return
 	}
-	var data DaoAPP
+	apps := utils.NewSet()
+	// 数据 -> 数据库
 	APPManager.APPManagerMap.Range(func(key, value interface{}) bool {
+		apps.Add(value.(App).Meta.Name)
+
 		if !checkExist(bson.M{"app.meta.name": key}) {
+			var data DaoAPP
 			data = DaoAPP{
 				App: value.(App),
 			}
@@ -75,6 +80,22 @@ func SaveToDB() {
 		}
 		return true
 	})
+	// 数据库自查
+	var data []DaoAPP
+	if err := mgm.Coll(&DaoAPP{}).SimpleFind(&data, bson.M{}); err != nil {
+		logger.LoggerSugar.Errorf("%s load from db failed: %s", APPManagerPrefix, err.Error())
+		return
+	}
+
+	for _, d := range data {
+		if !apps.Contains(d.Meta.Name) {
+			logger.LoggerSugar.Infof("%s [%s] unload from db", APPManagerPrefix, d.Meta.Name)
+			if _, err := mgm.Coll(&DaoAPP{}).DeleteOne(context.Background(), bson.M{"app.meta.name": d.Meta.Name}); err != nil {
+				logger.LoggerSugar.Errorf("%s [%s] unload from db failed: %s", APPManagerPrefix, d.Meta.Name, err.Error())
+				return
+			}
+		}
+	}
 }
 
 // FirstLoad 在异常情况下重启，先从mongo拿数据保存后续再刷新

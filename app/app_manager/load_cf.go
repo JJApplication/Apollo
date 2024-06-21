@@ -43,6 +43,7 @@ func LoadManagerCf() error {
 
 // ReloadManagerMap 运行时刷新数据
 // 只做增量更新 数据的更新由AppSync任务完成
+// 以octopus模型中注册的微服务为准，即新增octopus则注册服务，不存在的服务即被卸载的服务->删除
 func ReloadManagerMap() error {
 	apps, err := octopus_meta.AutoLoad()
 	if err != nil {

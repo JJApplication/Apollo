@@ -7,6 +7,7 @@ package engine
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/middleware"
 	"net/http"
 	"os"
@@ -55,7 +56,11 @@ func NewEngine(cf *EngineConfig) *Engine {
 }
 
 func newGin() *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
+	if config.ApolloConf.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	g := gin.New()
 
 	// 默认会开启gzip

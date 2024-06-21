@@ -26,12 +26,18 @@ const (
 var cronGroup *cron.CronGroup
 
 func InitCronJobs() {
+	initGroup()
 	addCronJobBackup()
 	addCronJobClearAlarm()
 }
 
-func init() {
-	cronGroup = cron.NewGroup(SpecAPPBackup)
+func initGroup() {
+	var spec string
+	spec = config.ApolloConf.Task.CronJob.APPBackup
+	if spec == "" {
+		spec = SpecAPPBackup
+	}
+	cronGroup = cron.NewGroup(spec)
 }
 
 func addCronJobBackup() {

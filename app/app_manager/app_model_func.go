@@ -377,7 +377,7 @@ func (app *App) NoEngineStatus() (bool, error) {
 	// 判断容器状态
 	status := noengine_manager.StatusNoEngineApp(app.Meta.Name)
 	if status != "running" {
-		return false, nil
+		return false, errors.New("container not running")
 	}
 	return true, nil
 }
