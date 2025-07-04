@@ -36,7 +36,7 @@
   "server": {
     "host": "0.0.0.0",
     "port": 9090,
-    "uds": "/tmp/Apollo.sock",
+    "uds": "/var/run/Apollo.sock",
     "ui_cache": false,
     "ui_cache_time": 84600,
     "ui_router": [

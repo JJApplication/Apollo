@@ -8,6 +8,7 @@ package app_manager
 import (
 	"errors"
 	"fmt"
+	"github.com/JJApplication/Apollo/app/env_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"os"
 	"path/filepath"
@@ -57,6 +58,8 @@ func attachEnvs(app *App) []string {
 		envs = append(envs, fmt.Sprintf("PATH=%s", path+":/usr/local/bin"))
 	}
 
+	envManager := env_manager.GetEnvManager()
+	envs = append(envs, envManager.GetEnvs(app.Meta.Name)...)
 	return wrapWithCode(envs)
 }
 

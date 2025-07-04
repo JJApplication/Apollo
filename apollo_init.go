@@ -7,9 +7,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/app/env_manager"
 	"github.com/JJApplication/Apollo/app/log_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"github.com/JJApplication/Apollo/router/router_auth"
+	"github.com/JJApplication/Apollo/router/router_env"
 	"github.com/JJApplication/Apollo/router/router_log"
 	"github.com/JJApplication/Apollo/router/router_noengine"
 	"github.com/JJApplication/Apollo/router/router_oauth"
@@ -122,6 +124,7 @@ func initEngine() {
 	router_log.Init(r)
 	router_noengine.Init(r)
 	router_oauth.Init(r)
+	router_env.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -132,10 +135,12 @@ func initEngine() {
 		logger.LoggerSugar.Errorf("%s %s", APPName, err.Error())
 		cron.InsureTickerExit()
 		fmt.Println(APPName + " server start failed ⚠️")
+		env_manager.GetEnvManager().Close()
 		return
 	}
 
 	if err == http.ErrServerClosed {
+		env_manager.GetEnvManager().Close()
 		fmt.Println(APPName + " thanks for using 💕️")
 	}
 }

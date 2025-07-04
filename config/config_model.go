@@ -59,6 +59,12 @@ type DConfig struct {
 
 	// 定时任务
 	Task Task `json:"task"`
+
+	// GRPC
+	GRPC GRPC `json:"grpc"`
+
+	// AES
+	AES AES `json:"aes"`
 }
 
 // DLog log config
@@ -181,6 +187,16 @@ type Task struct {
 		App      int // 从模型文件中全量同步微服务
 		NoEngine int // 从NoEngine模型中加载NoEngine服务
 	} `json:"auto_discover"`
+}
+
+type GRPC struct {
+	Host    string `json:"host"`
+	Port    int    `json:"port"`
+	UdsAddr string `json:"uds_addr"`
+}
+
+type AES struct {
+	Key string `json:"key"`
 }
 
 // Sync 从配置文件中同步加载
