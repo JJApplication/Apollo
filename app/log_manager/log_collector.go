@@ -8,6 +8,11 @@
 package log_manager
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
 )
@@ -95,4 +100,40 @@ func GetAPPLogList(app string) []LogDetail {
 	}
 
 	return result
+}
+
+// ClearAPPLog 清空日志目录下的全部gz文件
+func ClearAPPLog() error {
+	logPath := config.ApolloConf.APPLogDir
+	_, err := os.Stat(logPath)
+	if os.IsNotExist(err) {
+		return err
+	}
+	// 获取服务目录
+	apps, err := os.ReadDir(logPath)
+	if err != nil {
+		logger.LoggerSugar.Errorf("%s get app log failed: %s", LogManager, err.Error())
+		return err
+	}
+	go func() {
+		logger.LoggerSugar.Infof("%s start to clear app log", LogManager)
+		logger.LoggerSugar.Infof("%s find %d apps", LogManager, len(apps))
+		for _, app := range apps {
+			logs, err := os.ReadDir(filepath.Join(logPath, app.Name()))
+			if err != nil {
+				logger.LoggerSugar.Errorf("%s get app: %s log failed: %s", LogManager, app, err.Error())
+				continue
+			}
+			for _, log := range logs {
+				if log.IsDir() {
+					continue
+				}
+				if strings.HasSuffix(log.Name(), ".tar.gz") {
+					_ = os.Remove(filepath.Join(logPath, app.Name(), log.Name()))
+				}
+			}
+		}
+	}()
+
+	return nil
 }

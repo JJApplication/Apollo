@@ -21,5 +21,6 @@ func Init(r *gin.Engine) {
 	routerLogWithAuth := r.Group("/api/log", middleware.MiddleWareAuth())
 	{
 		routerLogWithAuth.GET("/download", GetAPPLogDownload)
+		routerLogWithAuth.POST("/clear", ClearAPPLog)
 	}
 }

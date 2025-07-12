@@ -63,5 +63,11 @@
   },
   "module": {
     "enable": false
+  },
+  "grpc": {
+    "uds_addr": "unix:///var/run/Nidavellir.sock"
+  },
+  "aes": {
+    "key": ""
   }
 }

@@ -31,7 +31,7 @@ func LoadManagerCf() error {
 		})
 
 		for k, v := range tm {
-			logger.LoggerSugar.Infof("store app [%s] config: %+v", k, v)
+			logger.LoggerSugar.Infof("store app [%s] config", k)
 			APPManager.APPManagerMap.Store(k, App{Meta: v})
 		}
 	}

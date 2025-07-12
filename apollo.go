@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/JJApplication/Apollo/cmd"
 	"runtime"
+
+	"github.com/JJApplication/Apollo/cmd"
 
 	"github.com/JJApplication/Apollo/logger"
 )
@@ -53,6 +54,8 @@ func main() {
 	initDockerClient()
 	// init NoEngine
 	initNoEngineApps()
+	//init env manager etcd client
+	initEnvManager()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

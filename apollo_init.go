@@ -7,6 +7,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/JJApplication/Apollo/app/env_manager"
 	"github.com/JJApplication/Apollo/app/log_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
@@ -18,8 +21,6 @@ import (
 	"github.com/JJApplication/Apollo/router/router_script"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
-	"net/http"
-	"time"
 
 	"github.com/JJApplication/Apollo/app/app_manager"
 	"github.com/JJApplication/Apollo/app/discover_manager"
@@ -129,6 +130,7 @@ func initEngine() {
 	// hooks engine
 	engine.Hooks(apolloEngine)
 
+	logger.LoggerSugar.Infof("%s init Engine done, start at %s", APPName, fmt.Sprintf("%s:%d", config.ApolloConf.Server.Host, config.ApolloConf.Server.Port))
 	err := apolloEngine.RunServer()
 	if err != nil && err != http.ErrServerClosed {
 		logger.LoggerSugar.Errorf("%s server start failed", APPName)
@@ -155,4 +157,8 @@ func initDockerClient() {
 
 func initLogManager() {
 	log_manager.InitLogManager()
+}
+
+func initEnvManager() {
+	env_manager.InitEnvManager()
 }

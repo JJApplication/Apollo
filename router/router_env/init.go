@@ -7,11 +7,11 @@ import (
 )
 
 func Init(r *gin.Engine) {
-	routerAlarm := r.Group("/api/envs")
+	routerAlarm := r.Group("/api/env")
 	{
 		routerAlarm.GET("/list", ListServices)
 	}
-	routerAlarmWithAuth := r.Group("/api/envs", middleware.MiddleWareAuth())
+	routerAlarmWithAuth := r.Group("/api/env", middleware.MiddleWareAuth())
 	{
 		routerAlarmWithAuth.POST("/show", GetEnvs)
 		routerAlarmWithAuth.POST("/get", GetEnv)

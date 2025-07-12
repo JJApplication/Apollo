@@ -4,16 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
+
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/grpc/nidavellir"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"sync"
 )
 
 // 环境变量管理实例
+
+const EnvManagerPrefix = "[Env Manager]"
 
 var manager *EnvManager
 
@@ -21,6 +24,13 @@ type EnvManager struct {
 	init     bool // 是否初始化
 	grpcConn *grpc.ClientConn
 	client   nidavellir.ConfigServiceClient
+}
+
+func InitEnvManager() {
+	go func() {
+		manager = new(EnvManager)
+		manager.Init()
+	}()
 }
 
 func GetEnvManager() *EnvManager {
@@ -35,23 +45,26 @@ func GetEnvManager() *EnvManager {
 }
 
 func (m *EnvManager) Init() {
-	client, err := grpc.Dial(
+	logger.LoggerSugar.Infof("%s start to init grpc client at %s", EnvManagerPrefix, config.ApolloConf.GRPC.UdsAddr)
+	client, err := grpc.NewClient(
 		config.ApolloConf.GRPC.UdsAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock())
+		grpc.WithMaxCallAttempts(5))
 	if err != nil {
 		m.init = false
-		logger.LoggerSugar.Errorf("grpc dial err %s", err.Error())
+		logger.LoggerSugar.Errorf("%s grpc dial err %s", EnvManagerPrefix, err.Error())
 		return
 	}
 	m.client = nidavellir.NewConfigServiceClient(client)
+	m.grpcConn = client
 	m.init = true
+	logger.LoggerSugar.Infof("%s grpc client init success at: %s", EnvManagerPrefix, config.ApolloConf.GRPC.UdsAddr)
 }
 
 func (m *EnvManager) Close() {
 	if m.grpcConn != nil {
 		if err := m.grpcConn.Close(); err != nil {
-			logger.LoggerSugar.Errorf("grpc conn close err %s", err.Error())
+			logger.LoggerSugar.Errorf("%s grpc conn close err %s", EnvManagerPrefix, err.Error())
 		}
 	}
 }
@@ -71,7 +84,7 @@ func (m *EnvManager) GetEnvs(service string) []string {
 		if item.GetEncrypt() {
 			decryptVal, err := utils.DecryptAES256(item.Value, config.ApolloConf.AES.Key)
 			if err != nil {
-				logger.LoggerSugar.Errorf("decrypt [%s]-[%s] err %s", service, item.Key, err.Error())
+				logger.LoggerSugar.Errorf("%s decrypt [%s]-[%s] err %s", EnvManagerPrefix, service, item.Key, err.Error())
 				continue
 			}
 			data = append(data, fmt.Sprintf("%s=%s", item.Key, decryptVal))
@@ -90,7 +103,7 @@ func (m *EnvManager) ListAllServices() []string {
 	ctx := context.Background()
 	data, err := m.client.ListServices(ctx, nil)
 	if err != nil {
-		logger.LoggerSugar.Errorf("list services err %s", err.Error())
+		logger.LoggerSugar.Errorf("%s list services err %s", EnvManagerPrefix, err.Error())
 		return nil
 	}
 
