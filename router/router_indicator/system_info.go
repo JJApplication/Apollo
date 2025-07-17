@@ -1,11 +1,4 @@
-/*
-   Create: 2023/9/16
-   Project: Apollo
-   Github: https://github.com/landers1037
-   Copyright Renj
-*/
-
-package router_system
+package router_indicator
 
 import (
 	"github.com/JJApplication/Apollo/app/indicator_manager"

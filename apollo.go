@@ -38,6 +38,8 @@ func main() {
 
 	// init database
 	initMongo()
+	// init KV
+	initKV()
 	// init app manager
 	initAPPManager()
 	// init app discover
@@ -56,6 +58,8 @@ func main() {
 	initNoEngineApps()
 	//init env manager etcd client
 	initEnvManager()
+	// init indicator manager
+	initIndicatorManager()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

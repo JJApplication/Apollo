@@ -1,0 +1,38 @@
+package indicator_manager
+
+import (
+	"encoding/json"
+	"github.com/JJApplication/Apollo/kv"
+	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/model"
+	"github.com/JJApplication/Apollo/utils"
+	"go.etcd.io/bbolt"
+)
+
+func IndicatorNetwork() []model.SystemCPU {
+	var data []model.SystemCPU
+	err := kv.KV.View(func(tx *bbolt.Tx) error {
+		return tx.Bucket([]byte("NETWORK")).ForEach(func(k, v []byte) error {
+			var s model.SystemCPU
+			err := json.Unmarshal(v, &s)
+			if err != nil {
+				return err
+			}
+			data = append(data, s)
+			return nil
+		})
+	})
+	if err != nil {
+		return nil
+	}
+
+	return data
+}
+
+func IndicatorNetworkRun() {
+	net := utils.CalcNetwork()
+	if err := kv.AddQuick(kv.KV, "NETWORK", net.JSON()); err != nil {
+		logger.LoggerSugar.Errorf("%s get indicator of NETWORK error: %s", ManagerPrefix, err.Error())
+		return
+	}
+}

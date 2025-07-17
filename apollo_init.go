@@ -7,6 +7,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/app/indicator_manager"
+	"github.com/JJApplication/Apollo/kv"
+	"github.com/JJApplication/Apollo/router/router_indicator"
 	"net/http"
 	"time"
 
@@ -72,6 +75,16 @@ func initMongo() {
 	fmt.Println(APPName + " init mongo success")
 }
 
+// 初始化高性能KV
+func initKV() {
+	err := kv.NewKV()
+	if err != nil {
+		fmt.Printf("%s init kv failed: %s\n", APPName, err.Error())
+		return
+	}
+	fmt.Println(APPName + " init kv success")
+}
+
 func initAPPManager() {
 	app_manager.InitAPPManager()
 	app_manager.SaveToDB()
@@ -126,6 +139,7 @@ func initEngine() {
 	router_noengine.Init(r)
 	router_oauth.Init(r)
 	router_env.Init(r)
+	router_indicator.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -161,4 +175,8 @@ func initLogManager() {
 
 func initEnvManager() {
 	env_manager.InitEnvManager()
+}
+
+func initIndicatorManager() {
+	indicator_manager.AllocIndicator()
 }
