@@ -3,7 +3,7 @@ package model
 import "encoding/json"
 
 type SystemCPU struct {
-	Percent float64 `bson:"percent"`
+	Percent float64 `json:"percent"`
 }
 
 func (s *SystemCPU) JSON() []byte {

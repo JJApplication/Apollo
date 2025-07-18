@@ -9,11 +9,11 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func IndicatorNetwork() []model.SystemCPU {
-	var data []model.SystemCPU
+func IndicatorNetwork() []model.SystemNetwork {
+	var data []model.SystemNetwork
 	err := kv.KV.View(func(tx *bbolt.Tx) error {
 		return tx.Bucket([]byte("NETWORK")).ForEach(func(k, v []byte) error {
-			var s model.SystemCPU
+			var s model.SystemNetwork
 			err := json.Unmarshal(v, &s)
 			if err != nil {
 				return err

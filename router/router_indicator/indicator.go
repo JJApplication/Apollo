@@ -19,7 +19,7 @@ func IndicatorMem(c *gin.Context) {
 }
 
 func IndicatorIO(c *gin.Context) {
-	router.Response(c, indicator_manager.IndicatorLoad(), true)
+	router.Response(c, indicator_manager.IndicatorIO(), true)
 }
 
 func IndicatorNetwork(c *gin.Context) {
