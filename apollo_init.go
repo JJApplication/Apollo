@@ -169,6 +169,6 @@ func initRepoManager() {
 	repo_manager.InitRepoManager()
 }
 
-func initIndicator() {
+func initIndicatorManager() {
 	indicator_manager.AllocIndicator()
 }
