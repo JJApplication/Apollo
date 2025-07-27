@@ -7,16 +7,16 @@ import (
 )
 
 func Init(r *gin.Engine) {
-	routerAlarm := r.Group("/api/env")
+	routerEnv := r.Group("/api/env")
 	{
-		routerAlarm.GET("/list", ListServices)
+		routerEnv.GET("/list", ListServices)
 	}
-	routerAlarmWithAuth := r.Group("/api/env", middleware.MiddleWareAuth())
+	routerEnvWithAuth := r.Group("/api/env", middleware.MiddleWareAuth())
 	{
-		routerAlarmWithAuth.POST("/show", GetEnvs)
-		routerAlarmWithAuth.POST("/get", GetEnv)
-		routerAlarmWithAuth.POST("/decrypt", GetEnvWithAES)
-		routerAlarmWithAuth.POST("/set", SetEnv)
-		routerAlarmWithAuth.POST("/delete", DeleteEnv)
+		routerEnvWithAuth.POST("/show", GetEnvs)
+		routerEnvWithAuth.POST("/get", GetEnv)
+		routerEnvWithAuth.POST("/decrypt", GetEnvWithAES)
+		routerEnvWithAuth.POST("/set", SetEnv)
+		routerEnvWithAuth.POST("/delete", DeleteEnv)
 	}
 }

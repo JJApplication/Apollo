@@ -8,9 +8,10 @@ Copyright Renj
 package discover_manager
 
 import (
+	"path/filepath"
+
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
-	"path/filepath"
 )
 
 const DiscoverManagerPrefix = "[APPDiscover Manager]"
@@ -45,7 +46,7 @@ func createNoEngineDiscover() {
 	noEngineDiscover = NewDiscoverRule(DiscoverRule{
 		WatchRoot:   filepath.Join(config.ApolloConf.APPRoot, "NoEngine"),
 		Include:     nil,
-		Exclude:     []string{"nginx.conf", "conf", "conf.d", "cache", "apps.json", "noengine.app.json", "noengine.domain.json"},
+		Exclude:     []string{"nginx.conf", "conf", "conf.d", "cache", "apps.json", "noengine.app.json", "domain.json", "noengine.domain.json"},
 		CompareFlag: FlagAll,
 	})
 }

@@ -45,11 +45,11 @@ func GetEnvManager() *EnvManager {
 }
 
 func (m *EnvManager) Init() {
-	logger.LoggerSugar.Infof("%s start to init grpc client at %s", EnvManagerPrefix, config.ApolloConf.GRPC.UdsAddr)
+	logger.LoggerSugar.Infof("%s start to init grpc client at %s", EnvManagerPrefix, config.ApolloConf.GRPC.GetAddr("Nidavellir"))
 	client, err := grpc.NewClient(
-		config.ApolloConf.GRPC.UdsAddr,
+		config.ApolloConf.GRPC.GetAddr("Nidavellir"),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithMaxCallAttempts(5))
+		grpc.WithMaxCallAttempts(config.ApolloConf.GRPC.MaxAttempt))
 	if err != nil {
 		m.init = false
 		logger.LoggerSugar.Errorf("%s grpc dial err %s", EnvManagerPrefix, err.Error())

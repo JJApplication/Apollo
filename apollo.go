@@ -56,6 +56,8 @@ func main() {
 	initNoEngineApps()
 	//init env manager etcd client
 	initEnvManager()
+	// init repo manager
+	initRepoManager()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

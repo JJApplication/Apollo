@@ -37,6 +37,7 @@
     "host": "0.0.0.0",
     "port": 9090,
     "uds": "/var/run/Apollo.sock",
+    "grpc": "/var/run/Apollo.grpc.sock",
     "ui_cache": false,
     "ui_cache_time": 84600,
     "ui_router": [
@@ -65,7 +66,13 @@
     "enable": false
   },
   "grpc": {
-    "uds_addr": "unix:///var/run/Nidavellir.sock"
+    "max_attempt": 5,
+    "uds_addr": {
+      "Nidavellir": "unix:///var/run/Nidavellir.sock",
+      "TwT": "unix:///var/run/TwT.sock",
+      "OctopusTwig": "unix:///var/run/Twig.sock",
+      "Hephaestus": "unix:///var/run/Hephaestus.sock"
+    }
   },
   "aes": {
     "key": ""

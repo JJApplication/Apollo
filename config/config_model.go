@@ -110,7 +110,8 @@ type TiDB struct {
 type Server struct {
 	Host        string   `json:"host"`
 	Port        int      `json:"port"`
-	Uds         string   `json:"uds"`
+	Uds         string   `json:"uds"`           // Octopus通信的UDS地址
+	GRPC        string   `json:"grpc"`          // GRPC的UDS地址
 	UICache     bool     `json:"ui_cache"`      // 是否开启缓存
 	UICacheTime int      `json:"ui_cache_time"` // 缓存的失效时间
 	UIRouter    []string `json:"ui_router"`     // 决定哪些url由前端路由处理
@@ -190,9 +191,21 @@ type Task struct {
 }
 
 type GRPC struct {
-	Host    string `json:"host"`
-	Port    int    `json:"port"`
-	UdsAddr string `json:"uds_addr"`
+	Host       string            `json:"host"`
+	Port       int               `json:"port"`
+	MaxAttempt int               `json:"max_attempt"`
+	UdsAddr    map[string]string `json:"uds_addr"`
+}
+
+func (g *GRPC) GetAddr(name string) string {
+	if g.UdsAddr == nil {
+		return ""
+	}
+	val, ok := g.UdsAddr[name]
+	if ok {
+		return val
+	}
+	return ""
 }
 
 type AES struct {
