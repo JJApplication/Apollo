@@ -58,6 +58,8 @@ func main() {
 	initEnvManager()
 	// init repo manager
 	initRepoManager()
+	// init indicator manager
+	initIndicatorManager()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

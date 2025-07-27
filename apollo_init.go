@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/JJApplication/Apollo/app/env_manager"
+	"github.com/JJApplication/Apollo/app/indicator_manager"
 	"github.com/JJApplication/Apollo/app/log_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
 	"github.com/JJApplication/Apollo/app/repo_manager"
@@ -19,7 +20,6 @@ import (
 	"github.com/JJApplication/Apollo/router/router_log"
 	"github.com/JJApplication/Apollo/router/router_noengine"
 	"github.com/JJApplication/Apollo/router/router_oauth"
-	"github.com/JJApplication/Apollo/router/router_repo"
 	"github.com/JJApplication/Apollo/router/router_script"
 	"github.com/JJApplication/Apollo/router/router_status"
 	"github.com/JJApplication/Apollo/router/router_system"
@@ -128,7 +128,6 @@ func initEngine() {
 	router_noengine.Init(r)
 	router_oauth.Init(r)
 	router_env.Init(r)
-	router_repo.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -168,4 +167,8 @@ func initEnvManager() {
 
 func initRepoManager() {
 	repo_manager.InitRepoManager()
+}
+
+func initIndicator() {
+	indicator_manager.AllocIndicator()
 }

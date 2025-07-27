@@ -8,6 +8,7 @@
 package utils
 
 import (
+	"github.com/JJApplication/Apollo/model"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/shirou/gopsutil/process"
 )
@@ -17,6 +18,20 @@ type ProcessMemInfo struct {
 	MemRss     uint64  `json:"memRss"`  // 物理内存
 	MemVms     uint64  `json:"memVms"`  // 虚拟内存
 	MemSwap    uint64  `json:"memSwap"` // 交换内存
+}
+
+func CalcMem() model.SystemMem {
+	v, err := mem.VirtualMemory()
+	if err != nil {
+		return model.SystemMem{}
+	}
+	return model.SystemMem{
+		Percent:   v.UsedPercent,
+		Free:      v.Free,
+		Available: v.Available,
+		Used:      v.Used,
+		Cached:    v.Cached,
+	}
 }
 
 // CalcMemUsed 当前内存使用率

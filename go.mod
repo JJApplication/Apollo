@@ -28,6 +28,7 @@ require (
 	github.com/shirou/gopsutil v2.21.11+incompatible
 	github.com/swaggo/gin-swagger v1.3.3
 	github.com/swaggo/swag v1.16.3
+	go.etcd.io/bbolt v1.4.2
 	go.mongodb.org/mongo-driver v1.7.0
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.73.0
@@ -80,7 +81,7 @@ require (
 	github.com/robfig/go-cache v0.0.0-20130306151617-9fc39e0dbf62 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/afero v1.9.2 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect

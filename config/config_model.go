@@ -82,6 +82,7 @@ type DDb struct {
 	Sqlite Sqlite `json:"sqlite"`
 	Mongo  Mongo  `json:"mongo"`
 	Redis  Redis  `json:"redis"`
+	KV     string `json:"kv"`
 }
 
 type Sqlite struct {
