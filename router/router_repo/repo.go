@@ -2,6 +2,8 @@
 package router_repo
 
 import (
+	"fmt"
+
 	"github.com/JJApplication/Apollo/app/repo_manager"
 	"github.com/JJApplication/Apollo/router"
 	"github.com/gin-gonic/gin"
@@ -22,7 +24,9 @@ func ListRepos(c *gin.Context) {
 }
 
 func GetRepo(c *gin.Context) {
-	fullName := c.Param("fullName")
+	org := c.Param("org")
+	name := c.Param("name")
+	fullName := fmt.Sprintf("%s/%s", org, name)
 	if fullName == "" {
 		router.Response(c, nil, false)
 		return
@@ -40,7 +44,9 @@ func SyncRepos(c *gin.Context) {
 
 func GetCommits(c *gin.Context) {
 	repoManager := repo_manager.GetRepoManager()
-	fullName := c.Param("fullName")
+	org := c.Param("org")
+	name := c.Param("name")
+	fullName := fmt.Sprintf("%s/%s", org, name)
 	if fullName == "" {
 		router.Response(c, nil, false)
 		return
@@ -51,7 +57,9 @@ func GetCommits(c *gin.Context) {
 
 func SyncCommits(c *gin.Context) {
 	repoManager := repo_manager.GetRepoManager()
-	fullName := c.Param("fullName")
+	org := c.Param("org")
+	name := c.Param("name")
+	fullName := fmt.Sprintf("%s/%s", org, name)
 	if fullName == "" {
 		router.Response(c, nil, false)
 		return

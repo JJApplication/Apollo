@@ -38,6 +38,8 @@ func main() {
 
 	// init database
 	initMongo()
+	// init KV
+	initKV()
 	// init app manager
 	initAPPManager()
 	// init app discover
