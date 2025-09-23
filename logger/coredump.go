@@ -1,3 +1,5 @@
+//go:build linux
+
 /*
 Create: 2022/8/22
 Project: Apollo

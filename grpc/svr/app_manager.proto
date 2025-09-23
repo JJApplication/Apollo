@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package svr;
+
+option go_package = "github.com/JJApplication/Apollo/grpc/svr";
+
+import "google/protobuf/empty.proto";
+
+// AppManagerService 微服务管理gRPC服务
+// 提供对Apollo管理的微服务进行启动、停止、重启、状态查询等操作
+service AppManagerService {
+    // GetAllAppName 获取所有服务名称列表
+    rpc GetAllAppName(google.protobuf.Empty) returns (ListReply);
+    
+    // Status 获取指定服务的运行状态
+    rpc Status(AppName) returns (StatusReply);
+    
+    // Start 启动指定的服务
+    rpc Start(AppName) returns (BoolReply);
+    
+    // Stop 停止指定的服务
+    rpc Stop(AppName) returns (BoolReply);
+    
+    // ReStart 重启指定的服务
+    rpc ReStart(AppName) returns (BoolReply);
+    
+    // StartAll 启动所有服务
+    rpc StartAll(google.protobuf.Empty) returns (ListReply);
+    
+    // StopAll 停止所有服务
+    rpc StopAll(google.protobuf.Empty) returns (ListReply);
+    
+    // StatusAll 获取所有服务的状态
+    rpc StatusAll(google.protobuf.Empty) returns (ListReply);
+    
+    // SyncApp 同步指定服务的配置
+    rpc SyncApp(AppName) returns (BoolReply);
+    
+    // SyncAll 同步所有服务的配置
+    rpc SyncAll(google.protobuf.Empty) returns (BoolReply);
+}
+
+// AppName 服务名称请求参数
+message AppName {
+    string name = 1; // 服务名称
+}
+
+// ListReply 字符串列表响应
+message ListReply {
+    repeated string items = 1; // 结果列表
+    string err = 2;            // 错误信息，为空表示成功
+}
+
+// StatusReply 状态查询响应
+message StatusReply {
+    string status = 1; // 服务状态
+    string err = 2;    // 错误信息，为空表示成功
+}
+
+// BoolReply 布尔值响应
+message BoolReply {
+    bool ok = 1;     // 操作是否成功
+    string msg = 2;  // 响应消息或错误信息
+}

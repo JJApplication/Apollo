@@ -62,6 +62,8 @@ func main() {
 	initRepoManager()
 	// init indicator manager
 	initIndicatorManager()
+	// init gRPC server
+	initGRPCServer()
 	// only all manager init, can uds server be active
 	initUDS()
 	// init engine

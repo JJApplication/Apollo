@@ -35,6 +35,7 @@ import (
 	"github.com/JJApplication/Apollo/cron"
 	"github.com/JJApplication/Apollo/database"
 	"github.com/JJApplication/Apollo/engine"
+	"github.com/JJApplication/Apollo/grpc/svr"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/router/router_alarm"
 	"github.com/JJApplication/Apollo/router/router_app"
@@ -186,4 +187,14 @@ func initKV() {
 
 func initIndicatorManager() {
 	indicator_manager.AllocIndicator()
+}
+
+// initGRPCServer 初始化gRPC服务器
+func initGRPCServer() {
+	go func() {
+		logger.LoggerSugar.Infof("%s start GRPC Server", APPName)
+		if err := svr.NewGRPCServer(); err != nil {
+			logger.LoggerSugar.Errorf("%s gRPC start error: %v", APPName, err)
+		}
+	}()
 }
