@@ -112,6 +112,10 @@ func (app *App) Start() (bool, error) {
 		return app.NoEngineStart()
 	}
 
+	if app.WebCheck() {
+		return app.WebStart()
+	}
+
 	var ret int
 	if ok, _ := app.Check(); ok {
 		return true, nil
@@ -156,6 +160,9 @@ func (app *App) Stop() (bool, error) {
 	if app.NoEngineCheck() {
 		return app.NoEngineStop()
 	}
+	if app.WebCheck() {
+		return app.WebStop()
+	}
 	var ret int
 	_, err := utils.CMDRun(attachEnvs(app), appScriptPath(app.Meta.Name, app.Meta.ManageCMD.Stop))
 	if err != nil {
@@ -193,6 +200,9 @@ func (app *App) ReStart() (bool, error) {
 	if app.NoEngineCheck() {
 		return app.NoEngineReStart()
 	}
+	if app.WebCheck() {
+		return app.WebRestart()
+	}
 	if app.Meta.Runtime.StopOperation {
 		return true, nil
 	}
@@ -229,6 +239,9 @@ func (app *App) Check() (bool, error) {
 	}
 	if app.NoEngineCheck() {
 		return app.NoEngineStatus()
+	}
+	if app.WebCheck() {
+		return app.WebStatus()
 	}
 
 	var ret int
@@ -431,5 +444,26 @@ func (app *App) NoEngineReStart() (bool, error) {
 		return false, err
 	}
 	logger.LoggerSugar.Infof("%s [%s] restart success", APPManagerPrefix, app.Meta.Name)
+	return true, nil
+}
+
+// WebCheck 前端web服务检查
+func (app *App) WebCheck() bool {
+	return app.Meta.Type == TypeWebFront
+}
+
+func (app *App) WebStart() (bool, error) {
+	return true, nil
+}
+
+func (app *App) WebStop() (bool, error) {
+	return true, nil
+}
+
+func (app *App) WebRestart() (bool, error) {
+	return true, nil
+}
+
+func (app *App) WebStatus() (bool, error) {
 	return true, nil
 }

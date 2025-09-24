@@ -62,9 +62,10 @@ const (
 // app的默认类型
 const (
 	TypeService    = "Service"    // 服务
-	TypeWebFront   = "FrontEnd"   // 前端
+	TypeWebFront   = "Web"        // 前端
 	TypeMiddleWare = "MiddleWare" // 中间件
 	TypeDataStore  = "DataStore"  // 数据层
+	TypeModule     = "Module"     // 模块
 )
 
 // app的发布状态
