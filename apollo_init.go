@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/app/port_manager"
 	"net/http"
 	"time"
 
@@ -173,6 +174,10 @@ func initEnvManager() {
 
 func initRepoManager() {
 	repo_manager.InitRepoManager()
+}
+
+func initPortManager() {
+	port_manager.InitPortManager()
 }
 
 // 初始化高性能KV

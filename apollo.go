@@ -60,6 +60,8 @@ func main() {
 	initEnvManager()
 	// init repo manager
 	initRepoManager()
+	// init port manager
+	initPortManager()
 	// init indicator manager
 	initIndicatorManager()
 	// init gRPC server

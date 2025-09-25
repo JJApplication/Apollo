@@ -65,6 +65,9 @@ type DConfig struct {
 
 	// AES
 	AES AES `json:"aes"`
+
+	// 实验特性
+	Experiment Experiment `json:"experiment"`
 }
 
 // DLog log config
@@ -211,6 +214,15 @@ func (g *GRPC) GetAddr(name string) string {
 
 type AES struct {
 	Key string `json:"key"`
+}
+
+// Experiment 实验特性
+type Experiment struct {
+	PortV2   bool `json:"port_v2"` // 端口管理器v2
+	TaskData struct {
+		Path     string `json:"path"`
+		Duration int    `json:"duration"`
+	} `json:"task_data"` // 任务持久化配置
 }
 
 // Sync 从配置文件中同步加载

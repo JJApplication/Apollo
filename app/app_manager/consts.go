@@ -8,6 +8,7 @@ package app_manager
 import "sync"
 
 type appManager struct {
+	al sync.Mutex
 	// APPManagerMap 当前微服务数据的字典
 	APPManagerMap sync.Map
 	// APPUsingPorts 维护一个当前已经监听的端口组
@@ -92,6 +93,8 @@ func (am *appManager) checkPorts(port int) bool {
 
 // 添加监听端口到端口占用组
 func (am *appManager) addPorts(port int) {
+	am.al.Lock()
+	defer am.al.Unlock()
 	if _, ok := am.APPUsingPorts[port]; !ok {
 		am.APPUsingPorts[port] = struct{}{}
 	}
@@ -99,6 +102,8 @@ func (am *appManager) addPorts(port int) {
 
 // 删除不再使用的端口
 func (am *appManager) delPorts(port int) {
+	am.al.Lock()
+	defer am.al.Unlock()
 	if _, ok := am.APPUsingPorts[port]; ok {
 		delete(am.APPUsingPorts, port)
 	}

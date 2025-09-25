@@ -52,6 +52,8 @@ func AddTicker(cf, def int, taskName, des string, f func()) {
 		LastRun:    0,
 	}
 
+	task_manager.AddBackgroundTask(ch, uuidStr, taskName, des, t, 0)
+
 	go func() {
 		for {
 			select {

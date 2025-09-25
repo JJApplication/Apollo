@@ -71,10 +71,18 @@
       "Nidavellir": "unix:///var/run/Nidavellir.sock",
       "TwT": "unix:///var/run/TwT.sock",
       "OctopusTwig": "unix:///var/run/Twig.sock",
-      "Hephaestus": "unix:///var/run/Hephaestus.sock"
+      "Hephaestus": "unix:///var/run/Hephaestus.sock",
+      "Themis": "unix:///var/run/Themis.sock"
     }
   },
   "aes": {
     "key": ""
+  },
+  "experiment": {
+    "port_v2": true,
+    "task_data": {
+      "path": "tasks.json",
+      "duration": 3600
+    }
   }
 }

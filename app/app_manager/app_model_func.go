@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/JJApplication/Apollo/app/env_manager"
 	"github.com/JJApplication/Apollo/app/noengine_manager"
+	"github.com/JJApplication/Apollo/app/port_manager"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -80,19 +81,39 @@ func attachEnvsSp(app *App) []string {
 // 生成运行时所需的端口
 // 通过appManager中的ports来去重
 func attachEnvsWithPorts(app *App) []string {
-	// 仅重试10次
 	var s string
 	var envs = attachEnvs(app)
-	for i := 0; i < 10; i++ {
-		p := utils.RandomPort()
-		if APPManager.checkPorts(p) {
-			s = fmt.Sprintf("PORTS=%d", p)
-			// 记录port到app运行时 在启动失败后从manager中删除
-			app.Meta.RunData.Ports = []int{p}
-			APPManager.addPorts(p)
-			app.ClonePorts()
-			app.Dump()
-			break
+	// 使用实验特性v2 端口管理器
+	if config.ApolloConf.Experiment.PortV2 {
+		pm := port_manager.GetPortManager()
+		var p int
+		port := pm.GetAppPort(app.Meta.Name)
+		if port > 0 {
+			p = port
+		} else {
+			p = pm.NewPort()
+		}
+		// 返回设置的端口以同步
+		_ = pm.SetAppPort(app.Meta.Name, p)
+		s = fmt.Sprintf("PORTS=%d", port)
+		// 记录port到app运行时 在启动失败后从manager中删除
+		app.Meta.RunData.Ports = []int{port}
+		APPManager.addPorts(port)
+		app.ClonePorts()
+		app.Dump()
+	} else {
+		// 仅重试10次
+		for i := 0; i < 10; i++ {
+			p := utils.RandomPort()
+			if APPManager.checkPorts(p) {
+				s = fmt.Sprintf("PORTS=%d", p)
+				// 记录port到app运行时 在启动失败后从manager中删除
+				app.Meta.RunData.Ports = []int{p}
+				APPManager.addPorts(p)
+				app.ClonePorts()
+				app.Dump()
+				break
+			}
 		}
 	}
 

@@ -6,8 +6,6 @@ Created: 2021/12/27 by Landers
 package task_manager
 
 import (
-	"time"
-
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/fatih/set"
 )
@@ -24,6 +22,8 @@ func InitTaskManager() {
 	TaskManager = new(taskManager)
 	TaskManager.CronJobs = make(map[string]task, 1)
 	TaskManager.BackGroundJobs = TickerMap
+	LoadFromData()
+	SyncData()
 	logger.LoggerSugar.Infof("%s init all tasks to TaskManager", TaskManagerPrefix)
 }
 
@@ -36,17 +36,4 @@ func GetSetOfTasks() {
 	}
 	t := s.List()
 	TaskGroup = t
-}
-
-func AddCronTask(id, name, spec string) {
-	TaskManager.lock.Lock()
-	if _, ok := TaskManager.CronJobs[id]; !ok {
-		TaskManager.CronJobs[id] = task{
-			TaskID:     id,
-			TaskName:   name,
-			Spec:       spec,
-			CreateTime: time.Now().Unix(),
-		}
-	}
-	TaskManager.lock.Unlock()
 }

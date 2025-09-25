@@ -70,8 +70,20 @@ const EmptyName = ""
 
 type taskManager struct {
 	lock           sync.Mutex
+	perLock        sync.Mutex // 持久化锁
 	CronJobs       map[string]task
 	BackGroundJobs map[string]*OneTicker
+}
+
+type PersistManager struct {
+	CronJobs []struct {
+		Name       string `json:"name"`
+		UpdateTime int64  `json:"update_time"`
+	} `json:"cron_jobs"`
+	BackGroundJobs []struct {
+		Name       string `json:"name"`
+		UpdateTime int64  `json:"update_time"`
+	} `json:"background_jobs"`
 }
 
 func NewTask(name string, timeout int) *task {
