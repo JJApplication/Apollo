@@ -28,6 +28,7 @@ require (
 	github.com/shirou/gopsutil v2.21.11+incompatible
 	github.com/swaggo/gin-swagger v1.3.3
 	github.com/swaggo/swag v1.16.3
+	github.com/vmihailenco/msgpack/v5 v5.4.1
 	go.etcd.io/bbolt v1.4.2
 	go.mongodb.org/mongo-driver v1.7.0
 	go.uber.org/zap v1.21.0
@@ -85,6 +86,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
+	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect

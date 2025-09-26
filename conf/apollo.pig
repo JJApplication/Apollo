@@ -8,6 +8,7 @@
   "app_back_up": "/renj.io/backup",
   "app_pids": "/renj.io/pids",
   "app_bridge": "rainbow_bridge",
+  "data_dir": "data",
   "log": {
     "enable_log": true,
     "enable_stack": false,
@@ -81,7 +82,7 @@
   "experiment": {
     "port_v2": true,
     "task_data": {
-      "path": "tasks.json",
+      "path": "tasks.msp",
       "duration": 3600
     }
   }

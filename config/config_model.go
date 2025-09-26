@@ -19,6 +19,7 @@ const (
 	GlobalConfigRoot = "conf"
 	GlobalConfigFile = "apollo.pig"
 	GlobalScriptRoot = "script"
+	GlobalDataDir    = "data"
 )
 
 // DConfig 全局配置
@@ -38,6 +39,7 @@ type DConfig struct {
 	APPBridge   string `json:"app_bridge"`    // JJAPP服务的全局自定义网卡地址
 	SSLRoot     string `json:"ssl_root"`      // SSL证书目录
 	SSLCert     string `json:"ssl_cert"`      // SSL的证书名称
+	DataDir     string `json:"data_dir"`      // 数据目录
 
 	// logger
 	Log DLog `json:"log"`

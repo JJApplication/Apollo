@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/JJApplication/Apollo/app/port_manager"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/JJApplication/Apollo/app/env_manager"
@@ -61,6 +62,17 @@ func initGlobalConfig() {
 		return
 	}
 	fmt.Printf("%s load config in %dms\n", APPName, utils.TimeCalcUnix(t))
+}
+
+func initDataDir() {
+	if config.ApolloConf.DataDir != "" {
+		err := os.MkdirAll(config.ApolloConf.DataDir, 0755)
+		if err != nil {
+			fmt.Printf("%s init data directory: %s failed: %s\n", APPName, config.ApolloConf.DataDir, err)
+			return
+		}
+		fmt.Printf("%s init data directory: %s success", APPName, config.ApolloConf.DataDir)
+	}
 }
 
 // 初始化数据库

@@ -18,6 +18,7 @@ import (
 func main() {
 	cmd.ApolloCmd()
 	initGlobalConfig()
+	initDataDir()
 	logger.Check()
 	err := logger.InitLogger()
 	if err != nil {

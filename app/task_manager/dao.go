@@ -6,9 +6,9 @@ Created: 2021/12/27 by Landers
 package task_manager
 
 import (
-	"encoding/json"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
+	"github.com/JJApplication/Apollo/utils"
 	"os"
 	"time"
 )
@@ -44,7 +44,7 @@ func PersistToData() {
 		})
 	}
 
-	data, err := json.Marshal(tm)
+	data, err := utils.MarshalMsgPack(tm)
 	if err != nil {
 		return
 	}
@@ -67,7 +67,7 @@ func LoadFromData() {
 	}
 
 	var tmp PersistManager
-	err = json.Unmarshal(data, &tmp)
+	err = utils.UnmarshalMsgPack(data, &tmp)
 	if err != nil {
 		logger.LoggerSugar.Errorf("load tasks from persistance: %s failed: %s", file, err.Error())
 		return
