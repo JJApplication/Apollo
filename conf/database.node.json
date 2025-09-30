@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Blog",
+    "path": "/renj.io/app/Blog/blog.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "Memos",
+    "path": "/renj.io/app/Memos/memos_prod.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "Mgek",
+    "path": "/renj.io/app/Mgek/mgek.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "MySite",
+    "path": "/renj.io/app/MySite/data.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "Palace",
+    "path": "/renj.io/app/Palace/palace.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "Demeter",
+    "path": "/renj.io/app/Demeter/todolist.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "TheWorldTree",
+    "path": "/renj.io/app/TheWorldTree/twt.db",
+    "type": "sqlite"
+  },
+  {
+    "name": "JJGo",
+    "path": "/renj.io/app/JJGo/jjgo.db",
+    "type": "sqlite"
+  }
+]

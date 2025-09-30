@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"syscall"
 )
 
 const (
@@ -246,4 +247,18 @@ func ReadDirDetail(dir string) []FileDetail {
 	}
 
 	return files
+}
+
+func GetFileTimes(path string) (create, update int64) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return 0, 0
+	}
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if ok {
+		create = stat.Ctim.Sec
+	}
+	update = info.ModTime().Unix()
+
+	return
 }

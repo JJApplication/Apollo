@@ -34,6 +34,8 @@ require (
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6
+	gorm.io/driver/sqlite v1.6.0
+	gorm.io/gorm v1.31.0
 )
 
 require (
@@ -64,11 +66,13 @@ require (
 	github.com/gookit/validate v1.4.2 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.11.13 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/memcachier/mc/v3 v3.0.3 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

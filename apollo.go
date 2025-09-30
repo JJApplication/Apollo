@@ -65,6 +65,8 @@ func main() {
 	initPortManager()
 	// init indicator manager
 	initIndicatorManager()
+	// init database manager
+	initDatabaseManager()
 	// init gRPC server
 	initGRPCServer()
 	// only all manager init, can uds server be active

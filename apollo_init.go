@@ -7,7 +7,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/JJApplication/Apollo/app/database_manager"
 	"github.com/JJApplication/Apollo/app/port_manager"
+	"github.com/JJApplication/Apollo/router/router_database"
 	"net/http"
 	"os"
 	"time"
@@ -71,7 +73,7 @@ func initDataDir() {
 			fmt.Printf("%s init data directory: %s failed: %s\n", APPName, config.ApolloConf.DataDir, err)
 			return
 		}
-		fmt.Printf("%s init data directory: %s success", APPName, config.ApolloConf.DataDir)
+		fmt.Printf("%s init data directory: %s success\n", APPName, config.ApolloConf.DataDir)
 	}
 }
 
@@ -147,6 +149,7 @@ func initEngine() {
 	router_env.Init(r)
 	router_indicator.Init(r)
 	router_repo.Init(r)
+	router_database.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -214,4 +217,8 @@ func initGRPCServer() {
 			logger.LoggerSugar.Errorf("%s gRPC start error: %v", APPName, err)
 		}
 	}()
+}
+
+func initDatabaseManager() {
+	database_manager.InitDatabaseManager()
 }
