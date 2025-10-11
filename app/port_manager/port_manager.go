@@ -95,6 +95,7 @@ func (m *PortManager) NewPort() int {
 		logger.LoggerSugar.Errorf("%s new port err %s", PortManagerPrefix, response.Error)
 		return 0
 	}
+	logger.LoggerSugar.Infof("%s new port success, port: %d", PortManagerPrefix, response.Port)
 	return int(response.Port)
 }
 
@@ -109,6 +110,7 @@ func (m *PortManager) GetAppPort(app string) int {
 		logger.LoggerSugar.Errorf("%s get app: %s port err %s", PortManagerPrefix, app, response.Error)
 		return 0
 	}
+	logger.LoggerSugar.Infof("%s get app: %s port: %d", PortManagerPrefix, app, response.Port)
 	return int(response.Port)
 }
 
@@ -126,5 +128,6 @@ func (m *PortManager) SetAppPort(app string, port int) error {
 		logger.LoggerSugar.Errorf("%s set app: %s port err %s", PortManagerPrefix, app, response.Error)
 		return err
 	}
+	logger.LoggerSugar.Infof("%s set app: %s port: %d", PortManagerPrefix, app, port)
 	return nil
 }
