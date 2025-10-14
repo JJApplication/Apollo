@@ -89,7 +89,6 @@ func SyncData() {
 			select {
 			case <-ticker.C:
 				PersistToData()
-			default:
 			}
 		}
 	}()

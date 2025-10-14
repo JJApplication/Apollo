@@ -129,7 +129,7 @@ func (d *DatabaseManager) Get(name string) *Info {
 		return db.Info
 	}
 
-	if err := d.connect(name); err != nil {
+	if err = d.connect(name); err != nil {
 		return nil
 	}
 	d.lock.RLock()
