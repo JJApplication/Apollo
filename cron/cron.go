@@ -32,6 +32,8 @@ type CronManager struct {
 	CreateTime   string
 }
 
+var cronLock sync.RWMutex
+
 // CronJobMap 保存所有的定时任务 没必要使用syncmap 采用内部加锁的方式保证数据安全性
 var CronJobMap map[cron.EntryID]*Cron
 
@@ -55,8 +57,7 @@ func (c *CronManager) Check() bool {
 func (c *CronManager) innerNewCronTask(spec, name string, f func()) (cronID cron.EntryID, err error) {
 	cronID, err = c.cronInstance.AddFunc(spec, f)
 	if err == nil {
-		l := sync.Mutex{}
-		l.Lock()
+		cronLock.Lock()
 		c := &Cron{
 			CronID:       cronID,
 			CronName:     name,
@@ -69,7 +70,7 @@ func (c *CronManager) innerNewCronTask(spec, name string, f func()) (cronID cron
 		}
 
 		CronJobMap[cronID] = c
-		defer l.Unlock()
+		defer cronLock.Unlock()
 	}
 	return
 }
@@ -94,9 +95,9 @@ func (c *CronManager) DelTask(id cron.EntryID) error {
 		return errors.New(ErrCronNull)
 	}
 	c.cronInstance.Remove(id)
-	l := sync.Mutex{}
+	cronLock.Lock()
+	defer cronLock.Unlock()
 	delete(CronJobMap, id)
-	defer l.Unlock()
 
 	return nil
 }
@@ -107,9 +108,9 @@ func (c *CronManager) StartTask(id cron.EntryID) error {
 		return errors.New(ErrCronNull)
 	}
 	c.cronInstance.Start()
-	l := sync.Mutex{}
+	cronLock.Lock()
+	defer cronLock.Unlock()
 	CronJobMap[id].Status = "START"
-	defer l.Unlock()
 	return nil
 }
 
@@ -119,9 +120,9 @@ func (c *CronManager) StopTask(id cron.EntryID) error {
 		return errors.New(ErrCronNull)
 	}
 	c.cronInstance.Stop()
-	l := sync.Mutex{}
+	cronLock.Lock()
+	defer cronLock.Unlock()
 	CronJobMap[id].Status = "STOP"
-	defer l.Unlock()
 	return nil
 }
 

@@ -12,6 +12,7 @@ require (
 	github.com/docker/docker v20.10.3-0.20220208084023-a5c757555091+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/set v0.2.1
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/gzip v0.0.6

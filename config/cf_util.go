@@ -15,6 +15,7 @@ import (
 // InitGlobalConfig 初始化全局配置文件
 func InitGlobalConfig() error {
 	ApolloConf.lock = new(sync.Mutex)
+	go InitConfigNotify()
 	return configen.ParseConfig(
 		&ApolloConf,
 		configen.Pig,

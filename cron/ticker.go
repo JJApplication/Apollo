@@ -7,7 +7,6 @@ package cron
 
 import (
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/JJApplication/Apollo/app/task_manager"
@@ -79,8 +78,7 @@ func InsureTickerExit() {
 }
 
 func updateLastRun(uuid string) {
-	lock := sync.Mutex{}
-	lock.Lock()
+	cronLock.Lock()
+	defer cronLock.Unlock()
 	task_manager.TickerMap[uuid].LastRun = time.Now().Unix()
-	defer lock.Unlock()
 }
