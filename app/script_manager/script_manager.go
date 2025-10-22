@@ -42,7 +42,7 @@ func GetScripts() []scriptModel {
 }
 
 // ExecuteScript 执行脚本
-func ExecuteScript(name string) error {
+func ExecuteScript(name, args string) error {
 	var sc scriptModel
 	for _, script := range scripts {
 		if script.ScriptName == name {
@@ -52,7 +52,7 @@ func ExecuteScript(name string) error {
 	if sc.Script == "" {
 		return errors.New("script not found")
 	}
-	return runWithTimeout(sc)
+	return runWithTimeout(sc, args)
 }
 
 // StopScript 强行停止脚本

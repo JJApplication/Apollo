@@ -14,6 +14,7 @@ import (
 	"github.com/JJApplication/fushin/utils/cmd"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 // 脚本的执行全部为异步任务
@@ -21,7 +22,7 @@ import (
 
 // RunWithTimeout 带上下文超时的运行回调
 // 考虑到存在大备份任务，超时时间设置为6h
-func runWithTimeout(script scriptModel) error {
+func runWithTimeout(script scriptModel, args string) error {
 	if hasTaskRunning(script.ScriptName) {
 		return errors.New("task is running")
 	}
@@ -37,8 +38,16 @@ func runWithTimeout(script scriptModel) error {
 		return err
 	}
 
+	// 拼接参数
+	var sh string
+	if args == "" {
+		sh = filepath.Join(config.GlobalScriptRoot, script.Script)
+	} else {
+		sh = strings.Join([]string{filepath.Join(config.GlobalScriptRoot, script.Script), args}, " ")
+	}
+
 	// 创建cmd进程
-	c := cmd.NewCmder().Run(filepath.Join(config.GlobalScriptRoot, script.Script))
+	c := cmd.NewCmder().Run(sh)
 	go func() {
 		if err = c.Run(); err != nil {
 			logger.LoggerSugar.Errorf("%s run script: %s err:%v", ScriptManagerPrefix, script.ScriptName, err)

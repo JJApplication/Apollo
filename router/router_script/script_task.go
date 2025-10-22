@@ -6,6 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type scriptReq struct {
+	Script string `json:"script"`
+	Args   string `json:"args"`
+}
+
 // ScriptTaskList 获取全部历史任务列表
 func ScriptTaskList(c *gin.Context) {
 	result := script_manager.GetScriptTasks()
@@ -25,12 +30,16 @@ func ScriptTaskByName(c *gin.Context) {
 
 // ScriptTaskStart 开始执行脚本
 func ScriptTaskStart(c *gin.Context) {
-	name := c.Query("name")
-	if name == "" {
+	var req scriptReq
+	if err := c.BindJSON(&req); err != nil {
 		router.Response(c, nil, false)
 		return
 	}
-	if err := script_manager.ExecuteScript(name); err != nil {
+	if req.Script == "" {
+		router.Response(c, nil, true)
+		return
+	}
+	if err := script_manager.ExecuteScript(req.Script, req.Args); err != nil {
 		router.Response(c, nil, false)
 		return
 	}
@@ -40,13 +49,17 @@ func ScriptTaskStart(c *gin.Context) {
 // ScriptTaskStop 强制停止任务
 // 如果对应的任务存在且正在执行则停止其上下文
 func ScriptTaskStop(c *gin.Context) {
-	name := c.Query("name")
-	if name == "" {
+	var req scriptReq
+	if err := c.BindJSON(&req); err != nil {
 		router.Response(c, nil, false)
 		return
 	}
+	if req.Script == "" {
+		router.Response(c, nil, true)
+		return
+	}
 
-	if err := script_manager.StopScript(name); err != nil {
+	if err := script_manager.StopScript(req.Script); err != nil {
 		router.Response(c, nil, false)
 		return
 	}
@@ -56,12 +69,16 @@ func ScriptTaskStop(c *gin.Context) {
 // ScriptTaskDelete 删除某个任务
 // 理论上只能删除状态停止的任务
 func ScriptTaskDelete(c *gin.Context) {
-	name := c.Query("name")
-	if name == "" {
+	var req scriptReq
+	if err := c.BindJSON(&req); err != nil {
 		router.Response(c, nil, false)
 		return
 	}
-	if err := script_manager.DeleteTask(name); err != nil {
+	if req.Script == "" {
+		router.Response(c, nil, true)
+		return
+	}
+	if err := script_manager.DeleteTask(req.Script); err != nil {
 		router.Response(c, nil, false)
 		return
 	}

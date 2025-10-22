@@ -18,7 +18,7 @@ const ScriptConfig = "script.json"
 
 func LoadScripts() []scriptModel {
 	var res []scriptModel
-	if err := utils.ParseJsonFile(filepath.Join(config.GlobalConfigRoot, config.GlobalScriptRoot, ScriptConfig), &res); err != nil {
+	if err := utils.ParseJsonFile(filepath.Join(config.GlobalConfigRoot, ScriptConfig), &res); err != nil {
 		return []scriptModel{}
 	}
 
