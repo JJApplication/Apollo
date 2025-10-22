@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kamva/mgm/v3"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
@@ -68,6 +69,10 @@ func hasTaskRunning(scriptName string) bool {
 	}
 	var data ScriptTask
 	if err := mgm.Coll(&ScriptTask{}).FindOne(context.Background(), bson.M{"script": scriptName, "status": StatusRunning}).Decode(&data); err != nil {
+		// 不存在记录时视作没有运行
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return false
+		}
 		logger.LoggerSugar.Errorf("%s get Running task of [%s] error:%v", ScriptManagerPrefix, scriptName, err)
 		return true
 	}
@@ -140,6 +145,6 @@ func deleteTask(uuid string) error {
 	if _, err := mgm.Coll(&ScriptTask{}).DeleteOne(context.Background(), bson.M{"uuid": uuid}); err != nil {
 		return errors.New("failed to delete task: " + uuid)
 	}
-	
+
 	return nil
 }

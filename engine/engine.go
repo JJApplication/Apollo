@@ -18,10 +18,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func init() {
-	gin.SetMode(gin.ReleaseMode)
-}
-
 const (
 	PLNACK_PROTO = "+plnack"
 	HtmlTmpl     = "web/tmpl/**/*"

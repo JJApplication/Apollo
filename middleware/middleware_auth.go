@@ -59,6 +59,9 @@ func MiddleWareAuth() gin.HandlerFunc {
 
 		// 从headers中取token校验
 		headerToken := c.GetHeader("token")
+		if headerToken == "" {
+			headerToken = c.GetHeader(OAuthToken)
+		}
 		validate := token_manager.ValidateToken(utils.GetRemoteIP(c.Request), headerToken)
 		if headerToken != "" && validate {
 			// header校验成功直接返回

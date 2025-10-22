@@ -14,6 +14,16 @@ import (
 	"sync"
 )
 
+func init() {
+	scriptLock.Lock()
+	defer scriptLock.Unlock()
+	scriptManager = make(map[string]struct {
+		uuid   string
+		status string
+		cmd    *exec.Cmd
+	})
+}
+
 var (
 	scriptLock    sync.Mutex
 	scriptManager map[string]struct {

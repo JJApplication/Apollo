@@ -77,6 +77,13 @@ var MiddleWareMap = map[string]gin.HandlerFunc{
 	"cors":     MiddleWareCors(),
 	"plnack":   MiddlewarePlnack(),
 	"gzip":     gzip.Gzip(gzip.BestCompression, gzip.WithExcludedPaths([]string{"/api/"})),
+	"custom_recovery": gin.CustomRecovery(func(c *gin.Context, err any) {
+		fmt.Printf("[Apollo] custom recovery from panic %v\n"+
+			"Path: %s\n"+
+			"Method: %s\n"+
+			"IP: %s\n"+
+			"Time: %s\n", err, c.Request.RequestURI, c.Request.Method, c.ClientIP(), time.Now().Format("2006-01-02 15:04:05"))
+	}),
 }
 
 // LoadMiddleWare 中间件加载
