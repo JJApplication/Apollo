@@ -49,7 +49,7 @@ func GetAccessToken(code string) (string, error) {
 		logger.LoggerSugar.Errorf("%s get github access token error: %s", OAuthManager, err.Error())
 		return "", err
 	}
-	data, err := utils.HttpPost(GithubAccessToken, body)
+	data, err := utils.HttpPost(GithubAccessToken, body, 0)
 	if err != nil {
 		logger.LoggerSugar.Errorf("%s get github access token error: %s", OAuthManager, err.Error())
 		return "", err

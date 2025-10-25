@@ -65,6 +65,9 @@ type DConfig struct {
 	// GRPC
 	GRPC GRPC `json:"grpc"`
 
+	// HttpLocal
+	HttpLocal HttpLocal `json:"http_local"`
+
 	// AES
 	AES AES `json:"aes"`
 
@@ -212,6 +215,22 @@ func (g *GRPC) GetAddr(name string) string {
 		return val
 	}
 	return ""
+}
+
+type HttpLocal struct {
+	Timeout int            `json:"timeout"` // 客户端超时时间默认30s
+	Addr    map[string]int `json:"addr"`
+}
+
+func (h *HttpLocal) GetAddr(name string) int {
+	if h.Addr == nil {
+		return 0
+	}
+	val, ok := h.Addr[name]
+	if ok {
+		return val
+	}
+	return 0
 }
 
 type AES struct {

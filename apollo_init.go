@@ -10,6 +10,7 @@ import (
 	"github.com/JJApplication/Apollo/app/database_manager"
 	"github.com/JJApplication/Apollo/app/port_manager"
 	"github.com/JJApplication/Apollo/router/router_database"
+	"github.com/JJApplication/Apollo/router/router_panel"
 	"net/http"
 	"os"
 	"time"
@@ -150,6 +151,7 @@ func initEngine() {
 	router_indicator.Init(r)
 	router_repo.Init(r)
 	router_database.Init(r)
+	router_panel.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)

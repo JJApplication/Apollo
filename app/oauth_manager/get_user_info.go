@@ -30,7 +30,7 @@ type ApolloOAuthUser struct {
 func GetGithubUser(token string) (GithubUserInfo, error) {
 	res, err := utils.HttpGet(GithubUserApi, map[string]string{
 		"Authorization": fmt.Sprintf("Bearer %s", token),
-	})
+	}, 0)
 	if err != nil {
 		return GithubUserInfo{}, err
 	}
