@@ -8,8 +8,8 @@
 package token_manager
 
 import (
-	"encoding/json"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/Apollo/utils/json"
 )
 
 // Token 基于IP控制 单点登录 每个IP的token有效期单独维护

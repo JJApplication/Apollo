@@ -1,6 +1,6 @@
 package model
 
-import "encoding/json"
+import "github.com/JJApplication/Apollo/utils/json"
 
 type SystemNetwork struct {
 	ByteRecv    uint64 `json:"byteRecv"`

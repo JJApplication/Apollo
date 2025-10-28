@@ -1,11 +1,11 @@
 package indicator_manager
 
 import (
-	"encoding/json"
 	"github.com/JJApplication/Apollo/kv"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/model"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/Apollo/utils/json"
 	"go.etcd.io/bbolt"
 )
 

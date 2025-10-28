@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/JJApplication/Apollo/app/database_manager"
 	"github.com/JJApplication/Apollo/app/port_manager"
+	"github.com/JJApplication/Apollo/app/process_manager"
 	"github.com/JJApplication/Apollo/router/router_database"
 	"github.com/JJApplication/Apollo/router/router_panel"
 	"net/http"
@@ -223,4 +224,8 @@ func initGRPCServer() {
 
 func initDatabaseManager() {
 	database_manager.InitDatabaseManager()
+}
+
+func initProcessManager() {
+	process_manager.InitProcessManager()
 }

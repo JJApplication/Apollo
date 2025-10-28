@@ -67,6 +67,8 @@ func main() {
 	initIndicatorManager()
 	// init database manager
 	initDatabaseManager()
+	// init process manager
+	initProcessManager()
 	// init gRPC server
 	initGRPCServer()
 	// only all manager init, can uds server be active

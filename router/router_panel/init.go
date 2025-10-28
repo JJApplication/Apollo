@@ -10,5 +10,8 @@ func Init(r *gin.Engine) {
 		routerPanel.GET("/network/stat", NetworkStat)
 		routerPanel.GET("/network/domain", NetworkDomain)
 		routerPanel.GET("/network/geo", NetworkGeoIP)
+
+		routerPanel.GET("/process/list", ProcessList)
+		routerPanel.GET("/process", Process)
 	}
 }

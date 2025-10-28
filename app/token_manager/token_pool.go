@@ -8,8 +8,8 @@
 package token_manager
 
 import (
-	"encoding/json"
 	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/utils/json"
 	"sync"
 	"time"
 )

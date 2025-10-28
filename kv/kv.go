@@ -96,6 +96,22 @@ func AddQuick(kv *bbolt.DB, bucket string, value []byte) error {
 	})
 }
 
+// AddIfNotExist 如果不存在则动态添加
+func AddIfNotExist(bucket string, value []byte) error {
+	return KV.Update(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte(bucket))
+		if b == nil {
+			ttx, err := tx.CreateBucketIfNotExists([]byte(bucket))
+			if err != nil {
+				return err
+			}
+			return ttx.Put([]byte(strconv.Itoa(int(time.Now().Unix()))), value)
+		} else {
+			return b.Put([]byte(strconv.Itoa(int(time.Now().Unix()))), value)
+		}
+	})
+}
+
 // Add 所有时序数据使用时间戳作为键
 func Add(kv *bbolt.DB, bucket, key string, value []byte) error {
 	PreHookAdd(kv, bucket)

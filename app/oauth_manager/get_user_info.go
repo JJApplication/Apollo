@@ -8,10 +8,10 @@
 package oauth_manager
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/Apollo/utils/json"
 )
 
 type GithubUserInfo struct {

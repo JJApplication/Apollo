@@ -1,6 +1,6 @@
 package model
 
-import "encoding/json"
+import "github.com/JJApplication/Apollo/utils/json"
 
 type SystemIO struct {
 	TotalReadBytes  uint64 `json:"totalReadBytes"`

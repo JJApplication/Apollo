@@ -9,14 +9,24 @@ package utils
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
 const (
 	DefaultTimeout = 30
 )
+
+// API 根据端口拼接API
+func API(port int, path string) string {
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+	return fmt.Sprintf("http://127.0.0.1:%d%s", port, path)
+}
 
 // HttpGet 发送get请求
 func HttpGet(url string, headers map[string]string, timeout int) ([]byte, error) {

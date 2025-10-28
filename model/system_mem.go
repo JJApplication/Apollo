@@ -1,6 +1,6 @@
 package model
 
-import "encoding/json"
+import "github.com/JJApplication/Apollo/utils/json"
 
 type SystemMem struct {
 	Percent   float64 `json:"percent"`

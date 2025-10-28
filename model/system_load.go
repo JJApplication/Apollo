@@ -1,6 +1,6 @@
 package model
 
-import "encoding/json"
+import "github.com/JJApplication/Apollo/utils/json"
 
 type SystemLoad struct {
 	Minute1  float64 `json:"minute1"`

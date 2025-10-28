@@ -8,11 +8,11 @@
 package oauth_manager
 
 import (
-	"encoding/json"
 	"errors"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/logger"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/Apollo/utils/json"
 	"strings"
 )
 

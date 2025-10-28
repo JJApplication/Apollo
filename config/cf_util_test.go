@@ -6,8 +6,8 @@ Created: 2021/11/22 by Landers
 package config
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/JJApplication/Apollo/utils/json"
 	"math/rand"
 	"os"
 	"testing"

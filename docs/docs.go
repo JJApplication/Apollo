@@ -4,7 +4,7 @@ package docs
 
 import (
 	"bytes"
-	"encoding/json"
+	"github.com/JJApplication/Apollo/utils/json"
 	"strings"
 	"text/template"
 

@@ -1,11 +1,11 @@
 package router_panel
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/JJApplication/Apollo/config"
 	"github.com/JJApplication/Apollo/router"
 	"github.com/JJApplication/Apollo/utils"
+	"github.com/JJApplication/Apollo/utils/json"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,7 +26,7 @@ func NetworkStat(c *gin.Context) {
 	}
 	Addr := config.ApolloConf.HttpLocal.GetAddr(ServiceNetwork)
 	timeout := config.ApolloConf.HttpLocal.Timeout
-	data, err := utils.HttpGet(fmt.Sprintf("http://127.0.0.1:%d%s", Addr, APIStat), header, timeout)
+	data, err := utils.HttpGet(utils.API(Addr, APIStat), header, timeout)
 	if err != nil {
 		router.Response(c, nil, false)
 		return
@@ -46,7 +46,7 @@ func NetworkDomain(c *gin.Context) {
 	}
 	Addr := config.ApolloConf.HttpLocal.GetAddr(ServiceNetwork)
 	timeout := config.ApolloConf.HttpLocal.Timeout
-	data, err := utils.HttpGet(fmt.Sprintf("http://127.0.0.1:%d%s", Addr, APIDomainStat), header, timeout)
+	data, err := utils.HttpGet(utils.API(Addr, APIDomainStat), header, timeout)
 	if err != nil {
 		router.Response(c, nil, false)
 		return
@@ -64,7 +64,7 @@ func NetworkGeoIP(c *gin.Context) {
 	}
 	Addr := config.ApolloConf.HttpLocal.GetAddr(ServiceNetwork)
 	timeout := config.ApolloConf.HttpLocal.Timeout
-	data, err := utils.HttpGet(fmt.Sprintf("http://127.0.0.1:%d%s", Addr, APIGeo), header, timeout)
+	data, err := utils.HttpGet(utils.API(Addr, APIGeo), header, timeout)
 	if err != nil {
 		router.Response(c, nil, false)
 		return

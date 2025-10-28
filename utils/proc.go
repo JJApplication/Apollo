@@ -8,6 +8,7 @@
 package utils
 
 import (
+	"github.com/JJApplication/Apollo/utils/json"
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/process"
 	"strings"
@@ -21,6 +22,14 @@ type SysProc struct {
 	ProcessIO      `json:",inline"`
 	NetConnections int   `json:"netConnections"`
 	Threads        int32 `json:"threads"`
+}
+
+func (sp *SysProc) ToBytes() []byte {
+	data, err := json.Marshal(sp)
+	if err != nil {
+		return nil
+	}
+	return data
 }
 
 // CalcBoot 主机的启动时间

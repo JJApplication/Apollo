@@ -1,8 +1,8 @@
 package database_manager
 
 import (
-	"encoding/json"
 	"github.com/JJApplication/Apollo/config"
+	"github.com/JJApplication/Apollo/utils/json"
 	"gorm.io/gorm"
 	"os"
 	"path/filepath"
