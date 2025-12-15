@@ -10,8 +10,10 @@ import (
 	"github.com/JJApplication/Apollo/app/database_manager"
 	"github.com/JJApplication/Apollo/app/port_manager"
 	"github.com/JJApplication/Apollo/app/process_manager"
+	"github.com/JJApplication/Apollo/app/secure_manager"
 	"github.com/JJApplication/Apollo/router/router_database"
 	"github.com/JJApplication/Apollo/router/router_panel"
+	"github.com/JJApplication/Apollo/router/router_secure"
 	"net/http"
 	"os"
 	"time"
@@ -153,6 +155,7 @@ func initEngine() {
 	router_repo.Init(r)
 	router_database.Init(r)
 	router_panel.Init(r)
+	router_secure.Init(r)
 
 	// hooks engine
 	engine.Hooks(apolloEngine)
@@ -228,4 +231,8 @@ func initDatabaseManager() {
 
 func initProcessManager() {
 	process_manager.InitProcessManager()
+}
+
+func initSecureManager() {
+	secure_manager.InitSecureManager()
 }
