@@ -97,6 +97,7 @@ func (p *ProcessManager) Start() {
 					if proc == nil {
 						continue
 					}
+					logger.LoggerSugar.Infof("%s start to fetch app: %s", ProcessManagerPrefix, app)
 					data := utils.SysProc{
 						PID:            utils.GetProcessPID(proc),
 						CPUPercent:     utils.CalcProcessCpu(proc),
